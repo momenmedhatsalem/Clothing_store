@@ -12,4 +12,5 @@ urlpatterns = [
     path('checkout', views.checkout, name='checkout'),
     path('product/<int:id>', views.product, name='product'),
     path('add_to_cart/<int:product_id>', views.add_to_cart, name='add_to_cart'),
+    path('toggle-night-mode/', views.toggle_night_mode, name='toggle_night_mode'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
