@@ -128,10 +128,7 @@ def cart(request):
             # Handle anonymous user
             cart = request.session.get('cart', [])
             products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
-            context = {'cart': [{'product': product,
-                                  'quantity': next(item['quantity'] for item in cart 
-                                                   if item['product_id'] == product.pk),
-                                                     'total': product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk)} for product in products]}
+            context = {'cart':  [{'product': product, 'quantity': next(item['quantity'] for item in cart if item['product_id'] == product.pk), 'total': product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk)} for product in products], 'user_cart': {'total_price': sum(product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk) for product in products)}}
         return render(request, 'cart.html', context)
 
 def checkout(request):

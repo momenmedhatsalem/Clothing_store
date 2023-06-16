@@ -12,6 +12,9 @@
         <!-- Use a CDN link for Bootstrap instead of a static file -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="{% static 'js/main.js' %}"></script>
+
+        <!-- Font Awesome Library -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -31,7 +34,7 @@
                         <a class="nav-link" href="{% url 'index' %}">Home</a>
                     </li>
                     <li>
-                        <button class="btn btn-dark" id="night-mode-toggle">Dark Mode</button>
+                        <button class="btn btn-dark" id="night-mode-toggle"><i class="fas fa-moon"></i> Dark Mode</button>
                         
                     </li>
                     <!-- Use the cart_count variable to show the number of items in the cart -->
@@ -64,13 +67,11 @@
     <script>
         const nightModeToggle = document.querySelector('#night-mode-toggle');
         nightModeToggle.addEventListener('click', () => {
-            if (nightModeToggle.innerHTML == "Dark Mode") {
-                
-                nightModeToggle.innerHTML = "Light Mode";
+            if (nightModeToggle.innerHTML.includes("Dark Mode")) {
+                nightModeToggle.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
             }
             else {
-                nightModeToggle.innerHTML = "Dark Mode";
-
+                nightModeToggle.innerHTML = `<i class="fas fa-moon"></i> Dark Mode`;
             }
         document.body.classList.toggle('night-mode');
         });
