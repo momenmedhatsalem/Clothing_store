@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    {{ block.super }}
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Add custom CSS -->
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Checkout</h1>
+    <form method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <h2>Billing Information</h2>
+        <div class="form-group">
+            <label for="id_first_name">First Name:</label>
+            <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ user.first_name }}">
+        </div>
+        <div class="form-group">
+            <label for="id_last_name">Last Name:</label>
+            <input type="text" name="last_name" id="id_last_name" class="form-control" value="{{ user.last_name }}">
+        </div>
+        <div class="form-group">
+            <label for="id_address">Address:</label>
+            <input type="text" name="address" id="id_address" class="form-control" value="{{ user.address }}">
+            <div class="form-group">
+                <label for="id_address">Address:</label>
+                <input type="text" name="address" id="id_address" class="form-control" value="{{ user.address }}">
+            </div>
+            <div class="form-group">
+                <label for="id_city">City:</label>
+                <input type="text" name="city" id="id_city" class="form-control" value="{{ user.city }}">
+            </div>
+            <div class="form-group">
+                <label for="id_state">State:</label>
+                <input type="text" name="state" id="id_state" class="form-control" value="{{ user.state }}">
+            </div>
+            <div class="form-group">
+                <label for="id_zip_code">Zip Code:</label>
+                <input type="text" name="zip_code" id="id_zip_code" class="form-control" value="{{ user.zip_code }}">
+            </div>
+
+
+            <h2>Payment Information</h2>
+            <div class="form-group">
+                <label for="id_card_number">Card Number:</label>
+                <input type="text" name="card_number" id="id_card_number" class="form-control" value="{{ user.card_number }}">
+            </div>
+            <div class="form-group">
+                <label for="id_expiration_date">Expiration Date:</label>
+                <input type="text" name="expiration_date" id="id_expiration_date" class="form-control" value="{{ user.expiration_date }}">
+            </div>
+            <div class="form-group">
+                <label for="id_cvv">CVV:</label>
+                <input type="text" name="cvv" id="id_cvv" class="form-control" value="{{ user.cvv }}">
+            </div>
+            
+            <input type="submit" value="Place Order" class="btn btn-primary">
+    </form>
+{% endblock %}

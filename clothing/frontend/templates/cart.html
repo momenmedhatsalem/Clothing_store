@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+
+<title>Clothing Store Cart</title>
+
+<div class="container">
+    <h1>Your Cart</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            {% for item in cart %}
+                <tr>
+                    <td>{{ item.product.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.product.price }}</td>
+                    <td>${{ item.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Total: ${{ user_cart.total_price }}</p>
+    <a href="{% url 'checkout' %}" class="btn btn-primary">Checkout</a>
+</div>
+{% endblock %}

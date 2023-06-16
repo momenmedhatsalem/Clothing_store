@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+
+<style>
+.product-card {
+  width: calc(100% / 3);
+  margin: 10px;
+  position: relative;
+  bottom: -100%;
+  animation: moveUp 1s ease-out forwards;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@keyframes moveUp {
+  0% {
+    bottom: -100%;
+    opacity: 0;
+  }
+  100% {
+    bottom: 0;
+    opacity: 1;
+  }
+}
+  .starter-template {
+      padding: 40px 15px;
+      text-align: center;
+  }
+</style>
+
+
+
+  <!-- Add page content -->
+  <div class="container">
+      <div class="starter-template">
+          <h1>Welcome to our Clothing Online Business!</h1>
+          <p class="lead">Check out our latest collections:</p>
+          <ul>
+              {% for collection in collections %}
+                  <li><a href="{% url 'collection_detail' collection.id %}">{{ collection.name }}</a></li>
+              {% endfor %}
+          </ul>
+      </div>
+  </div><!-- /.container -->
+
+
+
+
+  {% for product in products %}
+  <div class="product-container">
+
+    
+      <div class="product-card">
+        <div class="product-image">
+          <img class="card-img-top" src="{{product.image}}" width="50" height="50" alt="Card image cap">
+
+        </div>
+        <div class="product-info">
+          <h4 class="product-name">{{ product.name }}</h4>
+          <p class="product-price">${{ product.price|floatformat:2 }}</p>
+          <p class="product-description">{{ product.desc|truncatewords:20 }}</p>
+          <a href="{% url 'product' product.id %}" class="product-link">View details</a>
+          <button href="{% url 'add_to_cart' product.id %}">BUY NOW</button>
+          <a href="{% url 'add_to_cart' product.id %}" class="product-button">Add to cart</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+      
+      gsdfgsdfsdf
+{% endblock %}
