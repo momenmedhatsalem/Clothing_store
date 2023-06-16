@@ -77,7 +77,7 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     order_number = models.CharField(max_length=32, null=False, editable=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='P')
-    payment_method = models.CharField(max_length=2, choices=PAYMENT_METHOD_CHOICES)
+    payment_method = models.CharField(max_length=3, choices=PAYMENT_METHOD_CHOICES)
 
     # other fields ...
 

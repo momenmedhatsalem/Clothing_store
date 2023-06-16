@@ -108,12 +108,30 @@ def cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         product = Product.objects.get(pk=product_id)
-        request.session['cart'] = product
-        return HttpResponseRedirect(reverse('cart'))
+        if request.user.is_authenticated:
+            # Handle authenticated user
+            cart = Cart.objects.get(user=request.user)
+            CartItem.objects.create(cart=cart, product=product)
+        else:
+            # Handle anonymous user
+            cart = request.session.get('cart', [])
+            products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
+            context = {'cart': [{'product': product, 'quantity': next(item['quantity'] for item in cart if item['product_id'] == product.pk)} for product in products]}
+        return render(request, 'cart.html', context)
     else:
-        cart = Cart.objects.get(user=request.user)
-        CartItems = CartItem.objects.filter(cart=cart)
-        context = {'cart': CartItems, 'user_cart': cart}
+        if request.user.is_authenticated:
+            # Handle authenticated user
+            cart = Cart.objects.get(user=request.user)
+            CartItems = CartItem.objects.filter(cart=cart)
+            context = {'cart': CartItems, 'user_cart': cart}
+        else:
+            # Handle anonymous user
+            cart = request.session.get('cart', [])
+            products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
+            context = {'cart': [{'product': product,
+                                  'quantity': next(item['quantity'] for item in cart 
+                                                   if item['product_id'] == product.pk),
+                                                     'total': product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk)} for product in products]}
         return render(request, 'cart.html', context)
 
 def checkout(request):
@@ -161,15 +179,28 @@ def product_detail(request, product_id):
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    # get the quantity from the form data or default to 1
     quantity = int(request.POST.get('quantity', 1))
-    # add the product to the cart with the given quantity or update the existing quantity if it already exists
-    a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        # get the quantity from the form data or default to 1
+        # add the product to the cart with the given quantity or update the existing quantity if it already exists
+        a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-    if not created:
-        a_cart_item.quantity += quantity
+        if not created:
+            a_cart_item.quantity += quantity
+        else:
+            a_cart_item.quantity = quantity
+        a_cart_item.save()
     else:
-        a_cart_item.quantity = quantity
-    a_cart_item.save()
+        # Handle anonymous user
+        cart = request.session.get('cart', [])
+        # check if the product is already in the cart
+        cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+        if cart_item:
+            # update the quantity if the product is already in the cart
+            cart_item['quantity'] += quantity
+        else:
+            # add a new cart item if the product is not in the cart
+            cart.append({'product_id': product_id, 'quantity': quantity})
+        request.session['cart'] = cart
     return redirect('cart')
