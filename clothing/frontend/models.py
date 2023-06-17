@@ -17,6 +17,7 @@ class Product(models.Model):
     category = models.CharField(max_length=50, default="")
     subcategory = models.CharField(max_length=50, default="")
     price = models.FloatField(default=0)
+    discount_price = models.FloatField(default=0)
     desc = models.CharField(max_length=300)
     pub_date = models.DateField()
     image = models.ImageField(upload_to="static/images", default="")
@@ -31,6 +32,7 @@ class Cart(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ordered = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Cart of {self.user.username}"
@@ -75,6 +77,8 @@ class Order(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ordered_at = models.DateTimeField(auto_now=True)
+    
     order_number = models.CharField(max_length=32, null=False, editable=False)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='P')
     payment_method = models.CharField(max_length=3, choices=PAYMENT_METHOD_CHOICES)
