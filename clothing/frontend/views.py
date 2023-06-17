@@ -37,9 +37,9 @@ def index(request):
 
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST['email']
+        username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=username, password=password)
 
         # Check if authentication successful
         if user is not None:
@@ -49,7 +49,7 @@ def login_view(request):
             return render(
                 request,
                 "login.html",
-                {"message": "Invalid username and/or password."},
+                {"message": "Invalid email/phone and/or password."},
             )
     else:
         return render(request, "login.html")
