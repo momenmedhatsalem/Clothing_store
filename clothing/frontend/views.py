@@ -221,3 +221,30 @@ def toggle_night_mode(request, mode):
         return JsonResponse({'night_mode':  night_mode})
 
 
+def profile(request):
+    return render(request, 'profile.html')
+
+
+#Unmaitained
+def remove_from_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.user.is_authenticated:
+        cart = Cart.objects.get(user=request.user)
+        CartItem.objects.filter(cart=cart, product=product).delete()
+    else:
+        # Handle anonymous user
+        cart = request.session.get('cart', [])
+        # check if the product is already in the cart
+        cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+        if cart_item:
+            # update the quantity if the product is already in the cart
+            cart.remove(cart_item)
+        request.session['cart'] = cart
+    return redirect('cart')
+
+#Unmaintained
+def edit_profile(request):
+    return render(request, 'edit_profile.html')
+
+def change_password(request):
+    return render(request, 'change_password.html')
