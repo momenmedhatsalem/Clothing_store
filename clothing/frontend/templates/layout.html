@@ -63,53 +63,75 @@
             </div>
         </div>
     </nav>
+                <style>
+                    body.night-mode {
+                    /* Add your night mode styles here */
+                    background-color: #333;
+                    color: #fff;
+                    }
+                
+                </style>
     <!-- Use the block body tag to insert the content of each page -->
     <script>
+
+
+
+
         var night_mode;
+        const body = document.querySelector('body');
+
         document.addEventListener("DOMContentLoaded", function() {
-    fetch('/toggle-night-mode/', {
-        method: 'GET'
-    })
-    .then(response => response.json())
-    .then(data => {
-        // handle the response data
-        console.log(data);
-        night_mode = data.night_mode;
-    });
+
+            fetch('/toggle-night-mode/False')
+                .then(response => response.json())
+                .then(data => {
+                    // Print email
+                    console.log(data);
+                    night_mode = data.night_mode;
+                    console.log(night_mode);
+                    // ... do something else with email ...
+                    if (night_mode === true) {
+                        
+                        body.classList.add('night-mode');
+                        nightModeToggle.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
+                    }
+                    else {
+                        nightModeToggle.innerHTML = `<i class="fas fa-moon"></i> Dark Mode`;
+                        body.classList.remove('night-mode');
+    
+                    }
+                });
+
 });
 
         const nightModeToggle = document.querySelector('#night-mode-toggle');
         nightModeToggle.addEventListener('click', () => {
-            fetch('/toggle-night-mode/', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
+
             
-        }
-    })
 
 
-
-
-
-            if (night_mode || nightModeToggle.innerHTML.includes("Dark Mode")) {
+            if (nightModeToggle.innerHTML.includes("Dark Mode")) {
                 nightModeToggle.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
-            }
-            else {
+                fetch('/toggle-night-mode/True', {
+                    method: 'PUT',
+
+                    })
+                    
+                    body.classList.add('night-mode');
+                }
+                else {
+                fetch('/toggle-night-mode/False', {
+                    method: 'PUT',
+
+                    })
                 nightModeToggle.innerHTML = `<i class="fas fa-moon"></i> Dark Mode`;
-            }
-        document.body.classList.toggle('night-mode');
+                
+                body.classList.remove('night-mode');
+                }
+        
         
         });
     </script>
-    <style>
-        body.night-mode {
-        /* Add your night mode styles here */
-        background-color: #333;
-        color: #fff;
-        }
-
-    </style>
     {% block body %}
     {% endblock %}
 </body>

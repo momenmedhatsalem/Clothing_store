@@ -208,12 +208,16 @@ from django.views.decorators.http import require_http_methods
 
 @csrf_exempt
 
-def toggle_night_mode(request):
-    if request.method == 'PUt':
-        night_mode = request.session.get('night_mode',False)
-        request.session['night_mode'] = not night_mode
+def toggle_night_mode(request, mode):
+    if request.method == 'PUT':
+        if mode == 'True':
+            request.session['darkmode'] = True
+        else:
+            request.session['darkmode'] = False
+        return JsonResponse({'night_mode':  request.session.get('darkmode')})
     else:
-        night_mode = request.session.get('night_mode')
-        return JsonResponse({'night_mode': night_mode})
+        night_mode = request.session.get('darkmode')
+        
+        return JsonResponse({'night_mode':  night_mode})
 
 
