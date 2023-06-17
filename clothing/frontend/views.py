@@ -201,3 +201,23 @@ def add_to_cart(request, product_id):
             cart.append({'product_id': product_id, 'quantity': quantity})
         request.session['cart'] = cart
     return redirect('cart')
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+@csrf_exempt
+
+def toggle_night_mode(request, mode):
+    if request.method == 'PUT':
+        if mode == 'True':
+            request.session['darkmode'] = True
+        else:
+            request.session['darkmode'] = False
+        return JsonResponse({'night_mode':  request.session.get('darkmode')})
+    else:
+        night_mode = request.session.get('darkmode')
+        
+        return JsonResponse({'night_mode':  night_mode})
+
+
