@@ -24,6 +24,9 @@ class Product(models.Model):
     pub_date = models.DateField()
     image = models.ImageField(upload_to="static/images", default="")
 
+    def get_absolute_url(self):
+        return f"/product/{self.id}/"
+
     def __str__(self):
         return self.product_name
 
@@ -53,7 +56,7 @@ class CartItem(models.Model):
     
     @property
     def total(self):
-        return self.product.price * self.quantity
+        return (self.product.price) * int(self.quantity)
     
 class Order(models.Model):
     STATUS_CHOICES = (

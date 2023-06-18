@@ -28,7 +28,8 @@ from django.contrib.auth import login
 from django.utils.crypto import get_random_string
 
 
-
+from django.views.decorators.http import require_http_methods
+import json
 def index(request):
     products = Product.objects.all()
     return render(request, 'index.html', {'products':products})
@@ -127,6 +128,20 @@ def cart(request):
             context = {'cart': [{'product': product, 'quantity': next(item['quantity'] for item in cart if item['product_id'] == product.pk)} for product in products]}
         return render(request, 'cart.html', context)
     else:
+        existing_options = [
+        {'value': 1, 'label': '1'},
+        {'value': 2, 'label': '2'},
+        {'value': 3, 'label': '3'},
+        {'value': 4, 'label': '4'},
+        {'value': 5, 'label': '5'},
+        {'value': 6, 'label': '6'},
+        {'value': 7, 'label': '7'},
+        {'value': 8, 'label': '8'},
+        {'value': 9, 'label': '9'},
+        {'value': 10, 'label': '10'},
+        ]
+
+        
         if request.user.is_authenticated:
             # Handle authenticated user
             try:
@@ -135,17 +150,20 @@ def cart(request):
                 # Handle the case where the cart does not exist
                 cart = Cart.objects.create(user=request.user)
             CartItems = CartItem.objects.filter(cart=cart)
-            context = {'cart': CartItems, 'user_cart': cart}
+            context = {'existing_options': existing_options,
+                       'cart': CartItems, 'user_cart': cart}
         else:
             # Handle anonymous user
             cart = request.session.get('cart', [])
             products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
-            context = {'cart':  [{'product': product,
+            context = {'existing_options': existing_options,
+                       'cart':  [{'product': product,
                                    'quantity': next(item['quantity'] for item in cart
                                                      if item['product_id'] == product.pk),
                                                        'total': product.price * next(item['quantity']
                                                                                       for item in cart if item['product_id'] == product.pk)}
-                                                                                        for product in products], 'user_cart': {'total_price': sum(product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk) for product in products)}}
+                                                                                      for product in products], 'user_cart': {'total_price': sum(product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk) for product in products)}}
+        
         return render(request, 'cart.html', context)
 
 def checkout(request):
@@ -206,32 +224,50 @@ def product_detail(request, product_id):
     }
     return render(request, 'product_detail.html', context)
 
+#@require_http_methods(["POST", "PUT"])
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    quantity = int(request.POST.get('quantity', 1))
-    if request.user.is_authenticated:
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        # get the quantity from the form data or default to 1
-        # add the product to the cart with the given quantity or update the existing quantity if it already exists
-        a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        if request.user.is_authenticated:
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-        if not created:
-            a_cart_item.quantity += quantity
+            if not created:
+                a_cart_item.quantity += quantity
+            else:
+                a_cart_item.quantity = quantity
+            a_cart_item.save()
+            
         else:
+            # Handle anonymous user
+            cart = request.session.get('cart', [])
+            cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+            if cart_item:
+                cart_item['quantity'] += quantity
+            else:
+                cart.append({'product_id': product_id, 'quantity': quantity})
+            request.session['cart'] = cart
+    elif request.method == 'PUT':
+        data = json.loads(request.body)
+        quantity = data.get('quantity', 1)
+        if request.user.is_authenticated:
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
             a_cart_item.quantity = quantity
-        a_cart_item.save()
-    else:
-        # Handle anonymous user
-        cart = request.session.get('cart', [])
-        # check if the product is already in the cart
-        cart_item = next((item for item in cart if item['product_id'] == product_id), None)
-        if cart_item:
-            # update the quantity if the product is already in the cart
-            cart_item['quantity'] += quantity
+            a_cart_item.save()
+            total = a_cart_item.total
         else:
-            # add a new cart item if the product is not in the cart
-            cart.append({'product_id': product_id, 'quantity': quantity})
-        request.session['cart'] = cart
+            # Handle anonymous user
+            cart = request.session.get('cart', [])
+            cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+            if cart_item:
+                cart_item['quantity'] = quantity
+            else:
+                cart.append({'product_id': product_id, 'quantity': quantity})
+            request.session['cart'] = cart
+            total = cart_item['price'] * quantity
+        return JsonResponse({'success': True,'cart_total': cart.total_price, 'total': total})
     return redirect('cart')
 
 from django.http import JsonResponse
@@ -275,7 +311,7 @@ def remove_from_cart(request, product_id):
                 cart.remove(cart_item)
             request.session['cart'] = cart
         # Return a JSON response with the updated cart total
-        return JsonResponse({'cart_total': cart.total})
+        return JsonResponse({'cart_total': cart.total_price})
     else:
         # Handle other request methods (e.g. GET) as before
         ...
