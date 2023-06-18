@@ -107,10 +107,18 @@ def logout_view(request):
 def cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
-        product = Product.objects.get(pk=product_id)
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            # Handle the case where the product does not exist
+            pass
         if request.user.is_authenticated:
             # Handle authenticated user
-            cart = Cart.objects.get(user=request.user)
+            try:
+                cart = Cart.objects.get(user=request.user)
+            except Cart.DoesNotExist:
+                # Handle the case where the cart does not exist
+                cart = Cart.objects.create(user=request.user)
             CartItem.objects.create(cart=cart, product=product)
         else:
             # Handle anonymous user
@@ -121,7 +129,11 @@ def cart(request):
     else:
         if request.user.is_authenticated:
             # Handle authenticated user
-            cart = Cart.objects.get(user=request.user)
+            try:
+                cart = Cart.objects.get(user=request.user)
+            except Cart.DoesNotExist:
+                # Handle the case where the cart does not exist
+                cart = Cart.objects.create(user=request.user)
             CartItems = CartItem.objects.filter(cart=cart)
             context = {'cart': CartItems, 'user_cart': cart}
         else:
