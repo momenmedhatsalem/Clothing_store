@@ -189,10 +189,7 @@ def checkout(request):
                                                        'total': product.price * next(item['quantity']
                                                                                       for item in cart if item['product_id'] == product.pk)}
                                                                                         for product in products], 'user_cart': {'total_price': sum(product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk) for product in products)}}
-        context = {
-            
-            'cart': cart,
-        }
+
         return render(request, 'checkout.html', context)
         
 def product(request, product_id):
@@ -224,10 +221,12 @@ def product_detail(request, product_id):
     }
     return render(request, 'product_detail.html', context)
 
+
+
 #@require_http_methods(["POST", "PUT"])
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    if request.method == 'POST':
+    if request.method == 'GET':
         quantity = int(request.POST.get('quantity', 1))
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
