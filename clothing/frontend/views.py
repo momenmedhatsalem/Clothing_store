@@ -258,21 +258,27 @@ def profile(request):
 
 
 #Unmaitained
+
 def remove_from_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    if request.user.is_authenticated:
-        cart = Cart.objects.get(user=request.user)
-        CartItem.objects.filter(cart=cart, product=product).delete()
+    if request.method == 'PUT':
+        product = get_object_or_404(Product, id=product_id)
+        if request.user.is_authenticated:
+            cart = Cart.objects.get(user=request.user)
+            CartItem.objects.filter(cart=cart, product=product).delete()
+        else:
+            # Handle anonymous user
+            cart = request.session.get('cart', [])
+            # check if the product is already in the cart
+            cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+            if cart_item:
+                # update the quantity if the product is already in the cart
+                cart.remove(cart_item)
+            request.session['cart'] = cart
+        # Return a JSON response with the updated cart total
+        return JsonResponse({'cart_total': cart.total})
     else:
-        # Handle anonymous user
-        cart = request.session.get('cart', [])
-        # check if the product is already in the cart
-        cart_item = next((item for item in cart if item['product_id'] == product_id), None)
-        if cart_item:
-            # update the quantity if the product is already in the cart
-            cart.remove(cart_item)
-        request.session['cart'] = cart
-    return redirect('cart')
+        # Handle other request methods (e.g. GET) as before
+        ...
 
 #Unmaintained
 def edit_profile(request):

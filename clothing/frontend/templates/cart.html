@@ -26,11 +26,52 @@
                     <td>${{ item.product.price }}</td>
 
                     <td>${{ item.total }}</td>
+                    <td><button onclick="removeFromCart(1)">Remove</button></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
     <p>Total: ${{ user_cart.total_price }}</p>
     <a href="{% url 'checkout' %}" class="btn btn-primary">Checkout</a>
+
+
+    <script>
+ function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function removeFromCart(product_id) {
+    // Get the value of the CSRF token
+    const csrftoken = getCookie('csrftoken');
+
+    // Send a PUT request to the server to remove the item from the cart
+    fetch(`/cart/remove/${product_id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            // Include the CSRF token as a header
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the page to reflect the changes
+        // For example, you could update the cart total and remove the item from the cart display
+        document.getElementById('cart-total').textContent = data.cart_total;
+        document.getElementById('cart-item-' + product_id).remove();
+    });
+}
+    </script>
 </div>
 {% endblock %}
