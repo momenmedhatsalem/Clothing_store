@@ -97,21 +97,21 @@
                 <div class="col-6">
                   <p class="mb-0">Last name</p>
                   <div class="form-outline">
-                    <input type="text" id="typeText" placeholder="Type here" class="form-control" />
+                    <input type="text" id="typeText" placeholder="Type here" class="form-control" value="{{user.last_name}}"/>
                   </div>
                 </div>
   
                 <div class="col-6 mb-3">
                   <p class="mb-0">Phone</p>
                   <div class="form-outline">
-                    <input type="tel" id="typePhone" value="+48 " class="form-control" />
+                    <input type="tel" id="typePhone" class="form-control" value="{{ user.phone }}"/>
                   </div>
                 </div>
   
                 <div class="col-6 mb-3">
                   <p class="mb-0">Email</p>
                   <div class="form-outline">
-                    <input type="email" id="typeEmail" placeholder="example@gmail.com" class="form-control" />
+                    <input type="email" id="typeEmail" placeholder="example@gmail.com" class="form-control" value="{{ user.email }}"/>
                   </div>
                 </div>
               </div>
@@ -251,7 +251,7 @@
   
             <hr />
             <h6 class="text-dark my-4">Items in cart</h6>
-  
+            {% for item in cart %}
             <div class="d-flex align-items-center mb-4">
               <div class="me-3 position-relative">
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
@@ -261,13 +261,13 @@
               </div>
               <div class="">
                 <a href="#" class="nav-link">
-                  Gaming Headset with Mic <br />
+                  {{ item.product.product_name }} <br />
                   Darkblue color
                 </a>
                 <div class="price text-muted">Total: $295.99</div>
               </div>
             </div>
-  
+            {% endfor %}
             <div class="d-flex align-items-center mb-4">
               <div class="me-3 position-relative">
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
