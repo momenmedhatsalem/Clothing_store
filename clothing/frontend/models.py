@@ -39,8 +39,8 @@ class CartManager(models.Manager):
         cart = session.get('cart', [])
         products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
         return [{'product': product,
-                 'quantity': next(item['quantity'] for item in cart if item['product_id'] == product.pk),
-                 'total': product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk)}
+                 'quantity': int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)),
+                 'total': "{:.2f}".format(product.price * int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)))}
                 for product in products]
 
 class Cart(models.Model):

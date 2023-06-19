@@ -505,6 +505,8 @@ function removeFromCart(product_id) {
         setTimeout(function() {
             div.classList.add('hidden');
         }, 10);
+        var cart_total = document.getElementById('cart_total');
+        cart_total.innerHTML = `$${data.cart_total.toFixed(2)}`;
         
 
     });
