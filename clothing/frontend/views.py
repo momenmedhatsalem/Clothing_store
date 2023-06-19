@@ -6,7 +6,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.urls import reverse
-from frontend.models import Product, MyUser, Cart, CartItem, Order
+from frontend.models import Product, MyUser, Cart, CartItem, Order, PromoCode
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -329,3 +329,34 @@ def edit_profile(request):
 
 def change_password(request):
     return render(request, 'change_password.html')
+
+
+
+
+@require_http_methods(["PUT"])
+def apply_coupon(request):
+    data = json.loads(request.body)
+    promo_code = data.get('promo_code')
+    if request.user.is_authenticated:
+        cart = Cart.objects.get(user=request.user)
+        cart_total_price = cart.total_price
+    else:
+        anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
+        cart_total_price = sum(float(item['total']) for item in anonymous_cart)
+    cart_total = cart_total_price  # example cart total
+    promo = PromoCode.objects.filter(code=promo_code).first()
+    if promo:
+        # check if there is already an applied promo code
+        if 'applied_promo_code' in request.session:
+            # remove the old promo code
+            old_promo = PromoCode.objects.filter(code=request.session['applied_promo_code']).first()
+            if old_promo:
+                cart_total /= (1 - old_promo.discount)
+        # apply the new promo code
+        discount = promo.discount
+        cart_total *= (1 - discount)
+        # save the new applied p`romo code in session
+        request.session['applied_promo_code'] = promo.code
+        return JsonResponse({'discount': cart_total,'cart_total': cart_total_price - cart_total })
+    else:
+        return JsonResponse({'error': 'Invalid promo code'}, status=400)

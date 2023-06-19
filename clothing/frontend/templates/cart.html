@@ -142,15 +142,15 @@ Cart
         <div class="col-lg-3">
           <div class="card mb-3 border shadow-0">
             <div class="card-body">
-              <form>
+              
                 <div class="form-group">
                   <label class="form-label">Have coupon?</label>
                   <div class="input-group">
-                    <input type="text" class="form-control border" name="" placeholder="Coupon code" />
-                    <button class="btn btn-light border">Apply</button>
+                    <input id="promo_code" type="text" class="form-control border" name="promo_code" placeholder="Coupon code" />
+                    <button id="apply-promo-code" onclick="Apply_promo_function()" class="btn btn-light border">Apply</button>
                   </div>
                 </div>
-              </form>
+              
             </div>
           </div>
           <div class="card shadow-0 border">
@@ -541,6 +541,31 @@ selectElements.forEach(selectElement => {
         });
     });
 });
+
+ // A function to apply promo codes through a put request
+ const apply_promo_button = document.getElementById('apply-promo-code')
+const input = document.querySelector('#promo_code');
+const url = '/apply_coupon/';
+
+    function Apply_promo_function() {
+    const data = { promo_code: input.value };
+
+    fetch('/apply_coupon/', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+};
     </script>
     <style>
 .fade-away {
