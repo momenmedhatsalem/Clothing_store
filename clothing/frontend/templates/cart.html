@@ -530,9 +530,9 @@ selectElements.forEach(selectElement => {
             // update the cart total or display a message here
             console.log(data);
             var total_price = document.getElementById(`total_price_${productId}`);
-            total_price.innerHTML = `$${data.total}`;
+            total_price.innerHTML = `$${data.total.toFixed(2)}`;
             var cart_total = document.getElementById('cart_total');
-            cart_total.innerHTML = `$${data.cart_total}`;
+            cart_total.innerHTML = `$${data.cart_total.toFixed(2)}`;
         })
         .catch((error) => {
             console.error('Error:', error);

@@ -154,15 +154,12 @@ def cart(request):
                        'cart': CartItems, 'user_cart': cart}
         else:
             # Handle anonymous user
-            cart = request.session.get('cart', [])
-            products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
+
+            cart = Cart.objects.get_anonymous_cart(request.session)
+            total_price = sum(item['total'] for item in cart)
             context = {'existing_options': existing_options,
-                       'cart':  [{'product': product,
-                                   'quantity': next(item['quantity'] for item in cart
-                                                     if item['product_id'] == product.pk),
-                                                       'total': product.price * next(item['quantity']
-                                                                                      for item in cart if item['product_id'] == product.pk)}
-                                                                                      for product in products], 'user_cart': {'total_price': sum(product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk) for product in products)}}
+                       'cart': cart, 'user_cart': {'total_price':total_price}}
+
         
         return render(request, 'cart.html', context)
 

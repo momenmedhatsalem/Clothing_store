@@ -33,11 +33,22 @@ class Product(models.Model):
 
 
 
+    
+class CartManager(models.Manager):
+    def get_anonymous_cart(self, session):
+        cart = session.get('cart', [])
+        products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
+        return [{'product': product,
+                 'quantity': next(item['quantity'] for item in cart if item['product_id'] == product.pk),
+                 'total': product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk)}
+                for product in products]
+
 class Cart(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ordered = models.BooleanField(default=False)
+    objects = CartManager()
 
     def __str__(self):
         return f"Cart of {self.user.username}"
@@ -45,7 +56,7 @@ class Cart(models.Model):
     @property
     def total_price(self):
         return sum(item.total for item in self.items.all())
-
+    
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
@@ -56,7 +67,7 @@ class CartItem(models.Model):
     
     @property
     def total(self):
-        return (self.product.price) * int(self.quantity)
+        return float(self.product.price) * int(self.quantity)
     
 class Order(models.Model):
     STATUS_CHOICES = (
