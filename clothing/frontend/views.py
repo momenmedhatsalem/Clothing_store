@@ -154,15 +154,12 @@ def cart(request):
                        'cart': CartItems, 'user_cart': cart}
         else:
             # Handle anonymous user
-            cart = request.session.get('cart', [])
-            products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
+
+            cart = Cart.objects.get_anonymous_cart(request.session)
+            total_price = sum(float(item['total']) for item in cart)
             context = {'existing_options': existing_options,
-                       'cart':  [{'product': product,
-                                   'quantity': next(item['quantity'] for item in cart
-                                                     if item['product_id'] == product.pk),
-                                                       'total': product.price * next(item['quantity']
-                                                                                      for item in cart if item['product_id'] == product.pk)}
-                                                                                      for product in products], 'user_cart': {'total_price': sum(product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk) for product in products)}}
+                       'cart': cart, 'user_cart': {'total_price':total_price}}
+
         
         return render(request, 'cart.html', context)
 
@@ -258,15 +255,23 @@ def add_to_cart(request, product_id):
             total = a_cart_item.total
         else:
             # Handle anonymous user
+
+            product = Product.objects.get(pk=product_id)
             cart = request.session.get('cart', [])
             cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+
             if cart_item:
                 cart_item['quantity'] = quantity
             else:
                 cart.append({'product_id': product_id, 'quantity': quantity})
+
             request.session['cart'] = cart
-            total = cart_item['price'] * quantity
-        return JsonResponse({'success': True,'cart_total': cart.total_price, 'total': total})
+            total = product.price * int(quantity)
+
+            anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
+            cart_total_price = sum(float(item['total']) for item in anonymous_cart)
+
+            return JsonResponse({'success': True,'cart_total': cart_total_price, 'total': total})
     return redirect('cart')
 
 from django.http import JsonResponse
@@ -300,6 +305,7 @@ def remove_from_cart(request, product_id):
         if request.user.is_authenticated:
             cart = Cart.objects.get(user=request.user)
             CartItem.objects.filter(cart=cart, product=product).delete()
+            cart_total_price = cart.total_price
         else:
             # Handle anonymous user
             cart = request.session.get('cart', [])
@@ -310,7 +316,9 @@ def remove_from_cart(request, product_id):
                 cart.remove(cart_item)
             request.session['cart'] = cart
         # Return a JSON response with the updated cart total
-        return JsonResponse({'cart_total': cart.total_price})
+            anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
+            cart_total_price = sum(float(item['total']) for item in anonymous_cart)
+        return JsonResponse({'cart_total': cart_total_price})
     else:
         # Handle other request methods (e.g. GET) as before
         ...
