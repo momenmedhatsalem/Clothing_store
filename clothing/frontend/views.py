@@ -155,7 +155,8 @@ def cart(request):
             # check if authenticated user has applied a promo code
             if cart.coupon:
                 promo_code = cart.coupon.code
-
+            else:
+                promo_code = False
             context = {'promocode': promo_code, 'existing_options': existing_options,
                        'cart': CartItems, 'user_cart': cart, 'discount': discount}
         else:
@@ -286,7 +287,7 @@ def add_to_cart(request, product_id):
             total_price_before_discount = anonymous_cart['total_price_before_discount']
         # calculate discount
         discount = float(total_price_before_discount) - float(total_price)
-        return JsonResponse({'success': True,'cart_total': total_price, 'total': total, 'discount': discount, 'cart_total_before_discount': total_price_before_discount})
+        return JsonResponse({'success': True,'cart_total': total_price, 'total': total, 'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
     return redirect('cart')
 
 from django.http import JsonResponse
@@ -361,6 +362,10 @@ def apply_coupon(request):
     promo = PromoCode.objects.filter(code=promo_code).first()
     if promo:
         if request.user.is_authenticated:
+            # check if code is already applied
+            if cart.coupon and cart.coupon.code == promo_code:
+                return JsonResponse({'error': 'Code already applied'}, status=400)
+            
             # remove old coupon if applied
             if cart.coupon:
                 cart.coupon = None
@@ -373,6 +378,10 @@ def apply_coupon(request):
             total_price = cart.total_price
             total_price_before_discount = cart.total_price_before_discount
         else:
+            # check if code is already applied
+            if 'applied_promo_code' in request.session and request.session['applied_promo_code'] == promo_code:
+                return JsonResponse({'error': 'Code already applied'}, status=400)
+            
             # remove old coupon if applied
             if 'applied_promo_code' in request.session:
                 del request.session['applied_promo_code']
@@ -384,11 +393,11 @@ def apply_coupon(request):
             anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
             total_price = anonymous_cart['total_price']
             total_price_before_discount = anonymous_cart['total_price_before_discount']
+        
         # calculate discount
         discount = float(total_price_before_discount) - float(total_price)
 
-        
-        return JsonResponse({'error': False,'cart_total': total_price,'discount': "{:.2f}".format(discount) })
+        return JsonResponse({'error': False, 'cart_total': total_price, 'discount': "{:.2f}".format(discount)})
     else:
         return JsonResponse({'error': 'Invalid promo code'}, status=400)
     
