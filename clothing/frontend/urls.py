@@ -18,4 +18,5 @@ urlpatterns = [
     path('edit_profile', views.edit_profile, name='edit_profile'),
     path('change_password', views.change_password, name='change_password'),
     path('apply_coupon/', views.apply_coupon, name='apply_coupon'),
+    path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

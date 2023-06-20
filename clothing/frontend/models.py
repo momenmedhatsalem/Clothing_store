@@ -33,31 +33,73 @@ class Product(models.Model):
 class PromoCode(models.Model):
     code = models.CharField(max_length=15)
     discount = models.FloatField()
-
+    max_discount = models.FloatField(default=100)
 
     
 class CartManager(models.Manager):
     def get_anonymous_cart(self, session):
         cart = session.get('cart', [])
         products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
-        return [{'product': product,
-                 'quantity': int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)),
-                 'total': "{:.2f}".format(product.price * int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)))}
-                for product in products]
+        cart_items = [{'product': product, 'quantity': int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)), 'total': "{:.2f}".format(product.price * int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)))} for product in products]
+        
+        # calculate total price before discount
+        total_price_before_discount = sum(float(item['total']) for item in cart_items)
+        
+        # apply promo code discount if available
+        promo_code = session.get('applied_promo_code')
+        if promo_code:
+            promo = PromoCode.objects.filter(code=promo_code).first()
+            if promo:
+                discount = promo.discount
+                max_discount = promo.max_discount
+                cart_total = total_price_before_discount
+                discount_amount = cart_total * discount
+                discount_amount = min(discount_amount, max_discount)
+                # calculate total price after discount
+                total_price = sum(float(item['total']) for item in cart_items) - discount_amount 
+        else:
+            total_price = total_price_before_discount
+            discount_amount = 0.00
+        return {
+            'cart_items': cart_items,
+            'total_price_before_discount': "{:.2f}".format(total_price_before_discount),
+            'total_price': "{:.2f}".format(total_price),
+            'discount': "{:.2f}".format(discount_amount)
+        }
+
 
 class Cart(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ordered = models.BooleanField(default=False)
+    coupon = models.ForeignKey(
+        PromoCode, on_delete=models.SET_NULL, blank=True, null=True)
     objects = CartManager()
 
     def __str__(self):
         return f"Cart of {self.user.username}"
 
     @property
+    def discount(self):
+        if self.coupon:
+            total_price = sum(item.total for item in self.items.all())
+            discount_amount = total_price * self.coupon.discount
+            max_discount = self.coupon.max_discount
+            return min(discount_amount, max_discount)
+        else:
+            return 0
+    
+    @property
+    def total_price_before_discount(self):
+        total_price = sum(item.total for item in self.items.all())
+        return "{:.2f}".format(total_price)
+    
+    @property
     def total_price(self):
-        return sum(item.total for item in self.items.all())
+        total_price = sum(item.total for item in self.items.all())
+        total_price -= self.discount
+        return "{:.2f}".format(total_price)
     
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -69,7 +111,8 @@ class CartItem(models.Model):
     
     @property
     def total(self):
-        return float(self.product.price) * int(self.quantity)
+        total = float(self.product.price) * int(self.quantity)
+        return float("{:.2f}".format(total))
     
 class Order(models.Model):
     STATUS_CHOICES = (
