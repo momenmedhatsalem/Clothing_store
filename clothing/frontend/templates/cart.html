@@ -142,40 +142,52 @@ Cart
         <div class="col-lg-3">
           <div class="card mb-3 border shadow-0">
             <div class="card-body">
-              <form>
-                <div class="form-group">
+              
+                <div id="main_coupon_div" class="form-group">
                   <label class="form-label">Have coupon?</label>
                   <div class="input-group">
-                    <input type="text" class="form-control border" name="" placeholder="Coupon code" />
-                    <button class="btn btn-light border">Apply</button>
+                    <input id="promo_code" type="text" class="form-control border" name="promo_code" placeholder="Coupon code" />
+                    <button id="apply-promo-code" onclick="Apply_promo_function()" class="btn btn-light border">Apply</button>
+                  </div>
+                    <div id="coupon-div">
+                      {% if promocode %}
+                          <p>Coupon applied: {{ promocode }}<button id="remove-coupon-btn" title="remove code">x</button></p>
+                          
+                      {% endif %}
                   </div>
                 </div>
-              </form>
+              
             </div>
           </div>
           <div class="card shadow-0 border">
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Total price:</p>
-                <p id="cart_total" class="mb-2">${{user_cart.total_price}}</p>
+                <p id="cart_total" class="mb-2">${{user_cart.total_price_before_discount}}</p>
               </div>
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Discount:</p>
-                <p class="mb-2 text-success">-$60.00</p>
-              </div>
-              <div class="d-flex justify-content-between">
-                <p class="mb-2">TAX:</p>
-                <p class="mb-2">$14.00</p>
+                {% if promocode %}
+                
+                <p id="discount" class="mb-2 text-success">${{ discount }}</p>
+                {% else %}
+                <p id="discount" class="mb-2 text-success">$0.00</p>
+
+                {% endif %}
               </div>
               <hr />
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Total price:</p>
-                <p id="cart_total" class="mb-2 fw-bold">$283.00</p>
+                {% if promocode %}
+                  <p id="cart_total_discount" class="mb-2 fw-bold">${{user_cart.total_price}}</p>
+                {% else %}
+                  <p id="cart_total_discount" class="mb-2">${{user_cart.total_price_before_discount}}</p>
+                {% endif %}
               </div>
   
               <div class="mt-3">
-                <a href="#" class="btn btn-success w-100 shadow-0 mb-2"> Make Purchase </a>
-                <a href="#" class="btn btn-light w-100 border mt-2"> Back to shop </a>
+                <a href="{% url 'checkout' %}"  class="btn btn-success w-100 shadow-0 mb-2"> Checkout Now </a>
+                <a  id="back-button" class="btn btn-light w-100 border mt-2"> Back to shop </a>
               </div>
             </div>
           </div>
@@ -461,7 +473,10 @@ Cart
     <script>
 
 
-
+      // Button for return
+      document.querySelector('#back-button').addEventListener('click', () => {
+    history.back();
+});
 
 
 
@@ -506,7 +521,7 @@ function removeFromCart(product_id) {
             div.classList.add('hidden');
         }, 10);
         var cart_total = document.getElementById('cart_total');
-        cart_total.innerHTML = `$${data.cart_total.toFixed(2)}`;
+        cart_total.innerHTML = `$${data.cart_total}`;
         
 
     });
@@ -532,17 +547,131 @@ selectElements.forEach(selectElement => {
             // update the cart total or display a message here
             console.log(data);
             var total_price = document.getElementById(`total_price_${productId}`);
-            total_price.innerHTML = `$${data.total.toFixed(2)}`;
+            total_price.innerHTML = `$${data.total}`;
             var cart_total = document.getElementById('cart_total');
-            cart_total.innerHTML = `$${data.cart_total.toFixed(2)}`;
+            cart_total.innerHTML = `$${data.cart_total_before_discount}`;
+            document.getElementById('discount').innerHTML = `$${data.discount}`;
+            document.getElementById('cart_total_discount').innerHTML = `$${data.cart_total}`;
         })
         .catch((error) => {
-            console.error('Error:', error);
-        });
+        console.error('Error:', error);
+    });
     });
 });
+
+ // A function to apply promo codes through a put request
+ const apply_promo_button = document.getElementById('apply-promo-code')
+const input = document.querySelector('#promo_code');
+const url = '/apply_coupon/';
+
+    function Apply_promo_function() {
+    const data = { promo_code: input.value };
+
+    fetch('/apply_coupon/', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        if (data.error != false) {
+              // create error message element
+    let errorMessage = document.createElement('div');
+    errorMessage.id = 'error-message';
+    errorMessage.textContent = data.error;
+    errorMessage.style.color = 'red';
+    
+    // check if error message is already shown
+    let existingErrorMessage = document.querySelector('#error-message');
+    if (!existingErrorMessage) {
+        // insert error message into main_coupon_div
+        document.querySelector('#main_coupon_div').appendChild(errorMessage);
+        
+        // fade out error message when user clicks anywhere on the page
+        document.addEventListener('click', () => {
+            errorMessage.classList.add('fade-away');
+            errorMessage.addEventListener('transitionend', () => {
+                errorMessage.remove();
+            });
+        });
+    }
+        }
+        else{
+          document.getElementById('discount').innerHTML = `$${data.discount}`;
+    document.getElementById('cart_total_discount').innerHTML = `$${data.cart_total}`;
+    
+    // check if coupon div already exists
+    let couponDiv = document.querySelector('#coupon-div');
+    if (couponDiv) {
+        // update coupon div with new code
+        couponDiv.innerHTML = `<p>Coupon applied: ${input.value}<button id="remove-coupon-btn" title="remove code">x</button></p>`;
+    } else {
+        // create and insert new coupon div
+        couponDiv = document.createElement('div');
+        couponDiv.id = 'coupon-div';
+        couponDiv.innerHTML = `<p>Coupon applied: ${input.value}<button id="remove-coupon-btn" title="remove code">x</button></p>`;
+        document.querySelector('#main_coupon_div').appendChild(couponDiv);
+    }
+    
+    // apply fade-in effect to coupon div
+    couponDiv.classList.add('fade-in');
+    document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
+        }
+    })
+};
+
+
+    // Remove coupon code function
+    function removeCoupon() {
+    fetch('/remove_coupon/', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.error) {
+            // update cart total
+            document.querySelector('#cart_total').textContent = data.cart_total;
+            document.querySelector('#cart_total_discount').textContent = data.cart_total;
+        }
+        //remove the discount 
+        document.getElementById('discount').innerHTML = `$0.00`;
+        // remove coupon div
+        let couponDiv = document.querySelector('#coupon-div');
+        if (couponDiv) {
+          couponDiv.classList.add('fade-away');
+          couponDiv.addEventListener('transitionend', () => {
+              couponDiv.remove();
+        });
+      }
+    });
+}
+
+document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
+
+
     </script>
     <style>
+      .fade-in {
+    animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+      #remove-coupon-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
 .fade-away {
   opacity: 0;
   transition: opacity 1s ease-in-out;

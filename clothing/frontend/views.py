@@ -6,7 +6,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.urls import reverse
-from frontend.models import Product, MyUser, Cart, CartItem, Order
+from frontend.models import Product, MyUser, Cart, CartItem, Order, PromoCode
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -150,18 +150,30 @@ def cart(request):
                 # Handle the case where the cart does not exist
                 cart = Cart.objects.create(user=request.user)
             CartItems = CartItem.objects.filter(cart=cart)
-            context = {'existing_options': existing_options,
-                       'cart': CartItems, 'user_cart': cart}
+            discount = cart.discount
+
+            # check if authenticated user has applied a promo code
+            if cart.coupon:
+                promo_code = cart.coupon.code
+            else:
+                promo_code = False
+            context = {'promocode': promo_code, 'existing_options': existing_options,
+                       'cart': CartItems, 'user_cart': cart, 'discount': discount}
         else:
             # Handle anonymous user
+            # Check if user has applied a promo code
+            if 'applied_promo_code' in request.session:
+                promo_code = request.session['applied_promo_code']
+            else:
+                promo_code = False
 
             cart = Cart.objects.get_anonymous_cart(request.session)
-            total_price = sum(float(item['total']) for item in cart)
-            context = {'existing_options': existing_options,
-                       'cart': cart, 'user_cart': {'total_price':total_price}}
-
-        
-        return render(request, 'cart.html', context)
+            price_before = cart['total_price_before_discount']
+            total_price = cart['total_price']
+            discount = float(cart['discount'])
+            context = {'promocode': promo_code, 'existing_options': existing_options,
+                       'cart': cart['cart_items'], 'user_cart': {'total_price': total_price, 'total_price_before_discount': price_before}, 'discount': "{:.2f}".format(discount)}
+        return render(request, 'cart.html', context )
 
 def checkout(request):
     if request.method == 'POST':
@@ -253,6 +265,8 @@ def add_to_cart(request, product_id):
             a_cart_item.quantity = quantity
             a_cart_item.save()
             total = a_cart_item.total
+            total_price = cart.total_price
+            total_price_before_discount = cart.total_price_before_discount
         else:
             # Handle anonymous user
 
@@ -269,9 +283,11 @@ def add_to_cart(request, product_id):
             total = product.price * int(quantity)
 
             anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-            cart_total_price = sum(float(item['total']) for item in anonymous_cart)
-
-            return JsonResponse({'success': True,'cart_total': cart_total_price, 'total': total})
+            total_price = anonymous_cart['total_price']
+            total_price_before_discount = anonymous_cart['total_price_before_discount']
+        # calculate discount
+        discount = float(total_price_before_discount) - float(total_price)
+        return JsonResponse({'success': True,'cart_total': total_price, 'total': total, 'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
     return redirect('cart')
 
 from django.http import JsonResponse
@@ -317,7 +333,7 @@ def remove_from_cart(request, product_id):
             request.session['cart'] = cart
         # Return a JSON response with the updated cart total
             anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-            cart_total_price = sum(float(item['total']) for item in anonymous_cart)
+            cart_total_price = anonymous_cart['total_price']
         return JsonResponse({'cart_total': cart_total_price})
     else:
         # Handle other request methods (e.g. GET) as before
@@ -329,3 +345,87 @@ def edit_profile(request):
 
 def change_password(request):
     return render(request, 'change_password.html')
+
+
+
+
+@require_http_methods(["PUT"])
+def apply_coupon(request):
+    data = json.loads(request.body)
+    promo_code = data.get('promo_code')
+    if request.user.is_authenticated:
+        cart = Cart.objects.get(user=request.user)
+    else:
+        anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
+        cart_total_price = anonymous_cart['total_price']
+    
+    promo = PromoCode.objects.filter(code=promo_code).first()
+    if promo:
+        if request.user.is_authenticated:
+            # check if code is already applied
+            if cart.coupon and cart.coupon.code == promo_code:
+                return JsonResponse({'error': 'Code already applied'}, status=400)
+            
+            # remove old coupon if applied
+            if cart.coupon:
+                cart.coupon = None
+            
+            # apply the new promo code
+            cart.coupon = promo
+            cart.save()
+            
+            # recalculate cart total with discount applied
+            total_price = cart.total_price
+            total_price_before_discount = cart.total_price_before_discount
+        else:
+            # check if code is already applied
+            if 'applied_promo_code' in request.session and request.session['applied_promo_code'] == promo_code:
+                return JsonResponse({'error': 'Code already applied'}, status=400)
+            
+            # remove old coupon if applied
+            if 'applied_promo_code' in request.session:
+                del request.session['applied_promo_code']
+            
+            # apply the new promo code
+            request.session['applied_promo_code'] = promo.code
+            
+            # recalculate anonymous cart total with discount applied
+            anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
+            total_price = anonymous_cart['total_price']
+            total_price_before_discount = anonymous_cart['total_price_before_discount']
+        
+        # calculate discount
+        discount = float(total_price_before_discount) - float(total_price)
+
+        return JsonResponse({'error': False, 'cart_total': total_price, 'discount': "{:.2f}".format(discount)})
+    else:
+        return JsonResponse({'error': 'Invalid promo code'}, status=400)
+    
+@require_http_methods(["PUT"])
+def remove_coupon(request):
+    if request.user.is_authenticated:
+        cart = Cart.objects.get(user=request.user)
+    else:
+        anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
+        cart_total_price = anonymous_cart['total_price']
+    
+    if request.user.is_authenticated:
+        # remove coupon if applied
+        if cart.coupon:
+            cart.coupon = None
+            cart.save()
+            
+            # recalculate cart total with discount removed
+            total_price = cart.total_price
+            total_price_before_discount = cart.total_price_before_discount
+    else:
+        # remove coupon if applied
+        if 'applied_promo_code' in request.session:
+            del request.session['applied_promo_code']
+            
+        # recalculate anonymous cart total with discount removed
+        anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
+        total_price = anonymous_cart['total_price']
+        total_price_before_discount = anonymous_cart['total_price_before_discount']
+    
+    return JsonResponse({'error': False, 'cart_total': total_price})
