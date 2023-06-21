@@ -201,7 +201,6 @@ def checkout(request):
                 phone=phone,
                 coupon = cart.coupon,
                 address=request.POST['address'],
-                postal_code=request.POST['postal_code'],
                 city=request.POST['city'],
                 final_price=cart.final_price  # Set the final price of the order to the final price of the cart
             )
@@ -254,7 +253,7 @@ def checkout(request):
             request.session['cart'] = []
 
         # Redirect to the order confirmation page
-        return render(request, 'orderconfirm.html', {"order_number": order.id})
+        return render(request, 'orderconfirm.html', {"order_number": order.order_number})
     else:
         if request.user.is_authenticated:
             # Handle authenticated user
