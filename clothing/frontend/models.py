@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-import uuid
+import random
 # Create your models here.
 class MyUser(AbstractUser):
     country = models.CharField(max_length=50, default="")
@@ -82,6 +82,8 @@ class CartManager(models.Manager):
 
 class Cart(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    applied_coupons = models.ManyToManyField(PromoCode, blank=True,related_name="Applied_Coupons")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ordered = models.BooleanField(default=False)
@@ -95,7 +97,7 @@ class Cart(models.Model):
     @property
     def shipping_remainder(self):
         if self.shipping_cost > 0:
-            return 1000 - self.total_price
+            return 1000 - float(self.total_price)
         else:
             return 0
     @property
@@ -156,6 +158,25 @@ class Address(models.Model):
         return f"Address of {self.user.first_name}"
     
 class Order(models.Model):
+    STATUS_CHOICES = (
+        ('P', 'Pending'),
+        ('PR', 'Processing'),
+        ('S', 'Shipped'),
+        ('D', 'Delivered'),
+    )
+
+    PAYMENT_METHOD_CHOICES = (
+        ('CC', 'Credit Card'),
+        ('VS', 'Visa'),
+        ('MC', 'Master Card'),
+        ('COD', 'Cash On Delivery'),
+        ('VF', 'Vodafone'),
+        ('OG', 'Orange'),
+        ('WE', 'Wepay'),
+        ('PP', 'Paypal'),
+        ('BT', 'Bank Transfer'),
+    )
+
     user = models.ForeignKey(MyUser, on_delete=models.SET_NULL, blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -170,23 +191,28 @@ class Order(models.Model):
     coupon = models.ForeignKey(PromoCode, on_delete=models.SET_NULL, blank=True, null=True)
     order_number = models.CharField(max_length=32, null=False, editable=False)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default='Credit Card')
-    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, default=25.99)
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='P')
 
 
     class Meta:
         ordering = ('-created',)
 
     def _generate_order_number(self):
-        """ Generate a random, unique order number using UUID """
-        return uuid.uuid4().hex.upper()
+        """ Generate a random, unique 12-digit order number """
+        order_number = str(random.randint(10**11, 10**12 - 1))
+        while Order.objects.filter(order_number=order_number).exists():
+            order_number = str(random.randint(10**11, 10**12 - 1))
+        return order_number
 
     def save(self, *args, **kwargs):
         """ Override the original save method to set the order number if it hasn't been set already. """
         if not self.order_number:
             self.order_number = self._generate_order_number()
         super().save(*args, **kwargs)
+
     def __str__(self):
-        return f'Order {self.id}'
+        return f'Order {self.order_number}'
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)

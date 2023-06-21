@@ -28,18 +28,21 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     fieldsets = (
         (None, {
-            'fields': ('first_name', 'last_name', 'email')
+            'fields': ('first_name', 'last_name', 'email', 'phone')
         }),
         ('Address information', {
             'fields': ('address', 'city')
         }),
         ('Payment information', {
-            'fields': ('paid',)
+            'fields': ('paid', 'payment_method')
         }),
         ('Order information', {
             'fields': ('final_price',)
         }),
         ('Coupon information', {
             'fields': ('coupon',)
+        }),
+        ('Payment and Shipping information', {
+            'fields': ('shipping_cost', 'status')
         }),
     )

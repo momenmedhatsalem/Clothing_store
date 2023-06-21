@@ -202,6 +202,8 @@ def checkout(request):
                 coupon = cart.coupon,
                 address=request.POST['address'],
                 city=request.POST['city'],
+                payment_method=payment_method,
+                shipping_cost=cart.shipping_cost,
                 final_price=cart.final_price  # Set the final price of the order to the final price of the cart
             )
 
@@ -220,6 +222,8 @@ def checkout(request):
 
             # Clear the cart for authenticated users
             cart.items.all().delete()
+            cart.coupon = None
+            cart.save()
         else:
             # Get or create a cart for the guest user using the CartManager model
             cart = Cart.objects.get_anonymous_cart(request.session)
@@ -233,6 +237,8 @@ def checkout(request):
                 phone=phone,
                 city=request.POST['city'],
                 coupon = PromoCode.objects.get(code=request.session['applied_promo_code']),
+                payment_method=payment_method,
+                shipping_cost=cart['shipping_cost'],
                 final_price=cart['final_price']  # Set the final price of the order to the final price of the anonymous cart
             )
 
@@ -437,6 +443,8 @@ def apply_coupon(request):
     if promo:
         if request.user.is_authenticated:
             # check if code is already applied
+            if cart.applied_coupons.filter(code=promo_code).exists():
+                return JsonResponse({'error': 'You have already applied this code before'}, status=400)
             if cart.coupon and cart.coupon.code == promo_code:
                 return JsonResponse({'error': 'Code already applied'}, status=400)
             
@@ -446,6 +454,7 @@ def apply_coupon(request):
             
             # apply the new promo code
             cart.coupon = promo
+            cart.applied_coupons.add(promo)
             cart.save()
             
             # recalculate cart total with discount applied
@@ -486,7 +495,10 @@ def remove_coupon(request):
     if request.user.is_authenticated:
         # remove coupon if applied
         if cart.coupon:
+            cart.applied_coupons.remove(cart.coupon)
+
             cart.coupon = None
+
             cart.save()
             
             # recalculate cart total with discount removed
