@@ -6,13 +6,14 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.urls import reverse
-from frontend.models import Product, MyUser, Cart, CartItem, Order, PromoCode
+from frontend.models import Product, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from django import forms
+from django.contrib import messages
 
 # Create your views here.
 from django.contrib.auth import get_user_model
@@ -31,9 +32,46 @@ from django.utils.crypto import get_random_string
 from django.views.decorators.http import require_http_methods
 import json
 def index(request):
-    products = Product.objects.all()
-    return render(request, 'index.html', {'products':products})
+    # Get the list of recently viewed product IDs from the session
+    recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
 
+    # Get the Product objects for the recently viewed products
+    recently_viewed_products = Product.objects.filter(id__in=recently_viewed_product_ids)
+
+    # Get all products
+    products = Product.objects.all()
+
+    # Render the template with the products and recently viewed products
+    return render(request, 'index.html', {
+        'products': products,
+        'recently_viewed_products': recently_viewed_products,
+    })
+
+
+def product_detail(request, product_id):
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        cart_item, created = cart_item.objects.get_or_create(
+            cart=request.cart,
+            product=product,
+        )
+        if not created:
+            cart_item.quantity += quantity
+        else:
+            cart_item.quantity = quantity
+        cart_item.save()
+        return redirect('cart_detail')
+    # Get the product
+    product = get_object_or_404(Product, id=product_id)
+
+    # Add the product ID to the list of recently viewed products in the session
+    recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
+    if product_id not in recently_viewed_product_ids:
+        recently_viewed_product_ids.append(product_id)
+        request.session['recently_viewed_products'] = recently_viewed_product_ids
+
+    # Render the template with the product
+    return render(request, 'product_detail.html', {'product': product})
 
 
 def login_view(request):
@@ -175,11 +213,89 @@ def cart(request):
                        'cart': cart['cart_items'], 'user_cart': {'total_price': total_price, 'total_price_before_discount': price_before}, 'discount': "{:.2f}".format(discount)}
         return render(request, 'cart.html', context )
 
+
 def checkout(request):
     if request.method == 'POST':
-        user = request.user
-        cart = Cart.objects.get(user=user)
-        order = Order.objects.create(user=user, cart=cart)
+        # Get the form data
+        email = request.POST['email']
+        payment_method = request.POST['payment_method']
+        address_id = request.POST.get('address')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        phone = request.POST.get('phone')
+
+        # Check if the user is authenticated
+        if request.user.is_authenticated:
+            # Get the user and cart information
+            user = request.user
+            cart = Cart.objects.get(user=user, ordered=False)
+
+            # Create a new Order instance for the authenticated user
+            order = Order.objects.create(
+                user=user,
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                phone=phone,
+                coupon = cart.coupon,
+                address=request.POST['address'],
+                city=request.POST['city'],
+                payment_method=payment_method,
+                shipping_cost=cart.shipping_cost,
+                final_price=cart.final_price  # Set the final price of the order to the final price of the cart
+            )
+
+            # Create OrderItem instances for each item in the cart
+            for item in cart.items.all():
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    price=item.product.price,
+                    quantity=item.quantity,
+                    customized=item.customized,
+                )
+
+            # Save the order
+            order.save()
+
+            # Clear the cart for authenticated users
+            cart.items.all().delete()
+            cart.coupon = None
+            cart.save()
+        else:
+            # Get or create a cart for the guest user using the CartManager model
+            cart = Cart.objects.get_anonymous_cart(request.session)
+
+            # Create a new Order instance for the anonymous user without setting the user field
+            order = Order.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                address=request.POST['address'],
+                phone=phone,
+                city=request.POST['city'],
+                coupon = PromoCode.objects.get(code=request.session['applied_promo_code']),
+                payment_method=payment_method,
+                shipping_cost=cart['shipping_cost'],
+                final_price=cart['final_price']  # Set the final price of the order to the final price of the anonymous cart
+            )
+
+            # Create OrderItem instances for each item in the anonymous cart
+            for item in cart['cart_items']:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item['product'],
+                    price=item['product'].price,
+                    quantity=item['quantity'],
+                    customized=item['customized']
+                )
+
+            # Save the order
+            order.save()
+
+            # Clear the cart for anonymous users
+            request.session['cart'] = []
+
         # Redirect to the order confirmation page
         return render(request, 'orderconfirm.html', {"order_number": order.order_number})
     else:
@@ -187,48 +303,21 @@ def checkout(request):
             # Handle authenticated user
             cart = Cart.objects.get(user=request.user)
             CartItems = CartItem.objects.filter(cart=cart)
+            if float(cart.total_price) > 1000:
+                cart.shipping_cost = 0
+                cart.save()
             context = {'cart': CartItems, 'user_cart': cart}
         else:
             # Handle anonymous user
-            cart = request.session.get('cart', [])
-            products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
-            context = {'cart':  [{'product': product,
-                                   'quantity': next(item['quantity'] for item in cart
-                                                     if item['product_id'] == product.pk),
-                                                       'total': product.price * next(item['quantity']
-                                                                                      for item in cart if item['product_id'] == product.pk)}
-                                                                                        for product in products], 'user_cart': {'total_price': sum(product.price * next(item['quantity'] for item in cart if item['product_id'] == product.pk) for product in products)}}
-
+            anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
+            
+            context = {'cart': anonymous_cart['cart_items'], 'user_cart': anonymous_cart}
+    
         return render(request, 'checkout.html', context)
         
-def product(request, product_id):
-    if request.method == 'POST':
-        product_id = request.POST.get('product_id')
-        product = Product.objects.get(pk=product_id)
-        request.session['product'] = product
-        return HttpResponseRedirect(reverse('product'))
-    else:
-        product = request.session.get('product')
-        return render(request, 'product.html', {'product':product})
+
     
-def product_detail(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))
-        cart_item, created = cart_item.objects.get_or_create(
-            cart=request.cart,
-            product=product,
-        )
-        if not created:
-            cart_item.quantity += quantity
-        else:
-            cart_item.quantity = quantity
-        cart_item.save()
-        return redirect('cart_detail')
-    context = {
-        'product': product,
-    }
-    return render(request, 'product_detail.html', context)
+
 
 
 
@@ -322,6 +411,8 @@ def remove_from_cart(request, product_id):
             cart = Cart.objects.get(user=request.user)
             CartItem.objects.filter(cart=cart, product=product).delete()
             cart_total_price = cart.total_price
+            total_price_before_discount = cart.total_price_before_discount
+            discount = float(total_price_before_discount) - float(cart_total_price)
         else:
             # Handle anonymous user
             cart = request.session.get('cart', [])
@@ -334,7 +425,9 @@ def remove_from_cart(request, product_id):
         # Return a JSON response with the updated cart total
             anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
             cart_total_price = anonymous_cart['total_price']
-        return JsonResponse({'cart_total': cart_total_price})
+            total_price_before_discount = anonymous_cart['total_price_before_discount']
+            discount = float(total_price_before_discount) - float(cart_total_price)
+        return JsonResponse({'cart_total': cart_total_price,'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
     else:
         # Handle other request methods (e.g. GET) as before
         ...
@@ -363,6 +456,8 @@ def apply_coupon(request):
     if promo:
         if request.user.is_authenticated:
             # check if code is already applied
+            if cart.applied_coupons.filter(code=promo_code).exists():
+                return JsonResponse({'error': 'You have already applied this code before'}, status=400)
             if cart.coupon and cart.coupon.code == promo_code:
                 return JsonResponse({'error': 'Code already applied'}, status=400)
             
@@ -372,6 +467,7 @@ def apply_coupon(request):
             
             # apply the new promo code
             cart.coupon = promo
+            cart.applied_coupons.add(promo)
             cart.save()
             
             # recalculate cart total with discount applied
@@ -412,7 +508,10 @@ def remove_coupon(request):
     if request.user.is_authenticated:
         # remove coupon if applied
         if cart.coupon:
+            cart.applied_coupons.remove(cart.coupon)
+
             cart.coupon = None
+
             cart.save()
             
             # recalculate cart total with discount removed
@@ -429,3 +528,23 @@ def remove_coupon(request):
         total_price_before_discount = anonymous_cart['total_price_before_discount']
     
     return JsonResponse({'error': False, 'cart_total': total_price})
+
+
+def orders(request):
+    if request.GET.get('order_number'):
+        # User is looking up an order using an order number
+        order_number = request.GET.get('order_number')
+        try:
+            # Try to get the order with the given order number
+            order = Order.objects.get(order_number=order_number)
+            # Return the order details page
+            # Calculate the width of each progress bar segment
+            segment_width = 100 / order.items.count()
+            return render(request, 'order.html', {'order': order, 'segment_width': segment_width})
+        except Order.DoesNotExist:
+            # Order with the given order number does not exist
+            # Display an error message
+            messages.error(request, 'Order not found.')
+    # User is viewing their order history
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'order.html', {'orders': orders})

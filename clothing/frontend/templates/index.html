@@ -58,6 +58,7 @@
 
     
       <div class="product-card">
+        <span class="badge bg-{{ product.get_label_display }} pt-1 mt-3 ms-2">{{ product.label }}</span>
         <div class="product-image">
           <img class="card-img-top" src="{{product.image}}" width="50" height="50" alt="Card image cap">
 
@@ -66,7 +67,7 @@
           <h4 class="product-name">{{ product.name }}</h4>
           <p class="product-price">${{ product.price|floatformat:2 }}</p>
           <p class="product-description">{{ product.desc|truncatewords:20 }}</p>
-          <a href="{% url 'product' product.id %}" class="product-link">View details</a>
+          <a href="{{ product.get_absolute_url }}" class="product-link">View details</a>
           <button href="{% url 'add_to_cart' product.id %}">BUY NOW</button>
           <a href="{% url 'add_to_cart' product.id %}" class="product-button">Add to cart</a>
         </div>
@@ -74,5 +75,11 @@
     </div>
   {% endfor %}
       
-      gsdfgsdfsdf
+  <h2>Recently Viewed Products</h2>
+  <ul>
+      {% for product in recently_viewed_products %}
+      {{product}}
+          <li><a href="{{ product.get_absolute_url }}">{{product.product_name}}</a></li>
+      {% endfor %}
+  </ul>
 {% endblock %}

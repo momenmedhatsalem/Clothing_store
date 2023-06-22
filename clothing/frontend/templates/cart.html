@@ -112,8 +112,8 @@ Cart
                     </select>
                   </div>
                   <div class="">
-                    <text id="total_price_{{ item.product.id }}" class="h6">${{ item.total }}</text> <br />
-                    <small class="text-muted text-nowrap"> ${{ item.product.price }} / per item </small>
+                    <text id="total_price_{{ item.product.id }}" class="h6">EGP {{ item.total }}</text> <br />
+                    <small class="text-muted text-nowrap"> EGP {{ item.product.price }} / per item </small>
                   </div>
                 </div>
                 <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
@@ -129,17 +129,17 @@ Cart
             </div>
   
             <div class="border-top pt-4 mx-4 mb-4">
-              <p><i class="fas fa-truck text-muted fa-lg"></i> Free Delivery within 1-2 weeks</p>
+              <p><i class="fas fa-truck text-muted fa-lg"></i> Free Delivery for orders over EGP 1000</p>
               <p class="text-muted">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip
+
               </p>
             </div>
           </div>
         </div>
         <!-- cart -->
         <!-- summary -->
-        <div class="col-lg-3">
+        {% if cart %}
+        <div data-cart="{{ cart }}" id="cart_summary" class="col-lg-3">
           <div class="card mb-3 border shadow-0">
             <div class="card-body">
               
@@ -163,15 +163,15 @@ Cart
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Total price:</p>
-                <p id="cart_total" class="mb-2">${{user_cart.total_price_before_discount}}</p>
+                <p id="cart_total" class="mb-2">EGP {{user_cart.total_price_before_discount}}</p>
               </div>
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Discount:</p>
                 {% if promocode %}
                 
-                <p id="discount" class="mb-2 text-success">${{ discount }}</p>
+                <p id="discount" class="mb-2 text-success">EGP {{ discount }}</p>
                 {% else %}
-                <p id="discount" class="mb-2 text-success">$0.00</p>
+                <p id="discount" class="mb-2 text-success">EGP 0.00</p>
 
                 {% endif %}
               </div>
@@ -179,9 +179,9 @@ Cart
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Total price:</p>
                 {% if promocode %}
-                  <p id="cart_total_discount" class="mb-2 fw-bold">${{user_cart.total_price}}</p>
+                  <p id="cart_total_discount" class="mb-2 fw-bold">EGP {{user_cart.total_price}}</p>
                 {% else %}
-                  <p id="cart_total_discount" class="mb-2">${{user_cart.total_price_before_discount}}</p>
+                  <p id="cart_total_discount" class="mb-2">EGP {{user_cart.total_price_before_discount}}</p>
                 {% endif %}
               </div>
   
@@ -196,6 +196,7 @@ Cart
       </div>
     </div>
   </section>
+  {% endif %}
   <!-- cart + summary -->
   <section>
     <div class="container my-5">
@@ -520,9 +521,18 @@ function removeFromCart(product_id) {
         setTimeout(function() {
             div.classList.add('hidden');
         }, 10);
-        var cart_total = document.getElementById('cart_total');
-        cart_total.innerHTML = `$${data.cart_total}`;
-        
+        var cart_total = document.getElementById('cart_total_discount');
+        cart_total.innerHTML = `EGP ${data.cart_total}`;
+        var cart_total = document.getElementById('cart_total').innerHTML = `EGP ${data.cart_total_before_discount}`;
+        var cart_total = document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
+        var cart_summary = document.getElementById('cart_summary');
+        const cart_count = cart_summary.dataset.cart;
+        if (!cart_count) {
+          cart_summary.classList.add('fade-away');
+            cart_summary.addEventListener('transitionend', () => {
+                cart_summary.remove();
+            });
+        }
 
     });
 }
@@ -547,11 +557,11 @@ selectElements.forEach(selectElement => {
             // update the cart total or display a message here
             console.log(data);
             var total_price = document.getElementById(`total_price_${productId}`);
-            total_price.innerHTML = `$${data.total}`;
+            total_price.innerHTML = `EGP ${data.total}`;
             var cart_total = document.getElementById('cart_total');
-            cart_total.innerHTML = `$${data.cart_total_before_discount}`;
-            document.getElementById('discount').innerHTML = `$${data.discount}`;
-            document.getElementById('cart_total_discount').innerHTML = `$${data.cart_total}`;
+            cart_total.innerHTML = `EGP ${data.cart_total_before_discount}`;
+            document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
+            document.getElementById('cart_total_discount').innerHTML = `EGP ${data.cart_total}`;
         })
         .catch((error) => {
         console.error('Error:', error);
@@ -601,8 +611,8 @@ const url = '/apply_coupon/';
     }
         }
         else{
-          document.getElementById('discount').innerHTML = `$${data.discount}`;
-    document.getElementById('cart_total_discount').innerHTML = `$${data.cart_total}`;
+          document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
+    document.getElementById('cart_total_discount').innerHTML = `EGP ${data.cart_total}`;
     
     // check if coupon div already exists
     let couponDiv = document.querySelector('#coupon-div');
@@ -642,7 +652,7 @@ const url = '/apply_coupon/';
             document.querySelector('#cart_total_discount').textContent = data.cart_total;
         }
         //remove the discount 
-        document.getElementById('discount').innerHTML = `$0.00`;
+        document.getElementById('discount').innerHTML = `EGP 0.00`;
         // remove coupon div
         let couponDiv = document.querySelector('#coupon-div');
         if (couponDiv) {

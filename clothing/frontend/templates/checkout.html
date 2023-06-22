@@ -83,6 +83,75 @@
           </div>
   
           <!-- Checkout -->
+
+          <form method="POST" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="first_name">First Name</label>
+              <input type="text" class="form-control" id="first_name" name="first_name" required>
+          </div>
+          <div class="form-group">
+              <label for="last_name">Last Name</label>
+              <input type="text" class="form-control" id="last_name" name="last_name" required>
+          </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+
+    
+                    <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+               
+            </div>
+            <div class="form-group">
+                <label for="country">Country</label>
+                <input type="text" class="form-control" id="country" name="country" value="{{ user.country }}" required>
+            </div>
+            <div class="form-group">
+                <label for="street_name">Street Name</label>
+                <input type="text" class="form-control" id="street_name" name="street_name" required>
+            </div>
+            <div class="form-group">
+                <label for="building">Building</label>
+                <input type="text" class="form-control" id="building" name="building" required>
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="city" name="city" required>
+          </div>
+          <div class="form-group">
+              <label for="governorate">Governorate</label>
+              <input type="text" class="form-control" id="governorate" name="governorate" required>
+          </div>
+          <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="text" class="form-control" id="phone" name="phone" required>
+          </div>
+          <div class="form-group">
+              <label for="Nearest_landmark">Nearest Landmark</label>
+              <input type="text" class="form-control" id="Nearest_landmark" name="Nearest_landmark">
+          </div>
+          <div class="form-group">
+            <label for="payment_method">Payment Method</label>
+            <select class="form-control" id="payment_method" name="payment_method" required>
+                <option value="">--Select Payment Method--</option>
+                <option value="CC">Credit Card</option>
+                <option value="VS">Visa</option>
+                <option value="MC">Master Card</option>
+                <option value="COD">Cash On Delivery</option>
+                <option value="VF">Vodafone</option>
+                <option value="OG">Orange</option>
+                <option value="WE">Wepay</option>
+                <option value="PP">Paypal</option>
+                <option value="BT">Bank Transfer</option>
+            </select>
+        </div>
+
+          <button type="submit">Submit</button>
+          </form>
+          <form>
           <div class="card shadow-0 border">
             <div class="p-4">
               <h5 class="card-title mb-3">Guest checkout</h5>
@@ -221,27 +290,38 @@
               </div>
             </div>
           </div>
+        </form>
           <!-- Checkout -->
         </div>
         <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
           <div class="ms-lg-4 mt-4 mt-lg-0" style="max-width: 320px;">
             <h6 class="mb-3">Summary</h6>
             <div class="d-flex justify-content-between">
-              <p class="mb-2">Total price:</p>
-              <p class="mb-2">$195.90</p>
+              <p class="mb-2">Sub Total:</p>
+              <p class="mb-2">EGP {{user_cart.total_price_before_discount}}</p>
             </div>
             <div class="d-flex justify-content-between">
               <p class="mb-2">Discount:</p>
-              <p class="mb-2 text-danger">- $60.00</p>
+              <p class="mb-2 text-danger">- EGP {{user_cart.discount}}</p>
             </div>
             <div class="d-flex justify-content-between">
               <p class="mb-2">Shipping cost:</p>
-              <p class="mb-2">+ $14.00</p>
+              {% if user_cart.shipping_cost == 0 %}
+              <p class="mb-2">Free Shipping</p>
+              {% else %}
+              <p class="mb-2">+ EGP {{user_cart.shipping_cost}}</p>
+              {% endif %}
             </div>
             <hr />
+            {% if user_cart.shipping_cost != 0 %}
+            <div class="free-shipping">
+              Add items worth EGP {{ user_cart.shipping_remainder }} or  more to your cart and get free shipping!
+            </div>
+            <hr />
+            {% endif %}
             <div class="d-flex justify-content-between">
               <p class="mb-2">Total price:</p>
-              <p class="mb-2 fw-bold">$149.90</p>
+              <p class="mb-2 fw-bold">EGP {{user_cart.final_price}}</p>
             </div>
   
             <div class="input-group mt-3 mb-4">
@@ -255,47 +335,22 @@
             <div class="d-flex align-items-center mb-4">
               <div class="me-3 position-relative">
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                  1
+                  {{item.quantity}}
                 </span>
-                <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/7.webp" style="height: 96px; width: 96x;" class="img-sm rounded border" />
+                <img src="{{item.product.image}}" style="height: 96px; width: 96x;" class="img-sm rounded border" />
               </div>
               <div class="">
                 <a href="#" class="nav-link">
                   {{ item.product.product_name }} <br />
-                  Darkblue color
+                  
                 </a>
-                <div class="price text-muted">Total: $295.99</div>
+                <div class="price text-muted"> EGP {{item.product.price}}</div>
               </div>
             </div>
             {% endfor %}
-            <div class="d-flex align-items-center mb-4">
-              <div class="me-3 position-relative">
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                  1
-                </span>
-                <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/5.webp" style="height: 96px; width: 96x;" class="img-sm rounded border" />
-              </div>
-              <div class="">
-                <a href="#" class="nav-link">
-                  Apple Watch Series 4 Space <br />
-                  Large size
-                </a>
-                <div class="price text-muted">Total: $217.99</div>
-              </div>
-            </div>
+
   
-            <div class="d-flex align-items-center mb-4">
-              <div class="me-3 position-relative">
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
-                  3
-                </span>
-                <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/1.webp" style="height: 96px; width: 96x;" class="img-sm rounded border" />
-              </div>
-              <div class="">
-                <a href="#" class="nav-link">GoPro HERO6 4K Action Camera - Black</a>
-                <div class="price text-muted">Total: $910.00</div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -437,4 +492,13 @@
       </div>
     </div>
   </footer>
+  <style>
+        .free-shipping {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        border-radius: 5px;
+    }
+  </style>
 {% endblock %}

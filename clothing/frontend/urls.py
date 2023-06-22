@@ -10,7 +10,7 @@ urlpatterns = [
     path('register',  views.register_view, name='register'),
     path('cart', views.cart, name='cart'),
     path('checkout', views.checkout, name='checkout'),
-    path('product/<int:id>', views.product, name='product'),
+    path('product_detail/<int:product_id>/', views.product_detail, name='product_detail'),
     path('add_to_cart/<int:product_id>', views.add_to_cart, name='add_to_cart'),
     path('toggle-night-mode/<str:mode>', views.toggle_night_mode, name='toggle_night_mode'),
     path('cart/remove/<int:product_id>', views.remove_from_cart, name='remove_from_cart'),
@@ -19,4 +19,6 @@ urlpatterns = [
     path('change_password', views.change_password, name='change_password'),
     path('apply_coupon/', views.apply_coupon, name='apply_coupon'),
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
+    path('orders', views.orders, name='orders'),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
