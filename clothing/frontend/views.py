@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from django import forms
+from django.contrib import messages
 
 # Create your views here.
 from django.contrib.auth import get_user_model
@@ -515,3 +516,23 @@ def remove_coupon(request):
         total_price_before_discount = anonymous_cart['total_price_before_discount']
     
     return JsonResponse({'error': False, 'cart_total': total_price})
+
+
+def orders(request):
+    if request.GET.get('order_number'):
+        # User is looking up an order using an order number
+        order_number = request.GET.get('order_number')
+        try:
+            # Try to get the order with the given order number
+            order = Order.objects.get(order_number=order_number)
+            # Return the order details page
+            # Calculate the width of each progress bar segment
+            segment_width = 100 / order.items.count()
+            return render(request, 'order.html', {'order': order, 'segment_width': segment_width})
+        except Order.DoesNotExist:
+            # Order with the given order number does not exist
+            # Display an error message
+            messages.error(request, 'Order not found.')
+    # User is viewing their order history
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'order.html', {'orders': orders})

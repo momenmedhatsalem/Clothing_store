@@ -194,7 +194,11 @@ class Order(models.Model):
     shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, default=25.99)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='P')
 
-
+    @property
+    def get_payment_method_display(self):
+        payment_methods = dict(self.PAYMENT_METHOD_CHOICES)
+        return payment_methods[self.payment_method]
+    
     class Meta:
         ordering = ('-created',)
 

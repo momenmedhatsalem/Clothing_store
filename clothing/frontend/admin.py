@@ -22,6 +22,7 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    readonly_fields = ('order_number',)
     list_display = ['id', 'first_name', 'last_name', 'email', 'address', 'city', 'paid', 'created', 'updated']
     list_filter = ['paid', 'created', 'updated']
     search_fields = ['first_name', 'last_name', 'email']
@@ -45,4 +46,5 @@ class OrderAdmin(admin.ModelAdmin):
         ('Payment and Shipping information', {
             'fields': ('shipping_cost', 'status')
         }),
+ 
     )
