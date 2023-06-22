@@ -145,6 +145,7 @@ Cart
               
                 <div id="main_coupon_div" class="form-group">
                   <label class="form-label">Have coupon?</label>
+                  {% if user.is_authenticated %}
                   <div class="input-group">
                     <input id="promo_code" type="text" class="form-control border" name="promo_code" placeholder="Coupon code" />
                     <button id="apply-promo-code" onclick="Apply_promo_function()" class="btn btn-light border">Apply</button>
@@ -154,7 +155,12 @@ Cart
                           <p>Coupon applied: {{ promocode }}<button id="remove-coupon-btn" title="remove code">x</button></p>
                           
                       {% endif %}
-                  </div>
+                    </div>
+                    {% else %}
+                    <h5><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Create An Account</a> To Use Coupons</h5>
+                    <hr />
+                    <p>Don't Worry We Will Keep Your Cart And Designs :) </p>
+                    {% endif %}
                 </div>
               
             </div>

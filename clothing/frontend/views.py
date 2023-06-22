@@ -82,6 +82,31 @@ def login_view(request):
 
         # Check if authentication successful
         if user is not None:
+
+            # User has successfully logged in
+            # Retrieve session cart
+            session_cart = request.session.get('cart', [])
+            # Get or create user's Cart object
+            cart, created = Cart.objects.get_or_create(user=user)
+            # Iterate over session cart items
+            for item in session_cart:
+                product_id = item['product_id']
+                quantity = item['quantity']
+                product = Product.objects.get(pk=product_id)
+                # Check if CartItem already exists for given product and cart
+                cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+                if created:
+                    # CartItem did not exist, set its quantity
+                    cart_item.quantity = quantity
+                    cart_item.save()
+                else:
+                    # CartItem already exists, check if it has been customized
+                    if not cart_item.customized:
+                        # Increase its quantity
+                        cart_item.quantity += quantity
+                        cart_item.save()
+            # Clear session cart
+            request.session['cart'] = []
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
@@ -131,6 +156,31 @@ def register_view(request):
 
             phone_number = form.cleaned_data["phone_number"]
             user = MyUser.objects.create_user(first_name=first_name, phone=phone_number, username=username, last_name=last_name, email=email, password=password)
+        if user is not None:
+            # User has successfully logged in
+            # Retrieve session cart
+            session_cart = request.session.get('cart', [])
+            # Get or create user's Cart object
+            cart, created = Cart.objects.get_or_create(user=user)
+            # Iterate over session cart items
+            for item in session_cart:
+                product_id = item['product_id']
+                quantity = item['quantity']
+                product = Product.objects.get(pk=product_id)
+                # Check if CartItem already exists for given product and cart
+                cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+                if created:
+                    # CartItem did not exist, set its quantity
+                    cart_item.quantity = quantity
+                    cart_item.save()
+                else:
+                    # CartItem already exists, check if it has been customized
+                    if not cart_item.customized:
+                        # Increase its quantity
+                        cart_item.quantity += quantity
+                        cart_item.save()
+            # Clear session cart
+            request.session['cart'] = []
             login(request, user)
             # Redirect to the ecommerce website builder or another page
             return HttpResponseRedirect(reverse("index"))
@@ -473,22 +523,7 @@ def apply_coupon(request):
             # recalculate cart total with discount applied
             total_price = cart.total_price
             total_price_before_discount = cart.total_price_before_discount
-        else:
-            # check if code is already applied
-            if 'applied_promo_code' in request.session and request.session['applied_promo_code'] == promo_code:
-                return JsonResponse({'error': 'Code already applied'}, status=400)
-            
-            # remove old coupon if applied
-            if 'applied_promo_code' in request.session:
-                del request.session['applied_promo_code']
-            
-            # apply the new promo code
-            request.session['applied_promo_code'] = promo.code
-            
-            # recalculate anonymous cart total with discount applied
-            anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-            total_price = anonymous_cart['total_price']
-            total_price_before_discount = anonymous_cart['total_price_before_discount']
+
         
         # calculate discount
         discount = float(total_price_before_discount) - float(total_price)
@@ -517,15 +552,6 @@ def remove_coupon(request):
             # recalculate cart total with discount removed
             total_price = cart.total_price
             total_price_before_discount = cart.total_price_before_discount
-    else:
-        # remove coupon if applied
-        if 'applied_promo_code' in request.session:
-            del request.session['applied_promo_code']
-            
-        # recalculate anonymous cart total with discount removed
-        anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-        total_price = anonymous_cart['total_price']
-        total_price_before_discount = anonymous_cart['total_price_before_discount']
     
     return JsonResponse({'error': False, 'cart_total': total_price})
 
