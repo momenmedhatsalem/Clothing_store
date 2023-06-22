@@ -306,14 +306,14 @@
             </div>
             <div class="d-flex justify-content-between">
               <p class="mb-2">Shipping cost:</p>
-              {% if user_cart.shipping_cost == "0.00" %}
+              {% if user_cart.shipping_cost == 0 %}
               <p class="mb-2">Free Shipping</p>
               {% else %}
               <p class="mb-2">+ EGP {{user_cart.shipping_cost}}</p>
               {% endif %}
             </div>
             <hr />
-            {% if user_cart.shipping_cost != "0.00" %}
+            {% if user_cart.shipping_cost != 0 %}
             <div class="free-shipping">
               Add items worth EGP {{ user_cart.shipping_remainder }} or  more to your cart and get free shipping!
             </div>

@@ -11,12 +11,32 @@ class MyUser(AbstractUser):
     pass 
 
 class Product(models.Model):
+    CATEGORY_CHOICES = (
+        ('M', 'Men'),
+        ('W', 'Women'),
+        ('K', 'Kids'),
+        ('A', 'Accessories'),  
+    )
+
+    SUB_CATEGORY_CHOICES = (
+    ('S', 'Shirt'),
+    ('SW', 'Sport wear'),
+    ('OW', 'Outwear')
+    )
+
+    LABEL_CHOICES = (
+        ('NEW', 'primary'),
+        ('BEST Seller', 'secondary'),
+        ('N', '')
+    )
+
     product_id = models.AutoField
     id = models.AutoField(primary_key=True, auto_created=True)
 
     product_name = models.CharField(max_length=50)
-    category = models.CharField(max_length=50, default="")
-    subcategory = models.CharField(max_length=50, default="")
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    label = models.CharField(choices=LABEL_CHOICES, max_length=11, default="")
+    subcategory = models.CharField(choices= SUB_CATEGORY_CHOICES ,max_length=50, default="")
     price = models.FloatField(default=0)
     discount_price = models.FloatField(default=0)
     desc = models.CharField(max_length=300)
@@ -24,7 +44,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to="static/images", default="")
 
     def get_absolute_url(self):
-        return f"/product/{self.id}/"
+        return f"/product_detail/{self.id}/"
 
     def __str__(self):
         return self.product_name
@@ -66,6 +86,7 @@ class CartManager(models.Manager):
             shipping_cost = 0
         if shipping_cost > 0:
             shipping_remainder = 1000 - total_price
+            shipping_remainder = "{:.2f}".format(shipping_remainder)
         else:
             shipping_remainder = 0
         return {
@@ -73,9 +94,9 @@ class CartManager(models.Manager):
             'total_price_before_discount': "{:.2f}".format(total_price_before_discount),
             'total_price': "{:.2f}".format(total_price),
             'discount': "{:.2f}".format(discount_amount),
-            'shipping_cost': "{:.2f}".format(shipping_cost),
+            'shipping_cost': shipping_cost,
             'final_price': "{:.2f}".format(float(total_price) + float(shipping_cost)),
-            'shipping_remainder': "{:.2f}".format(shipping_remainder)
+            'shipping_remainder': shipping_remainder
         }
         
 
@@ -158,12 +179,12 @@ class Address(models.Model):
         return f"Address of {self.user.first_name}"
     
 class Order(models.Model):
-    STATUS_CHOICES = (
-        ('P', 'Pending'),
-        ('PR', 'Processing'),
+
+    STATUS_CHOICES = [
+        ('P', 'Placed'),
         ('S', 'Shipped'),
         ('D', 'Delivered'),
-    )
+    ]
 
     PAYMENT_METHOD_CHOICES = (
         ('CC', 'Credit Card'),

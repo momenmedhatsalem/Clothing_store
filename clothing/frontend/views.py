@@ -32,9 +32,46 @@ from django.utils.crypto import get_random_string
 from django.views.decorators.http import require_http_methods
 import json
 def index(request):
-    products = Product.objects.all()
-    return render(request, 'index.html', {'products':products})
+    # Get the list of recently viewed product IDs from the session
+    recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
 
+    # Get the Product objects for the recently viewed products
+    recently_viewed_products = Product.objects.filter(id__in=recently_viewed_product_ids)
+
+    # Get all products
+    products = Product.objects.all()
+
+    # Render the template with the products and recently viewed products
+    return render(request, 'index.html', {
+        'products': products,
+        'recently_viewed_products': recently_viewed_products,
+    })
+
+
+def product_detail(request, product_id):
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        cart_item, created = cart_item.objects.get_or_create(
+            cart=request.cart,
+            product=product,
+        )
+        if not created:
+            cart_item.quantity += quantity
+        else:
+            cart_item.quantity = quantity
+        cart_item.save()
+        return redirect('cart_detail')
+    # Get the product
+    product = get_object_or_404(Product, id=product_id)
+
+    # Add the product ID to the list of recently viewed products in the session
+    recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
+    if product_id not in recently_viewed_product_ids:
+        recently_viewed_product_ids.append(product_id)
+        request.session['recently_viewed_products'] = recently_viewed_product_ids
+
+    # Render the template with the product
+    return render(request, 'product_detail.html', {'product': product})
 
 
 def login_view(request):
@@ -278,34 +315,9 @@ def checkout(request):
     
         return render(request, 'checkout.html', context)
         
-def product(request, product_id):
-    if request.method == 'POST':
-        product_id = request.POST.get('product_id')
-        product = Product.objects.get(pk=product_id)
-        request.session['product'] = product
-        return HttpResponseRedirect(reverse('product'))
-    else:
-        product = request.session.get('product')
-        return render(request, 'product.html', {'product':product})
+
     
-def product_detail(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))
-        cart_item, created = cart_item.objects.get_or_create(
-            cart=request.cart,
-            product=product,
-        )
-        if not created:
-            cart_item.quantity += quantity
-        else:
-            cart_item.quantity = quantity
-        cart_item.save()
-        return redirect('cart_detail')
-    context = {
-        'product': product,
-    }
-    return render(request, 'product_detail.html', context)
+
 
 
 
