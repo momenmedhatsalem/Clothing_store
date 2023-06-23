@@ -97,13 +97,13 @@ def login_view(request):
                 cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
                 if created:
                     # CartItem did not exist, set its quantity
-                    cart_item.quantity = quantity
+                    cart_item.quantity = int(quantity)
                     cart_item.save()
                 else:
                     # CartItem already exists, check if it has been customized
                     if not cart_item.customized:
                         # Increase its quantity
-                        cart_item.quantity += quantity
+                        cart_item.quantity += int(quantity)
                         cart_item.save()
             # Clear session cart
             request.session['cart'] = []
@@ -574,3 +574,10 @@ def orders(request):
     # User is viewing their order history
     orders = Order.objects.filter(user=request.user)
     return render(request, 'order.html', {'orders': orders})
+
+
+
+def customize(request):
+    return render(request, 'customize.html')
+
+

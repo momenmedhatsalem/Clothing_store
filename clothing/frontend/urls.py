@@ -21,5 +21,5 @@ urlpatterns = [
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
     path('orders', views.orders, name='orders'),
     path('accounts/', include('allauth.urls')),
-
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('customize', views.customize, name='customize'),
+]
