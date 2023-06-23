@@ -32,8 +32,13 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "frontend",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     "django.contrib.admin",
     "django.contrib.auth",
+    "django.contrib.sites",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -123,6 +128,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     
 ]
+SITE_ID = 1
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

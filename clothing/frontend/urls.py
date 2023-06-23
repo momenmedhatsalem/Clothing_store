@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -20,5 +20,6 @@ urlpatterns = [
     path('apply_coupon/', views.apply_coupon, name='apply_coupon'),
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
     path('orders', views.orders, name='orders'),
+    path('accounts/', include('allauth.urls')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
