@@ -63,6 +63,19 @@ Register
         a {
             color: blue;
         }
+        .google-btn {
+    display: inline-block;
+    background-color: #4285f4;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+    }
+
+    .google-btn:hover {
+        background-color: #357ae8;
+    }
     </style>
     <h1>Register</h1>
     <form method="post" action="{% url 'register' %}">
@@ -72,6 +85,7 @@ Register
         <br>
         <button type="submit">Register</button>
     </form>
+    <a href="http://127.0.0.1:8000/accounts/google/login/?process=login" class="google-btn">Sign Up using Google</a>
     <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
         <script>
 
