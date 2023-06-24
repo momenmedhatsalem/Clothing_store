@@ -190,6 +190,8 @@ const url = '/apply_coupon/';
       }
     });
 }
-
-document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
+if (document.querySelector('#remove-coupon-btn')) {
+    
+    document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
+}
 });

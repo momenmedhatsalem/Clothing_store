@@ -31,6 +31,18 @@ from django.utils.crypto import get_random_string
 
 from django.views.decorators.http import require_http_methods
 import json
+
+
+from django.core.mail import send_mail
+
+def send_order_confirmation_email(user, order):
+    subject = 'Order Confirmation'
+    message = f'Thank you for your order, {user.first_name}! Your order number is {order.id}.'
+    from_email = 'your_email@example.com'
+    recipient_list = [user.email]
+    send_mail(subject, message, from_email, recipient_list)
+
+
 def index(request):
     # Get the list of recently viewed product IDs from the session
     recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
@@ -345,8 +357,14 @@ def checkout(request):
 
             # Clear the cart for anonymous users
             request.session['cart'] = []
-
+            user = {
+                'is_anonymous': True,
+                'first_name': 'Anonymous',
+                'last_name': '',
+                'email': 'anonymous@example.com'
+            }
         # Redirect to the order confirmation page
+        send_order_confirmation_email(user, order)
         return render(request, 'orderconfirm.html', {"order_number": order.order_number})
     else:
         if request.user.is_authenticated:
