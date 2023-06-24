@@ -1,3 +1,4 @@
+console.log("GGGGGG");
 document.addEventListener('DOMContentLoaded', function() {
       
       // Button for return
@@ -5,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     history.back();
 });
 
+console.log("gggggg");
 
 
 
@@ -190,6 +192,8 @@ const url = '/apply_coupon/';
       }
     });
 }
-
-document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
+if (document.querySelector('#remove-coupon-btn')) {
+    
+    document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
+}
 });
