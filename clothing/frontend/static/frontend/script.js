@@ -1,4 +1,5 @@
-
+document.addEventListener('DOMContentLoaded', function() {
+      
       // Button for return
       document.querySelector('#back-button').addEventListener('click', () => {
     history.back();
@@ -191,4 +192,4 @@ const url = '/apply_coupon/';
 }
 
 document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
-
+});
