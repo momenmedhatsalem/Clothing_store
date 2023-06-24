@@ -97,13 +97,13 @@ def login_view(request):
                 cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
                 if created:
                     # CartItem did not exist, set its quantity
-                    cart_item.quantity = quantity
+                    cart_item.quantity = int(quantity)
                     cart_item.save()
                 else:
                     # CartItem already exists, check if it has been customized
                     if not cart_item.customized:
                         # Increase its quantity
-                        cart_item.quantity += quantity
+                        cart_item.quantity += int(quantity)
                         cart_item.save()
             # Clear session cart
             request.session['cart'] = []
@@ -426,7 +426,7 @@ def add_to_cart(request, product_id):
             total_price_before_discount = anonymous_cart['total_price_before_discount']
         # calculate discount
         discount = float(total_price_before_discount) - float(total_price)
-        return JsonResponse({'success': True,'cart_total': total_price, 'total': total, 'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
+        return JsonResponse({'success': True,'cart_total': total_price, 'total': "{:.2f}".format(total), 'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
     return redirect('cart')
 
 from django.http import JsonResponse
@@ -574,3 +574,10 @@ def orders(request):
     # User is viewing their order history
     orders = Order.objects.filter(user=request.user)
     return render(request, 'order.html', {'orders': orders})
+
+
+
+def customize(request):
+    return render(request, 'customize.html')
+
+
