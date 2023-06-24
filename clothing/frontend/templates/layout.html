@@ -3,22 +3,56 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Ecommerce Website{% endblock %}</title>
+        <title>{% block title %}Vosmos | Clothing Store{% endblock %}</title>
         <!-- Use a CDN link for Bootstrap instead of a static file -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}">
         <!-- Use a CDN link for jQuery instead of a static file -->
         <!-- Use a CDN link for Bootstrap instead of a static file -->
         
+
+
+        
+        <meta name="description" content="Vamos Clothing Store">
+        <meta name="keywords" content="Vamos, unica, creative, html">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+
+
+        <!--Styles-->
+        <link rel="stylesheet" href="{% static 'frontend/css/bootstrap.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/font-awesome.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/elegant-icons.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/magnific-popup.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/nice-select.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/owl.carousel.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/slicknav.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}" type="text/css">
+
+
         
         <!--Scripts-->
         <!-- Js Plugins -->
         
         
-        {% block script %}
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+        {% block script %}
+        
+        <script src="{% static 'frontend/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'frontend/js/jquery.nice-select.min.js' %}"></script>
+        <script src="{% static 'frontend/js/jquery.nicescroll.min.js' %} "></script>
+        <script src="{% static 'frontend/js/jquery.magnific-popup.min.js'%}"></script>
+        <script src="{% static 'frontend/js/jquery.countdown.min.js' %}"></script>
+        <script src="{% static 'frontend/js/jquery.slicknav.js' %}"></script>
+        <script src="{% static 'frontend/js/mixitup.min.js' %}"></script>
+        <script src="{% static 'frontend/js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'frontend/js/main.js' %}"></script>
     {% endblock %}
 
 
@@ -29,7 +63,10 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
         <!-- Offcanvas Menu Begin -->
         <div class="offcanvas-menu-overlay"></div>
         <div class="offcanvas-menu-wrapper">
@@ -48,9 +85,8 @@
                 </div>
             </div>
             <div class="offcanvas__nav__option">
-                <a href="#" class="search-switch"><img src="" alt=""></a>
-                <a href="#"><img src="" alt=""></a>
-                <a href="#"><img src="" alt=""> <span>0</span></a>
+                <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
+                <a href="#"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
                 <div class="price">$0.00</div>
             </div>
             <div id="mobile-menu-wrap"></div>
@@ -107,7 +143,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="{% url 'index' %}"><img src="" alt=""></a>
+                        <a href="{% url 'index' %}"><img src="{% static 'frontend/img/logo2.png' %}" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
@@ -143,8 +179,8 @@
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="" alt=""></a>
-                        <a href="#"><img src="" alt=""></a>
+                        <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
                         
                         <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart m-1 me-md-2"></i><p> Cart {{ cart_count }}</p></a>
                         <div class="price">$0.00</div>
@@ -308,10 +344,10 @@ body.night-mode #container div.white-background {
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="footer__about">
                     <div class="footer__logo">
-                        <a href="#"><img src="" alt=""></a>
+                        <a href="#"><img src="{% static 'frontend/img/footer-logo.png' %}" alt=""></a>
                     </div>
                     <p>The customer is at the heart of our unique business model, which includes design.</p>
-                    <a href="#"><img src="" alt=""></a>
+                    <a href="#"><img src="{% static 'frontend/img/payment.png' %}" alt=""></a>
                 </div>
             </div>
             <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
