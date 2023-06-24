@@ -22,4 +22,5 @@ urlpatterns = [
     path('orders', views.orders, name='orders'),
     path('accounts/', include('allauth.urls')),
     path('customize', views.customize, name='customize'),
+    path('design_save', views.design_save, name='design_save'),
 ]
