@@ -35,11 +35,39 @@ import json
 
 from django.core.mail import send_mail
 
-def send_order_confirmation_email(user, order):
+import base64
+from django.core.files.base import ContentFile
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .models import Design
+
+
+
+
+@csrf_exempt
+def design_save(request):
+    if request.method == 'POST':
+        # Get the image data from the request body
+        data = json.loads(request.body)
+        image_data = data.get('image')
+        product_id = data.get('product_id')
+        # Decode the image data and create a new Image object
+        format, imgstr = image_data.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+        product = Product.objects.get(id=product_id)
+        image = Design.objects.create(image=data, user=request.user, product=product )
+        image.save()
+        # Return a JSON response
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False})
+
+def send_order_confirmation_email(first_name, email, order):
     subject = 'Order Confirmation'
-    message = f'Thank you for your order, {user.first_name}! Your order number is {order.id}.'
+    message = f'Thank you for your order, {first_name}! Your order number is {order.id}.'
     from_email = 'your_email@example.com'
-    recipient_list = [user.email]
+    recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
 
 
@@ -336,7 +364,7 @@ def checkout(request):
                 address=request.POST['address'],
                 phone=phone,
                 city=request.POST['city'],
-                coupon = PromoCode.objects.get(code=request.session['applied_promo_code']),
+                
                 payment_method=payment_method,
                 shipping_cost=cart['shipping_cost'],
                 final_price=cart['final_price']  # Set the final price of the order to the final price of the anonymous cart
@@ -349,7 +377,8 @@ def checkout(request):
                     product=item['product'],
                     price=item['product'].price,
                     quantity=item['quantity'],
-                    customized=item['customized']
+                    
+                    # customized=item['customized']
                 )
 
             # Save the order
@@ -357,14 +386,9 @@ def checkout(request):
 
             # Clear the cart for anonymous users
             request.session['cart'] = []
-            user = {
-                'is_anonymous': True,
-                'first_name': 'Anonymous',
-                'last_name': '',
-                'email': 'anonymous@example.com'
-            }
+
         # Redirect to the order confirmation page
-        send_order_confirmation_email(user, order)
+        send_order_confirmation_email(first_name, email, order)
         return render(request, 'orderconfirm.html', {"order_number": order.order_number})
     else:
         if request.user.is_authenticated:

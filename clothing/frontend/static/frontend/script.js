@@ -8,61 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
- function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
 
 const csrftoken = getCookie('csrftoken');
-function removeFromCart(product_id) {
-    // Get the value of the CSRF token
 
-    // Send a PUT request to the server to remove the item from the cart
-    fetch(`/cart/remove/${product_id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            // Include the CSRF token as a header
-            'X-CSRFToken': csrftoken
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Update the page to reflect the changes
-        // For example, you could update the cart total and remove the item from the cart display
-        var row = document.getElementById("x" + product_id);
-    row.style.transition = "opacity 1s";
-    row.style.opacity = 0;
-    setTimeout(function() {
-        row.parentNode.removeChild(row);
-    }, 1000);
-
-        var cart_total = document.getElementById('cart_total_discount');
-        cart_total.innerHTML = `EGP ${data.cart_total}`;
-        var cart_total = document.getElementById('cart_total').innerHTML = `EGP ${data.cart_total_before_discount}`;
-        var cart_total = document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
-        var cart_summary = document.getElementById('cart_summary');
-        const cart_count = cart_summary.dataset.cart;
-        if (!cart_count) {
-          cart_summary.classList.add('fade-away');
-            cart_summary.addEventListener('transitionend', () => {
-                cart_summary.remove();
-            });
-        }
-
-    });
-}
 // A function that handles quantity change
 const selectElements = document.querySelectorAll('#quantity-select');
 selectElements.forEach(selectElement => {
@@ -195,3 +143,56 @@ if (document.querySelector('#remove-coupon-btn')) {
     document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
 }
 });
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function removeFromCart(product_id) {
+    // Get the value of the CSRF token
+    const csrftoken = getCookie('csrftoken');
+    // Send a PUT request to the server to remove the item from the cart
+    fetch(`/cart/remove/${product_id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            // Include the CSRF token as a header
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the page to reflect the changes
+        // For example, you could update the cart total and remove the item from the cart display
+        var row = document.getElementById("x" + product_id);
+    row.style.transition = "opacity 1s";
+    row.style.opacity = 0;
+    setTimeout(function() {
+        row.parentNode.removeChild(row);
+    }, 1000);
+
+        var cart_total = document.getElementById('cart_total_discount');
+        cart_total.innerHTML = `EGP ${data.cart_total}`;
+        var cart_total = document.getElementById('cart_total').innerHTML = `EGP ${data.cart_total_before_discount}`;
+        var cart_total = document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
+        var cart_summary = document.getElementById('cart_summary');
+        const cart_count = cart_summary.dataset.cart;
+        if (!cart_count) {
+          cart_summary.classList.add('fade-away');
+            cart_summary.addEventListener('transitionend', () => {
+                cart_summary.remove();
+            });
+        }
+
+    });
+}

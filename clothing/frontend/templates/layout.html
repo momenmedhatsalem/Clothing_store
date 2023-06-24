@@ -33,6 +33,7 @@
         <link rel="stylesheet" href="{% static 'frontend/css/owl.carousel.min.css' %}" type="text/css">
         <link rel="stylesheet" href="{% static 'frontend/css/slicknav.min.css' %}" type="text/css">
         <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/style.css' %}" type="text/css">
 
 
         
@@ -53,6 +54,7 @@
         <script src="{% static 'frontend/js/mixitup.min.js' %}"></script>
         <script src="{% static 'frontend/js/owl.carousel.min.js' %}"></script>
         <script src="{% static 'frontend/js/main.js' %}"></script>
+        <script src="{% static 'frontend/script.js' %}"></script>
     {% endblock %}
 
 
@@ -200,53 +202,6 @@
 
 
 
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">Ecommerce</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <!-- Use the active class only for the current page -->
-                    {% if request.path == '/' %}
-                    <li class="nav-item active">
-                    {% else %}
-                    <li class="nav-item">
-                    {% endif %}
-                        <a class="nav-link" href="{% url 'index' %}">Home</a>
-                    </li>
-                    <li>
-                        <a id="night-mode-toggle"><i class="fas fa-moon"></i> Dark Mode</a>
-                        
-                    </li>
-                    <!-- Use the cart_count variable to show the number of items in the cart -->
-                    {% if request.path == '/cart/' %}
-                    <li class="nav-item active">
-                    {% else %}
-                    <li class="nav-item">
-                    {% endif %}
-                        <a class="nav-link" href="{% url 'cart' %}">Cart ({{ cart_count }})</a>
-                    </li>
-                    <!-- Use the user.is_authenticated attribute to show the appropriate links -->
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    {% else %}
-                    {% if request.path == '/login/' %}
-                    <li class="nav-item active">
-                    {% else %}
-                    <li class="nav-item">
-                    {% endif %}
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
 
 
 

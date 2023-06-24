@@ -1,3 +1,4 @@
-body {
-    background-color: yellow;
+
+.product__item__pic:hover {
+    cursor: pointer;
 }

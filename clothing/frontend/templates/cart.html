@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 {% load static %}
+
 {% block title %}
 
 Cart
 {% endblock %}
 {% block body %}
 
-<script type="text/javascript" src="{% static 'frontend/script.js' %}"></script>
+
 
 <header>
     <!-- Jumbotron -->
@@ -74,104 +75,103 @@ Cart
     </div>
     <!-- Heading -->
   </header>
-  <!-- Shopping Cart Section Begin -->
-  <section class="shopping-cart spad">
+  
+  <!-- cart + summary -->
+  <section class="bg-light my-5">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8">
-          <div class="shopping__cart__table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in cart %}
+        <!-- cart -->
+        <div class="col-lg-9">
+          <div class="card border shadow-0">
+            <div class="m-4">
+              <h4 class="card-title mb-4">Your shopping cart</h4>
 
-                <tr id="x{{ item.product.id }}" style="position: relative;">
-                  <td class="product__cart__item">
-                    <div class="product__cart__item__pic">
-                      <img src="{{ item.product.image }}" width="50px" alt="">
-                    </div>
-                    <div class="product__cart__item__text">
-                      <h6>{{ item.product.product_name }}</h6>
-                      <h5>EGP {{ item.product.price }}</h5>
-                    </div>
-                  </td>
-                  <td class="quantity__item">
-                    <div class="">
-                      <select value="{{ item.quantity }}" id="quantity-select" data-product-id="{{ item.product.id }}" style="width: 100px;" class="form-select me-4">
-                          {% for option in existing_options|dictsort:"value" %}
-                          <option value="{{ option.value }}" {% if option.value == item.quantity %}selected{% endif %}>{{ option.label }}</option>
-                      {% endfor %}
-                      </select>
-                    </div>
-                  </td>
-                  <td class="cart__price"><text id="total_price_{{ item.product.id }}" class="h6">EGP {{ item.total }}</text> <br />
-                  </td>
-                  <td>
-                    <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
-                      <div class="float-md-end">
-                        <a href="#!" class="btn btn-light border px-2 icon-hover-primary"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                        <a onclick="removeFromCart('{{ item.product.id }}')" class="btn btn-light border text-danger icon-hover-danger"> Remove</a>
+              {% for item in cart %}
+
+
+
+
+                
+              <div id="x{{ item.product.id }}" class="row gy-3 mb-4">
+                <div class="col-lg-5">
+                  <div class="me-lg-5">
+                    <div class="d-flex">
+                      <img src="{{ item.product.image }}" class="border rounded me-3" style="width: 96px; height: 96px;" />
+                      <div class="">
+                        <a href="{{ item.product.get_absolute_url }}" class="nav-link">{{ item.product.product_name }}</a>
+                        <p class="text-muted">{{ item.product.category }}</p>
                       </div>
                     </div>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          <div class="border-top pt-4 mx-4 mb-4">
-            <p><i class="fas fa-truck text-muted fa-lg"></i> Free Delivery for orders over EGP 1000</p>
-            <p class="text-muted">
-
-            </p>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-              <div class="continue__btn">
-                <a class="btn btn-light w-100 border mt-2" id="back-button">Continue Shopping</a>
+                  </div>
+                </div>
+                <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
+                  <div class="">
+                    <select value="{{ item.quantity }}" id="quantity-select" data-product-id="{{ item.product.id }}" style="width: 100px;" class="form-select me-4">
+                        {% for option in existing_options|dictsort:"value" %}
+                        <option value="{{ option.value }}" {% if option.value == item.quantity %}selected{% endif %}>{{ option.label }}</option>
+                    {% endfor %}
+                    </select>
+                  </div>
+                  <div class="">
+                    <text id="total_price_{{ item.product.id }}" class="h6">EGP {{ item.total }}</text> <br />
+                    <small class="text-muted text-nowrap"> EGP {{ item.product.price }} / per item </small>
+                  </div>
+                </div>
+                <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+                  <div class="float-md-end">
+                    <a href="#!" class="btn btn-light border px-2 icon-hover-primary"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
+                    <a onclick="removeFromCart('{{ item.product.id }}')" class="btn btn-light border text-danger icon-hover-danger"> Remove</a>
+                  </div>
+                </div>
               </div>
+            {% endfor %}
+              
+
+            </div>
+  
+            <div class="border-top pt-4 mx-4 mb-4">
+              <p><i class="fas fa-truck text-muted fa-lg"></i> Free Delivery for orders over EGP 1000</p>
+              <p class="text-muted">
+
+              </p>
             </div>
           </div>
         </div>
-        <div class="col-lg-4">
-          <div class="cart__discount">
-
-
-            <h6>Discount codes</h6>
-            <div id="main_coupon_div" class="form-group">
-              <label class="form-label">Have coupon?</label>
-  
-                {% if user.is_authenticated %}
-                <div class="input-group">
-                  <input id="promo_code" type="text" class="form-control border" name="promo_code" placeholder="Coupon code" />
-                  <button id="apply-promo-code" onclick="Apply_promo_function()" class="btn btn-light border">Apply</button>
-                </div>
-                  <div id="coupon-div">
-                    {% if promocode %}
-                        <p>Coupon applied: {{ promocode }}<button id="remove-coupon-btn" title="remove code">x</button></p>
-                        
-                    {% endif %}
-                  </div>
-                  {% else %}
-                  <h5><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Create An Account</a> To Use Coupons</h5>
-                  <hr />
-                  <p>Don't Worry We Will Keep Your Cart Items And Designs :) </p>
-                  {% endif %}
-              </div>
-
-          </div>
-          <div class="cart__total">
-            <h6>Cart total</h6>
-            <ul>
+        <!-- cart -->
+        <!-- summary -->
+        {% if cart %}
+        <div data-cart="{{ cart }}" id="cart_summary" class="col-lg-3">
+          <div class="card mb-3 border shadow-0">
+            <div class="card-body">
               
-              <li>Subtotal <span id="cart_total">EGP {{ user_cart.total_price_before_discount }}</span></li>
+                <div id="main_coupon_div" class="form-group">
+                  <label class="form-label">Have coupon?</label>
+                  {% if user.is_authenticated %}
+                  <div class="input-group">
+                    <input id="promo_code" type="text" class="form-control border" name="promo_code" placeholder="Coupon code" />
+                    <button id="apply-promo-code" onclick="Apply_promo_function()" class="btn btn-light border">Apply</button>
+                  </div>
+                    <div id="coupon-div">
+                      {% if promocode %}
+                          <p>Coupon applied: {{ promocode }}<button id="remove-coupon-btn" title="remove code">x</button></p>
+                          
+                      {% endif %}
+                    </div>
+                    {% else %}
+                    <h5><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Create An Account</a> To Use Coupons</h5>
+                    <hr />
+                    <p>Don't Worry We Will Keep Your Cart And Designs :) </p>
+                    {% endif %}
+                </div>
+              
+            </div>
+          </div>
+          <div class="card shadow-0 border">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <p class="mb-2">Total price:</p>
+                <p id="cart_total" class="mb-2">EGP {{user_cart.total_price_before_discount}}</p>
+              </div>
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Discount:</p>
                 {% if promocode %}
@@ -182,6 +182,7 @@ Cart
 
                 {% endif %}
               </div>
+              <hr />
               <div class="d-flex justify-content-between">
                 <p class="mb-2">Total price:</p>
                 {% if promocode %}
@@ -190,15 +191,20 @@ Cart
                   <p id="cart_total_discount" class="mb-2">EGP {{user_cart.total_price_before_discount}}</p>
                 {% endif %}
               </div>
-            </ul>
-            <a href="{% url 'checkout' %}" class="primary-btn">Proceed to checkout</a>
+  
+              <div class="mt-3">
+                <a href="{% url 'checkout' %}"  class="btn btn-success w-100 shadow-0 mb-2"> Checkout Now </a>
+                <a  id="back-button" class="btn btn-light w-100 border mt-2"> Back to shop </a>
+              </div>
+            </div>
           </div>
         </div>
+        <!-- summary -->
       </div>
     </div>
   </section>
-  <!-- Shopping Cart Section End -->
-  
+  {% endif %}
+  <!-- cart + summary -->
   <section>
     <div class="container my-5">
       <header class="mb-4">
@@ -469,29 +475,8 @@ Cart
     <a href="{% url 'checkout' %}" class="btn btn-primary">Checkout</a>
 
 
-    <script>
 
-
-    </script>
     <style>
-      .form-select {
-    width: 100px;
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    appearance: none;
-    background-color: #fff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23333' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 8px 10px;
-}
-
-.form-select:focus {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-}
       .fade-in {
     animation: fadeIn 1s;
 }

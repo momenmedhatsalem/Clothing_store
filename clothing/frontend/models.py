@@ -49,6 +49,14 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
+class Design(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='designs/')
+
+    def __str__(self):
+        return f'Design by {self.user} for {self.product}'
+    
 class PromoCode(models.Model):
     code = models.CharField(max_length=15)
     discount = models.FloatField()
