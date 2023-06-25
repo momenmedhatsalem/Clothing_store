@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.contrib.auth.admin import UserAdmin
-from frontend.models import Product, ProductSize, MyUser, PromoCode, Cart, Order, CartItem, OrderItem, Design
+from frontend.models import Product, ProductSize, ProductImage, MyUser, PromoCode, Cart, Order, CartItem, OrderItem, Design
 from django.utils.html import format_html
 
 # Register your models here.
@@ -15,8 +15,15 @@ class ProductSizeInline(admin.TabularInline):
     model = ProductSize
     extra = 1
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 3
+
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductSizeInline]
+    inlines = [ProductSizeInline, ProductImageInline]
+    list_display = ('product_name', 'category', 'price', 'discount_price')
+    list_filter = ('category', 'label')
+    search_fields = ('product_name',)
 
 admin.site.register(Product, ProductAdmin)
 

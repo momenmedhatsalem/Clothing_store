@@ -127,8 +127,7 @@
                     
                       <div class="product__item__text">
                           <h6>{{ product.product_name }}</h6>
-                          <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
-                          <div class="rating">
+                          <a onclick="addToCart('{{product.id}}')" class="add-cart">+ Add To Cart</a>                          <div class="rating">
                               <i class="fa fa-star-o"></i>
                               <i class="fa fa-star-o"></i>
                               <i class="fa fa-star-o"></i>
@@ -272,9 +271,8 @@
               <div class="col-lg-4">
                   <div class="instagram__text">
                       <h2>Instagram</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.</p>
-                      <h3>#Vosmos</h3>
+                      <p>Follow Us On Insta To Stay Updated With Our Products.</p>
+                      <a href="https://www.instagram.com/vosmos.eg/"><h3>@Vosmos.eg</h3></a>
                   </div>
               </div>
           </div>

@@ -454,13 +454,22 @@ def add_to_cart(request, product_id):
             else:
                 cart.append({'product_id': product_id, 'quantity': quantity})
             request.session['cart'] = cart
+        return redirect('cart')
     elif request.method == 'PUT':
         data = json.loads(request.body)
         quantity = data.get('quantity', 1)
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
             a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-            a_cart_item.quantity = quantity
+            if created:
+                # if the cart item was created (i.e. the product was not already in the cart), set the quantity to 1
+                a_cart_item.quantity = 1
+            else:
+                if quantity == 0:
+                    a_cart_item.quantity += 1
+                # if the cart item was not created (i.e. the product was already in the cart), update the quantity
+                else:
+                    a_cart_item.quantity = quantity
             a_cart_item.save()
             total = a_cart_item.total
             total_price = cart.total_price
@@ -473,9 +482,14 @@ def add_to_cart(request, product_id):
             cart_item = next((item for item in cart if item['product_id'] == product_id), None)
 
             if cart_item:
-                cart_item['quantity'] = quantity
+                if quantity == 0:
+                    a_cart_item.quantity += 1
+                # if the product is already in the cart, update the quantity
+                else:
+                    cart_item['quantity'] = quantity
             else:
-                cart.append({'product_id': product_id, 'quantity': quantity})
+                # if the product is not in the cart, add it with a quantity of 1
+                cart.append({'product_id': product_id, 'quantity': 1})
 
             request.session['cart'] = cart
             total = product.price * int(quantity)
@@ -485,8 +499,8 @@ def add_to_cart(request, product_id):
             total_price_before_discount = anonymous_cart['total_price_before_discount']
         # calculate discount
         discount = float(total_price_before_discount) - float(total_price)
-        return JsonResponse({'success': True,'cart_total': total_price, 'total': "{:.2f}".format(total), 'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
-    return redirect('cart')
+        return JsonResponse({'success': True,'cart_total': total_price, 'total': "{:.2f}".format(total),
+                              'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount, 'product_name': product.product_name})
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt

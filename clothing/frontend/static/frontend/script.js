@@ -1,17 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-      
-      // Button for return
-      document.querySelector('#back-button').addEventListener('click', () => {
-    history.back();
-});
-
-
-
-const csrftoken = getCookie('csrftoken');
-// A function that handles quantity change
-const selectElements = document.querySelectorAll('.quantity-select');
-selectElements.forEach(selectElement => {
-    selectElement.addEventListener('change', (event) => {
+    
+    // Button for return
+    document.querySelector('#back-button').addEventListener('click', () => {
+        history.back();
+    });
+    
+    
+    
+    const csrftoken = getCookie('csrftoken');
+    // A function that handles quantity change
+    const selectElements = document.querySelectorAll('.quantity-select');
+    selectElements.forEach(selectElement => {
+        selectElement.addEventListener('change', (event) => {
         const quantity = event.target.value;
         const productId = event.target.dataset.productId;
         const data = {quantity: quantity};
@@ -36,8 +36,8 @@ selectElements.forEach(selectElement => {
             document.getElementById('cart_total_discount').innerHTML = `EGP ${data.cart_total}`;
         })
         .catch((error) => {
-        console.error('Error:', error);
-    });
+            console.error('Error:', error);
+        });
     });
 });
 
@@ -56,6 +56,50 @@ if (document.querySelector('#remove-coupon-btn')) {
 
 
 
+//ADD to cart PUT
+
+const csrftoken = getCookie('csrftoken');
+function addToCart(productId) {
+    fetch(`/add_to_cart/${productId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({quantity: 0})
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // update the cart total or display a message here
+        console.log(data);
+    
+        // create the alert element
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success alert-dismissible fade show';
+        alert.role = 'alert';
+        alert.innerHTML = `<strong>Success!</strong> ${data.product_name} added to cart. <br> <a href="/cart">View cart</a>`;
+        
+        // set the position, top, and z-index properties of the alert element
+        alert.style.position = 'fixed';
+        alert.style.top = '50px';  // adjust this value to position the alert lower on the screen
+        alert.style.zIndex = 9999;  // set a high z-index value to make the alert appear on top of other elements
+        
+        // create the close button
+
+        
+        // append the alert to the page
+        document.body.prepend(alert);
+        
+        // remove the alert after 10 seconds
+        setTimeout(() => {
+            alert.remove();
+        }, 10000);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
 
 
 // A function to apply promo codes through a put request
