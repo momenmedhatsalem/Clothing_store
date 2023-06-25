@@ -6,7 +6,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.urls import reverse
-from frontend.models import Product, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
+from frontend.models import Product, ProductImage, ProductSize, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -44,7 +44,8 @@ from django.core.paginator import Paginator
 
 
 
-
+def contact(request):
+    return render(request, 'contact.html')
 
 def show_products(request, category=None, subcategory=None):
     products = Product.objects.all()
@@ -90,7 +91,7 @@ def send_order_confirmation_email(first_name, email, order):
 
 def index(request):
     # Get the list of recently viewed product IDs from the session
-    recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
+    recently_viewed_product_ids = request.session.get('recently_viewed_products', []).reverse()
 
     # Get the Product objects for the recently viewed products
     recently_viewed_products = Product.objects.filter(id__in=recently_viewed_product_ids)
@@ -126,9 +127,12 @@ def product_detail(request, product_id):
     if product_id not in recently_viewed_product_ids:
         recently_viewed_product_ids.append(product_id)
         request.session['recently_viewed_products'] = recently_viewed_product_ids
+    images = ProductImage.objects.filter(product=product)
+    sizes = ProductSize.objects.filter(product=product)
+    
 
     # Render the template with the product
-    return render(request, 'product_detail.html', {'product': product})
+    return render(request, 'product.html', {'product': product, 'images': images, 'sizes': sizes})
 
 
 def login_view(request):
@@ -433,8 +437,8 @@ def checkout(request):
 #@require_http_methods(["POST", "PUT"])
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    if request.method == 'GET':
-        quantity = int(request.POST.get('quantity', 1))
+    if request.method == 'GET' or request.method == 'POST':
+        quantity = int(request.POST.get('cloth_quantity'))
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
             a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)

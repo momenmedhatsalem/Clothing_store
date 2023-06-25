@@ -62,6 +62,7 @@ class ProductSize(models.Model):
     size = models.CharField(max_length=10)
     quantity = models.PositiveIntegerField()
     color = models.CharField(max_length=10)
+    color_id = models.CharField(max_length=10, default="1")
     class Meta:
         unique_together = ('product', 'size', 'color')
 

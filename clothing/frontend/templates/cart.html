@@ -48,13 +48,14 @@ Cart
   
                   <tr id="x{{ item.product.id }}" style="position: relative;">
                     <td class="product__cart__item">
+                      <a href="{{ item.product.get_absolute_url }}">
                       <div class="product__cart__item__pic">
                         <img src="{{ item.product.image }}" width="50px" alt="">
                       </div>
                       <div class="product__cart__item__text">
                         <h6>{{ item.product.product_name }}</h6>
                         <h5>EGP {{ item.product.price }}</h5>
-                      </div>
+                      </div></a>
                     </td>
                     <td class="quantity__item">
                       <div class="">

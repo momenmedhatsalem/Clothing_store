@@ -26,4 +26,5 @@ urlpatterns = [
     path('products/', views.show_products, name='show_products'),
     path('products/<str:category>/', views.show_products, name='show_products'),
     path('products/<str:category>/<str:subcategory>/', views.show_products, name='show_products'),
+    path('contact', views.contact, name='contact'),
 ]
