@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const csrftoken = getCookie('csrftoken');
 // A function that handles quantity change
-const selectElements = document.querySelectorAll('#quantity-select');
+const selectElements = document.querySelectorAll('.quantity-select');
 selectElements.forEach(selectElement => {
     selectElement.addEventListener('change', (event) => {
         const quantity = event.target.value;
@@ -55,39 +55,7 @@ if (document.querySelector('#remove-coupon-btn')) {
 });
 
 
-const csrftoken = getCookie('csrftoken');
-// A function that handles quantity change
-const selectElements = document.querySelectorAll('#quantity-select');
-selectElements.forEach(selectElement => {
-    selectElement.addEventListener('change', (event) => {
-        const quantity = event.target.value;
-        const productId = event.target.dataset.productId;
-        const data = {quantity: quantity};
-        fetch(`/add_to_cart/${productId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            // update the cart total or display a message here
-            console.log(data);
-            var total_price = document.getElementById(`total_price_${productId}`);
-            total_price.innerHTML = `EGP ${data.total}`;
-            var cart_total = document.getElementById('cart_total');
-            cart_total.innerHTML = `EGP ${data.cart_total_before_discount}`;
-            document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
-            document.getElementById('cart_total_discount').innerHTML = `EGP ${data.cart_total}`;
-        })
-        .catch((error) => {
-        console.error('Error:', error);
-    });
-    });
-});
+
 
 
 // A function to apply promo codes through a put request

@@ -158,10 +158,30 @@
                             {% endif %}
                                 <a class="nav-link" href="{% url 'index' %}">Home</a>
                             </li>
-                            <li class="active"><a href="{% url 'show_products' 'M' %}">MEN</a></li>
-                            <li><a href="{% url 'show_products' 'W' %}">WOMEN</a></li>
-                            <li><a href="{% url 'show_products' 'K' %}">KIDS</a></li>
-
+                            {% if request.path|slice:":12" == '/products/M/'  %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                            
+                            <a href="{% url 'show_products' 'M' %}">MEN</a></li>
+                            {% if request.path|slice:":12" == '/products/W/'  %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                            <a href="{% url 'show_products' 'W' %}">WOMEN</a></li>
+                            {% if request.path|slice:":12" == '/products/K/'  %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                            <a href="{% url 'show_products' 'K' %}">KIDS</a></li>
+                            {% if request.path|slice:":12" == '/products/M/'  %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
                             <li><a href="./contact.html">Contact Us</a></li>
                         </ul>
                     </nav>

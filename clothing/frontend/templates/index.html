@@ -115,10 +115,57 @@
 
               <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
                   <div class="product__item">
-                    <span class="badge bg-{{ product.get_label_display }} pt-1 mt-3 ms-2">{{ product.label }}</span>
                     
                     <div class="product__item__pic set-bg" data-setbg="{{ product.image }}" onclick="window.location.href='{{ product.get_absolute_url }}'">
-                      {% if product.label %}
+                      {% if product.label != 'N' %}
+                      <span class="label">{{ product.label }}</span>
+                      {% endif %}
+                      <ul class="product__hover">
+                          <li><a href="#"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
+                      </ul>
+                  </div>
+                    
+                      <div class="product__item__text">
+                          <h6>{{ product.product_name }}</h6>
+                          <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                          <div class="rating">
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                          </div>
+                          <h5>EGP {{ product.price|floatformat:2 }}</h5>
+                          <div class="product__color__select">
+                              <label for="pc-1">
+                                  <input type="radio" id="pc-1">
+                              </label>
+                              <label class="active black" for="pc-2">
+                                  <input type="radio" id="pc-2">
+                              </label>
+                              <label class="grey" for="pc-3">
+                                  <input type="radio" id="pc-3">
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+
+
+ 
+          </div>
+          <hr />
+          <hr />
+          <h3>Recently Viewed</h3>
+          <div class="row product__filter">
+            {% for product in recently_viewed_products %}
+
+              <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                  <div class="product__item">
+                    
+                    <div class="product__item__pic set-bg" data-setbg="{{ product.image }}" onclick="window.location.href='{{ product.get_absolute_url }}'">
+                      {% if product.label != 'N' %}
                       <span class="label">{{ product.label }}</span>
                       {% endif %}
                       <ul class="product__hover">
