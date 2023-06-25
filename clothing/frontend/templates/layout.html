@@ -145,7 +145,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="{% url 'index' %}"><img src="{% static 'frontend/img/logo2.png' %}" alt=""></a>
+                        <a href="{% url 'index' %}"><img src="{% static 'frontend/img/logo4.png' %}" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
@@ -158,34 +158,26 @@
                             {% endif %}
                                 <a class="nav-link" href="{% url 'index' %}">Home</a>
                             </li>
-                            <li class="active"><a href="./shop.html">Shop</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="./about.html">About Us</a></li>
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    {% if request.path == '/cart/' %}
-                                    <li class="nav-item active">
-                                    {% else %}
-                                    <li class="nav-item">
-                                    {% endif %}
-                                        <a class="nav-link" href="{% url 'cart' %}">Cart ({{ cart_count }})</a>
-                                    </li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
+                            <li class="active"><a href="{% url 'show_products' 'M' %}">MEN</a></li>
+                            <li><a href="{% url 'show_products' 'W' %}">WOMEN</a></li>
+                            <li><a href="{% url 'show_products' 'K' %}">KIDS</a></li>
+
+                            <li><a href="./contact.html">Contact Us</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
                         <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
-                        <a href="#"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
+                        <a href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>
+                            {% if cart_count %}
+                            {{ cart_count }}
+                            {% else %}
+                            0
+                            {% endif %}
+                        </span></a>
                         
-                        <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart m-1 me-md-2"></i><p> Cart {{ cart_count }}</p></a>
-                        <div class="price">$0.00</div>
+                        <div class="price">EGP {{ user_cart.total }}</div>
                     </div>
                 </div>
             </div>

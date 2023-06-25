@@ -7,10 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
 const csrftoken = getCookie('csrftoken');
-
 // A function that handles quantity change
 const selectElements = document.querySelectorAll('#quantity-select');
 selectElements.forEach(selectElement => {
@@ -44,12 +41,60 @@ selectElements.forEach(selectElement => {
     });
 });
 
- // A function to apply promo codes through a put request
- const apply_promo_button = document.getElementById('apply-promo-code')
-const input = document.querySelector('#promo_code');
-const url = '/apply_coupon/';
 
-    function Apply_promo_function() {
+
+
+
+
+
+
+if (document.querySelector('#remove-coupon-btn')) {
+    
+    document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
+}
+});
+
+
+const csrftoken = getCookie('csrftoken');
+// A function that handles quantity change
+const selectElements = document.querySelectorAll('#quantity-select');
+selectElements.forEach(selectElement => {
+    selectElement.addEventListener('change', (event) => {
+        const quantity = event.target.value;
+        const productId = event.target.dataset.productId;
+        const data = {quantity: quantity};
+        fetch(`/add_to_cart/${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // update the cart total or display a message here
+            console.log(data);
+            var total_price = document.getElementById(`total_price_${productId}`);
+            total_price.innerHTML = `EGP ${data.total}`;
+            var cart_total = document.getElementById('cart_total');
+            cart_total.innerHTML = `EGP ${data.cart_total_before_discount}`;
+            document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
+            document.getElementById('cart_total_discount').innerHTML = `EGP ${data.cart_total}`;
+        })
+        .catch((error) => {
+        console.error('Error:', error);
+    });
+    });
+});
+
+
+// A function to apply promo codes through a put request
+function Apply_promo_function() {
+
+    const apply_promo_button = document.getElementById('apply-promo-code')
+    const input = document.querySelector('#promo_code');
     const data = { promo_code: input.value };
 
     fetch('/apply_coupon/', {
@@ -64,12 +109,12 @@ const url = '/apply_coupon/';
     .then(data => {
         console.log('Success:', data);
         if (data.error != false) {
-              // create error message element
+            // create error message element
     let errorMessage = document.createElement('div');
     errorMessage.id = 'error-message';
     errorMessage.textContent = data.error;
     errorMessage.style.color = 'red';
-    
+
     // check if error message is already shown
     let existingErrorMessage = document.querySelector('#error-message');
     if (!existingErrorMessage) {
@@ -86,9 +131,9 @@ const url = '/apply_coupon/';
     }
         }
         else{
-          document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
+        document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
     document.getElementById('cart_total_discount').innerHTML = `EGP ${data.cart_total}`;
-    
+
     // check if coupon div already exists
     let couponDiv = document.querySelector('#coupon-div');
     if (couponDiv) {
@@ -101,7 +146,7 @@ const url = '/apply_coupon/';
         couponDiv.innerHTML = `<p>Coupon applied: ${input.value}<button id="remove-coupon-btn" title="remove code">x</button></p>`;
         document.querySelector('#main_coupon_div').appendChild(couponDiv);
     }
-    
+
     // apply fade-in effect to coupon div
     couponDiv.classList.add('fade-in');
     document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
@@ -110,8 +155,10 @@ const url = '/apply_coupon/';
 };
 
 
-    // Remove coupon code function
-    function removeCoupon() {
+
+// Remove coupon code function
+function removeCoupon() {
+
     fetch('/remove_coupon/', {
         method: 'PUT',
         headers: {
@@ -131,18 +178,15 @@ const url = '/apply_coupon/';
         // remove coupon div
         let couponDiv = document.querySelector('#coupon-div');
         if (couponDiv) {
-          couponDiv.classList.add('fade-away');
-          couponDiv.addEventListener('transitionend', () => {
-              couponDiv.remove();
+        couponDiv.classList.add('fade-away');
+        couponDiv.addEventListener('transitionend', () => {
+            couponDiv.remove();
         });
-      }
+    }
     });
 }
-if (document.querySelector('#remove-coupon-btn')) {
-    
-    document.querySelector('#remove-coupon-btn').addEventListener('click', removeCoupon);
-}
-});
+
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

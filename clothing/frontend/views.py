@@ -40,8 +40,25 @@ from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Design
+from django.core.paginator import Paginator
 
 
+
+
+
+def show_products(request, category=None, subcategory=None):
+    products = Product.objects.all()
+    if category:
+        products = products.filter(category=category)
+    if subcategory:
+        products = products.filter(subcategory=subcategory)
+
+    paginator = Paginator(products, 15) # Show 15 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'page_obj': page_obj, 'categories': Product.CATEGORY_CHOICES,}
+    return render(request, 'products.html', context)
 
 
 @csrf_exempt
