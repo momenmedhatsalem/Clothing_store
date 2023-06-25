@@ -29,7 +29,7 @@ class Product(models.Model):
         ('BEST Seller', 'secondary'),
         ('N', '')
     )
-
+    
     product_id = models.AutoField
     id = models.AutoField(primary_key=True, auto_created=True)
 
@@ -43,11 +43,22 @@ class Product(models.Model):
     pub_date = models.DateField()
     image = models.ImageField(upload_to="static/images", default="")
 
+
     def get_absolute_url(self):
         return f"/product_detail/{self.id}/"
 
     def __str__(self):
         return self.product_name
+
+
+class ProductSize(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="psize")
+    size = models.CharField(max_length=10)
+    quantity = models.PositiveIntegerField()
+    color = models.CharField(max_length=10)
+    class Meta:
+        unique_together = ('product', 'size', 'color')
+
 
 class Design(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
