@@ -158,9 +158,9 @@ def product_detail(request, product_id):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=email, password=password)
 
         # Check if authentication successful
         if user is not None:
@@ -461,10 +461,10 @@ def checkout(request):
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     if request.method == 'GET' or request.method == 'POST':
-        quantity = int(request.POST.get('cloth_quantity'))
+        quantity = int(request.POST.get('cloth_quantity', 1))
         color = request.POST.get('color')
         size = request.POST.get('size')
-        print(color)
+        
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
             a_cart_item, created = CartItem.objects.get_or_create(cart=cart,
@@ -492,9 +492,19 @@ def add_to_cart(request, product_id):
     elif request.method == 'PUT':
         data = json.loads(request.body)
         quantity = data.get('quantity', 1)
+        Product_detail = ProductSize.objects.filter(product=product)
+        color = Product_detail[0].color
+        size = Product_detail[0].size
+
+
+        print(color)
+        print(size)
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
-            a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+            a_cart_item, created = CartItem.objects.get_or_create(cart=cart,
+                                                                product=product, color=color,
+                                                                    size=size)
+
             if created:
                 # if the cart item was created (i.e. the product was not already in the cart), set the quantity to 1
                 a_cart_item.quantity = 1
@@ -513,17 +523,17 @@ def add_to_cart(request, product_id):
 
             product = Product.objects.get(pk=product_id)
             cart = request.session.get('cart', [])
-            cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+            cart_item = next((item for item in cart if item['product_id'] == product_id and item['color'] == color and item['size'] == size), None)
 
             if cart_item:
                 if quantity == 0:
-                    a_cart_item.quantity += 1
+                    cart_item['quantity'] += 1
                 # if the product is already in the cart, update the quantity
                 else:
                     cart_item['quantity'] = quantity
             else:
                 # if the product is not in the cart, add it with a quantity of 1
-                cart.append({'product_id': product_id, 'quantity': 1})
+                cart.append({'product_id': product_id, 'quantity': 1, 'color': color, 'size': size})
 
             request.session['cart'] = cart
             total = product.price * int(quantity)
@@ -535,6 +545,7 @@ def add_to_cart(request, product_id):
         discount = float(total_price_before_discount) - float(total_price)
         return JsonResponse({'success': True,'cart_total': total_price, 'total': "{:.2f}".format(total),
                               'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount, 'product_name': product.product_name})
+
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
