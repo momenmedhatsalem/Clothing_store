@@ -1,0 +1,251 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}
+
+Shop
+{% endblock %}
+{% block body %}
+
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <button type="button" data-toggle="collapse" data-target="#filters"
+                 class="visible-xs visible-sm collapsed d-md-none">Filter</button>
+                 <!-- Your filter content here -->
+                 
+                 <div class="col-lg-3">
+                        <div id="filters" class="collapse">
+                        <div class="shop__sidebar">
+                            <div class="shop__sidebar__search">
+                                <form action="#">
+                                    <input type="text" placeholder="Search...">
+                                    <button type="submit"><span class="icon_search"></span></button>
+                                </form>
+                            </div>
+                            <div class="shop__sidebar__accordion">
+                                <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__categories">
+                                                    <ul class="nice-scroll">
+                                                        {% for category, label in categories %}
+                                                        <li><a href="{% url 'show_products' category %}">{{ label }}</a></li>
+                                                        {% endfor %}
+            
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
+                                        </div>
+                                        <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__price">
+                                                    <ul>
+                                                        <button class="sort-by-price" data-sort-order="asc">Low to High</button>
+<button class="sort-by-price" data-sort-order="desc">High to Low</button>
+                                                        <li><a href="#" class="sort-by-price" data-sort-order="asc">Low to High</a></li>
+                                                        <li><a href="#">EGP 0.00 - EGP 50.00</a></li>
+                                                        <li><a href="#">EGP 50.00 - EGP 100.00</a></li>
+                                                        <li><a href="#">EGP 100.00 - EGP 150.00</a></li>
+                                                        <li><a href="#">EGP 150.00 - EGP 200.00</a></li>
+                                                        <li><a href="#">EGP 200.00 - EGP 250.00</a></li>
+                                                        <li><a href="#">EGP 250.00+</a></li>
+                                                        <li><a href="#" class="sort-by-price" data-sort-order="desc">High to Low</a></li>
+                                                      </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseFour">Size</a>
+                                        </div>
+                                        <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__size">
+                                                    <label for="xs">xs
+                                                        <input type="checkbox" id="xs">
+                                                    </label>
+                                                    <label for="sm">s
+                                                        <input type="checkbox" id="sm">
+                                                    </label>
+                                                    <label for="md">m
+                                                        <input type="checkbox" id="md">
+                                                    </label>
+                                                    <label for="xl">xl
+                                                        <input type="checkbox" id="xl">
+                                                    </label>
+                                                    <label for="2xl">2xl
+                                                        <input type="checkbox" id="2xl">
+                                                    </label>
+                                                    <label for="xxl">xxl
+                                                        <input type="checkbox" id="xxl">
+                                                    </label>
+                                                    <label for="3xl">3xl
+                                                        <input type="checkbox" id="3xl">
+                                                    </label>
+                                                    <label for="4xl">4xl
+                                                        <input type="checkbox" id="4xl">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="shop__product__option">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__left">
+                                    <p>Showing 1–12 of 126 results</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__right">
+                                    <p>Sort by Price:</p>
+                                    <select>
+                                        <option value="">Low To High</option>
+                                        <option value="">$0 - $55</option>
+                                        <option value="">$55 - $100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        
+                        {% for product in page_obj %}
+                            <div class="col-lg-4 col-md-6 col-sm-6 col-6">
+                            
+                                
+                                    <div class="product__item" data-size="{{ product.size }}" data-price="{{ product.price }}">
+
+                                        <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}"
+                                            onclick="window.location.href='{{ product.get_absolute_url }}'">
+                                            {% if product.label %}
+                                            <span class="label">{{ product.label }}</span>
+                                            {% endif %}
+                                            <ul class="product__hover">
+                                                <li><a href="#"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
+                                            </ul>
+                                        </div>
+                            
+                                        <div class="product__item__text">
+                                            <h6>{{ product.product_name }}</h6>
+                                            <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                                            <div class="rating">
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                            <h5>EGP {{ product.price|floatformat:2 }}</h5>
+
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                                  {% endfor %}
+                    
+                    
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="product__pagination">
+                                {% if page_obj.has_previous %}
+                                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                                {% endif %}
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == i %}
+                                        <a class="active" href="?page={{ i }}">{{ i }}</a>
+                                    {% else %}
+                                        <a href="?page={{ i }}">{{ i }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+    <style>
+@media (min-width: 992px) {
+    #filters {
+        display: block;
+    }
+}
+    </style>
+<script>
+    $('.shop__sidebar__price a').on('click', function(e) {
+  e.preventDefault();
+
+  // Get the minimum and maximum price from the link text
+  var priceRange = $(this).text().split(' - ');
+  var minPrice = parseFloat(priceRange[0].replace('$', ''));
+  var maxPrice = parseFloat(priceRange[1].replace('$', ''));
+
+  // Filter the products by price
+  $('.product__item').each(function() {
+    var price = parseFloat($(this).data('price'));
+    if (price >= minPrice && price <= maxPrice) {
+      $(this).show();
+    } else {
+      $(this).hide();
+    }
+  });
+});
+
+$('.shop__sidebar__size input[type="checkbox"]').on('change', function(e) {
+  // Add or remove the active class
+  if ($(this).is(':checked')) {
+    $(this).closest('label').addClass('active');
+  } else {
+    $(this).closest('label').removeClass('active');
+  }
+});
+
+// Sort by price
+$('.sort-by-price').on('click', function(e) {
+  e.preventDefault();
+ console.log("hello");
+  // Get the selected sort order
+  var sortOrder = $(this).data('sort-order');
+
+  // Sort the products by price
+  $('.product__item').sort(function(a, b) {
+    var priceA = parseFloat($(a).data('price'));
+    var priceB = parseFloat($(b).data('price'));
+    if (sortOrder === 'asc') {
+      return priceA - priceB;
+    } else {
+      return priceB - priceA;
+    }
+  }).appendTo('.product__list');
+});
+
+</script>
+{% endblock %}

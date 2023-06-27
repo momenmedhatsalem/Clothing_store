@@ -1,0 +1,401 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<h1>Order Lookup</h1>
+<div class="search-container">
+    <form action="{% url 'orders' %}" method="get">
+        <input class="searchbar" type="text" placeholder="Enter Order Number" name="order_number">
+        <button class="searchbutton" type="submit">Search</button>
+    </form>
+</div>
+{% if order %}
+
+<section class="vh-100 gradient-custom-2">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-10 col-lg-8 col-xl-6">
+          <div class="card card-stepper" style="border-radius: 16px;">
+            <div class="card-header p-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <p class="text-muted mb-0"> Order ID <span class="fw-bold text-body">{{ order.order_number}}</span></p>
+                  <p class="text-muted mb-0"> Place On <span class="fw-bold text-body">{{ order.created }}</span> </p>
+                </div>
+                <div>
+                  <h6 class="mb-0"> <a href="#">View Details</a> </h6>
+                </div>
+              </div>
+            </div>
+            <div id="orderCarousel" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner">
+                {% for item in order.items.all %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  <div class="d-flex flex-row mb-4 pb-2">
+                    <div class="flex-fill">
+                      <h5 class="bold ml-3">{{item.product.product_name}}</h5>
+                      <p class="text-muted ml-3"> Qt: {{ item.quantity }} item</p>
+                      <h4 class="mb-3 ml-3"> EGP {{ item.price }} <span class="small text-muted"> via {{ order.get_payment_method_display }} </span></h4>
+                      <p class="text-muted ml-3">Tracking Status on: <span class="text-body">11:30pm, Today</span></p>
+                    </div>
+                    <div>
+                      <img class="align-self-center img-fluid" src="{{ item.product.image }}" width="200">
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% if order.items.count > 1 %}
+              <!-- Add left and right arrows -->
+              <a class="carousel-control-prev" href="#orderCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#orderCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+              {% endif %}
+            </div>
+            <!-- Add a progress bar below the carousel -->
+            <div class="progress">
+              {% for item in order.items.all %}
+              <div class="progress-bar bg-white" role="progressbar" style="width: {{ segment_width }}%"></div>
+              {% endfor %}
+            </div>
+            <br>
+            <ul id="progressbar-1" class="mx-0 mt-0 mb-5 px-0 pt-0 pb-4">
+              <li class="step0 {% if order.status == 'P' or order.status == 'S' or order.status == 'D' %}active{% endif %}" id="step1"><span style="margin-left: 22px; margin-top: 12px;">PLACED</span></li>
+              <li class="step0 {% if order.status == 'S' or order.status == 'D' %}active{% endif %} text-center" id="step2"><span>SHIPPED</span></li>
+              <li class="step0 {% if order.status == 'D' %}active{% endif %} text-end" id="step3"><span style="margin-right: 22px;">DELIVERED</span></li>
+          </ul>
+            </div>
+            <div class="card-footer p-4">
+              <div class="d-flex justify-content-between">
+                <h5 class="fw-normal mb-0"><a href="#!">Track</a></h5>
+                <div class="border-start h-100"></div>
+                <h5 class="fw-normal mb-0"><a href="#!">Cancel</a></h5>
+                <div class="border-start h-100"></div>
+                <h5 class="fw-normal mb-0"><a href="#!">Pre-pay</a></h5>
+                <div class="border-start h-100"></div>
+                <h5 class="fw-normal mb-0"><a href="#!" class="text-muted"><i class="fas fa-ellipsis-v"></i></a>
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<!--Order history-->
+{% if user.is_authenticated %}
+
+<section class="h-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-10 col-xl-8">
+        <div class="card" style="border-radius: 10px;">
+          <div class="card-header px-4 py-5">
+            <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #a8729a;">Anna</span>!</h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
+              <p class="small text-muted mb-0">Order Number : {{ order.order_number}}</p>
+            </div>
+            {% for order in orders %}
+            <div class="card shadow-0 border mb-4">
+              <div class="card-body">
+                <div class="row">
+
+                  <div class="col-md-4 text-left justify-content-center align-items-center">
+                    {% for item in order.items.all %}
+                    <p class="text-muted mb-0">{{ item.quantity }}x {{ item.product.product_name }} </p>
+                    {% endfor %}
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">White</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Capacity: 64GB</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">Qty: 1</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">EGP {{ order.final_price }}</p>
+                  </div>
+                </div>
+                <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                <div class="row d-flex align-items-center">
+                  <div class="col-md-2">
+                    <p class="text-muted mb-0 small">Track Order</p>
+                  </div>
+                  <div class="col-md-10">
+                    <div class="progress" style="height: 6px; border-radius: 16px;">
+                      <div class="progress-bar" role="progressbar"
+                        style="width: 65%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="65"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="d-flex justify-content-around mb-1">
+                        <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for delivary</p>
+                        <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              
+
+ 
+          </div>
+          <div class="card-footer border-0 px-4 py-5"
+            style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--End Order History-->
+  <h1>Order History</h1>
+
+  <ul>
+    {% for order in orders %}
+      <li>
+        Order {{ order.id }}: Placed on {{ order.created|date:"F d, Y" }}
+        <ul>
+          {% for item in order.items.all %}
+            <li>{{ item.quantity }}x {{ item.product.product_name }} </li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+    <style>
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+  }
+
+  .carousel-control-prev-icon::before,
+  .carousel-control-next-icon::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+  }
+
+  .carousel-control-prev-icon::before {
+    transform: translate(-50%, -50%) rotate(-135deg);
+  }
+
+  .carousel-control-next-icon::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+        .gradient-custom-2 {
+/* fallback for old browsers */
+background: #a1c4fd;
+
+/* Chrome 10-25, Safari 5.1-6 */
+background: -webkit-linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
+
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1))
+}
+
+#progressbar-1 {
+color: #455A64;
+}
+
+#progressbar-1 li {
+list-style-type: none;
+font-size: 13px;
+width: 33.33%;
+float: left;
+position: relative;
+}
+
+#progressbar-1 #step1:before {
+content: "1";
+color: #fff;
+width: 29px;
+margin-left: 22px;
+padding-left: 11px;
+}
+
+#progressbar-1 #step2:before {
+content: "2";
+color: #fff;
+width: 29px;
+}
+
+#progressbar-1 #step3:before {
+content: "3";
+color: #fff;
+width: 29px;
+margin-right: 22px;
+text-align: center;
+}
+
+#progressbar-1 li:before {
+line-height: 29px;
+display: block;
+font-size: 12px;
+background: #455A64;
+border-radius: 50%;
+margin: auto;
+}
+
+#progressbar-1 li:after {
+content: '';
+width: 121%;
+height: 2px;
+background: #455A64;
+position: absolute;
+left: 0%;
+right: 0%;
+top: 15px;
+z-index: -1;
+}
+
+#progressbar-1 li:nth-child(2):after {
+left: 50%
+}
+
+#progressbar-1 li:nth-child(1):after {
+left: 25%;
+width: 121%
+}
+
+#progressbar-1 li:nth-child(3):after {
+left: 25%;
+width: 50%;
+}
+
+#progressbar-1 li.active:before,
+#progressbar-1 li.active:after {
+background: #1266f1;
+}
+
+.card-stepper {
+z-index: 0
+}
+        .order-details {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .order-details h2 {
+            margin-top: 0;
+        }
+        .order-details dl {
+            margin: 0;
+            padding: 0;
+        }
+        .order-details dt {
+            float: left;
+            clear: left;
+            width: 160px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .order-details dd {
+            margin-left: 180px;
+            margin-bottom: 10px;
+        }
+
+
+    .search-container {
+        width: 50%;
+        margin: 0 auto;
+        text-align: center;
+
+    }
+    .search-container input[type="text"] {
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+    }
+    .search-container button {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .search-container button:hover {
+        background-color: #45a049;
+    }
+    .progress {
+    height: 0.5rem; /* Set the height of the progress bar */
+  }
+</style>
+<script>
+  // A code that handles progressbar
+
+  // Initialize the carousel with the 'interval' option set to 'false'
+  $('#orderCarousel').carousel({
+    interval: false
+  });
+  // Get the progress bar segments
+  var progressBarSegments = document.querySelectorAll('.progress-bar');
+
+  // Update the progress bar when the page is loaded
+  updateProgressBar(0);
+
+  // Listen for the 'slid.bs.carousel' event on the carousel
+  $('#orderCarousel').on('slid.bs.carousel', function (event) {
+    // Get the index of the currently active order item
+    var activeIndex = event.to;
+
+    // Update the progress bar
+    updateProgressBar(activeIndex);
+  });
+
+  function updateProgressBar(activeIndex) {
+    // Update the progress bar
+    progressBarSegments.forEach(function (segment, index) {
+      if (index === activeIndex) {
+        // Set the background color of the active segment to blue
+        segment.classList.remove('bg-white');
+        segment.classList.add('bg-primary');
+      } else {
+        // Set the background color of all other segments to white
+        segment.classList.remove('bg-primary');
+        segment.classList.add('bg-white');
+      }
+    });
+  }
+</script>
+{% endblock %}

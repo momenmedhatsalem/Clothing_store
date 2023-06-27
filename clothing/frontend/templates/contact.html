@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}
+
+Cart
+{% endblock %}
+{% block body %}
+
+
+    <!-- Contact Section Begin -->
+    <section class="contact spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="contact__text">
+                        <div class="section-title">
+                            <span>Information</span>
+                            <h2>Contact Us</h2>
+                            <p>If you have any questions, comments, or feedback, we would love to hear from you. You can contact us by filling out the form below, sending us an email at vosmos.net@gmail.com, or calling us at 010-2089-2301. We are available from Sunday to Friday, 9 am to 5 pm. Our customer service team will get back to you as soon as possible.
+                                <br>
+                                We appreciate your interest in our clothing brand and look forward to serving you.</p>
+                        </div>
+                        <ul>
+                            <li>
+                                <h4><a href="https://wa.me/+2001020892301">WhatsApp </a></h4>
+                                
+                                <br />
+                            </li>
+                            <li>
+                                <h4><a href="https://www.facebook.com/vosmos.eg"> Facebook </a></h4>
+                                <br />
+                            </li>
+                            <li>
+                                <h4><a href="https://www.instagram.com/vosmos.eg"> Instagram </a></h4>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                            {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <div class="contact__form">
+                        <form action="{% url 'contact' %}" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input placeholder="Name" type="text" class="form-control" id="name" name="name">
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                                </div>
+                                <div class="col-lg-12">
+                                    <textarea class="form-control" id="message" name="message" placeholder="Message"></textarea>
+                                    <button type="submit" class="site-btn">Send Message</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Section End -->
+
+
+
+  
+
+
+
+
+
+{% endblock %}

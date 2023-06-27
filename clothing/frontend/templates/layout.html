@@ -3,9 +3,10 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <script>document.getElementsByTagName("html")[0].className += " js";</script>
         <title>{% block title %}Vosmos | Clothing Store{% endblock %}</title>
         <!-- Use a CDN link for Bootstrap instead of a static file -->
-        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}">
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}">
@@ -14,6 +15,7 @@
         
         <link rel="icon" href="{% static 'frontend/img/banner/logo.jpg'%}" type="image/x-icon">
 
+        
         
         <meta name="description" content="Vamos Clothing Store">
         <meta name="keywords" content="Vamos, unica, creative, html">
@@ -47,6 +49,10 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         {% block script %}
         
+
+        <script src="{% static 'frontend/assets/js/util.js' %}"></script> <!-- util functions included in the CodyHouse framework -->
+        <script src="{% static 'frontend/assets/js/main.js' %}"></script> 
+
         <script src="{% static 'frontend/js/bootstrap.min.js' %}"></script>
         <script src="{% static 'frontend/js/jquery.nice-select.min.js' %}"></script>
         <script src="{% static 'frontend/js/jquery.nicescroll.min.js' %} "></script>

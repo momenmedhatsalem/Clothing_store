@@ -1,0 +1,12 @@
+
+.product__item__pic:hover {
+    cursor: pointer;
+}
+@media (min-width: var(--breakpoint-md)) {
+    #filters {
+        display: block;
+    }
+}
+body {
+    background-color: yellow;
+}
