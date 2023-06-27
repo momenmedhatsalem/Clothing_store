@@ -27,4 +27,8 @@ urlpatterns = [
     path('products/<str:category>/', views.show_products, name='show_products'),
     path('products/<str:category>/<str:subcategory>/', views.show_products, name='show_products'),
     path('contact', views.contact, name='contact'),
+    path('add_to_favorites/', views.add_to_favorites, name='add_to_favorites'),
+    path('remove_from_favorites/', views.remove_from_favorites, name='remove_from_favorites'),
+    path('favorites', views.favorites, name='favorites'),
+
 ]

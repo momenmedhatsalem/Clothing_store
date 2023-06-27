@@ -3,13 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 import random
 # Create your models here.
-class MyUser(AbstractUser):
-    country = models.CharField(max_length=50, default="")
-    city = models.CharField(max_length=50, default="")
-    phone = models.CharField(max_length=10, default="")
-    country_code = models.CharField(max_length=10, default="")
-    pass 
-
 class Product(models.Model):
     CATEGORY_CHOICES = (
         ('M', 'Men'),
@@ -42,13 +35,21 @@ class Product(models.Model):
     desc = models.CharField(max_length=300)
     pub_date = models.DateField()
     image = models.ImageField(upload_to="static/images", default="")
-
-
+    material = models.CharField(max_length=50, default="Coton 100%")
+    description = models.TextField(default="Description")
     def get_absolute_url(self):
         return f"/product_detail/{self.id}/"
 
     def __str__(self):
         return self.product_name
+class MyUser(AbstractUser):
+    country = models.CharField(max_length=50, default="")
+    city = models.CharField(max_length=50, default="")
+    phone = models.CharField(max_length=10, default="")
+    country_code = models.CharField(max_length=10, default="")
+    favorites = models.ManyToManyField(Product)
+    pass 
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
@@ -84,9 +85,15 @@ class PromoCode(models.Model):
 class CartManager(models.Manager):
     def get_anonymous_cart(self, session):
         cart = session.get('cart', [])
-        products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
-        cart_items = [{'product': product, 'quantity': int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)), 'total': "{:.2f}".format(product.price * int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)))} for product in products]
-        # calculate shipping cost for anonymous user
+        products = Product.objects.filter(
+            pk__in=[item['product_id'] for item in cart],
+            psize__color__in=[item['color'] for item in cart],
+
+        )
+        cart_items = [{'product': product, 'quantity': int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)),
+                        'color': next((item.get('color', 'default_color') for item in cart if item['product_id'] == product.pk), 'default_color'),
+                        'size': next((item.get('size', 'default_size') for item in cart if item['product_id'] == product.pk), 'default_size'),
+                            'total': "{:.2f}".format(product.price * int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)))} for product in products]        # calculate shipping cost for anonymous user
         # calculate total price before discount
         total_price_before_discount = sum(float(item['total']) for item in cart_items)
         
@@ -178,7 +185,8 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=1)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items", null=True)
     customized = models.BooleanField(default=False)
-
+    size = models.CharField(max_length=10, blank=True, null=True)
+    color = models.CharField(max_length=10, blank=True, null=True)
     def __str__(self):
         return f'{self.product.product_name} ({self.quantity})'
     
@@ -271,6 +279,9 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
     customized = models.BooleanField(default=False)
+    size = models.CharField(max_length=10, blank=True, null=True)
+    color = models.CharField(max_length=10, blank=True, null=True)
+
     def __str__(self):
         return str(self.id)
 

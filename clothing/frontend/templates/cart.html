@@ -10,7 +10,7 @@ Cart
 
 
 
-
+    {% if cart|length != 0 %}
   
     <!-- Heading -->
     <div class="bg-dark">
@@ -18,9 +18,9 @@ Cart
         <!-- Breadcrumb -->
         <nav class="d-flex">
           <h6 class="mb-0">
-            <a href="" class="text-white-50">Home</a>
+            <a href="{% url 'index' %}" class="text-white-50">Home</a>
             <span class="text-white-50 mx-2"> > </span>
-            <a href="" class="text-white"><u>Shopping cart</u></a>
+            <a href="{% url 'cart' %}" class="text-white"><u>Shopping cart</u></a>
           </h6>
         </nav>
         <!-- Breadcrumb -->
@@ -28,6 +28,7 @@ Cart
     </div>
     <!-- Heading -->
   </header>
+  
     <!-- Shopping Cart Section Begin -->
     <section class="shopping-cart spad">
       <div class="container">
@@ -54,16 +55,17 @@ Cart
                       </div>
                       <div class="product__cart__item__text">
                         <h6>{{ item.product.product_name }}</h6>
+                        <p>{{item.color}}</p>
                         <h5>EGP {{ item.product.price }}</h5>
                       </div></a>
                     </td>
                     <td class="quantity__item">
                       <div class="">
-                        <select value="{{ item.quantity }}" class="quantity-select" data-product-id="{{ item.product.id }}" style="width: 100px;" class="form-select me-4">
-                            {% for option in existing_options|dictsort:"value" %}
-                            <option value="{{ option.value }}" {% if option.value == item.quantity %}selected{% endif %}>{{ option.label }}</option>
-                        {% endfor %}
-                        </select>
+                        <select value="{{ item.quantity }}" class="quantity-select form-select me-4" data-product-id="{{ item.product.id }}" style="width: 80px; border-radius: 12px;">
+                          {% for option in existing_options|dictsort:"value" %}
+                          <option value="{{ option.value }}" {% if option.value == item.quantity %}selected{% endif %}>{{ option.label }}</option>
+                          {% endfor %}
+                      </select>
                       </div>
                     </td>
                     <td class="cart__price"><text id="total_price_{{ item.product.id }}" class="h6">EGP {{ item.total }}</text> <br />
@@ -71,9 +73,8 @@ Cart
                     <td>
                       <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
                         <div class="float-md-end">
-                          <a href="#!" class="btn btn-light border px-2 icon-hover-primary"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                          <a onclick="removeFromCart('{{ item.product.id }}')" class="btn btn-light border text-danger icon-hover-danger"> Remove</a>
-                        </div>
+                          <a onclick="addToFavorites('{{ product.id }}')" href="#" class="btn btn-light border px-2 icon-hover filler" style="border-radius: 12px;"><i class="fas fa-heart fa-xs px-1 text-secondary"></i></a>
+                          <a onclick="removeFromCart('{{ item.product.id }}')" class="btn btn-light border text-danger icon-hover-danger" style="border-radius: 12px; padding: 4px 8px;"> <i class="fa fa-close"></i></a>                        </div>
                       </div>
                     </td>
                   </tr>
@@ -153,7 +154,20 @@ Cart
       </div>
     </section>
     <!-- Shopping Cart Section End -->
-
+    {% else %}
+    <section class="shopping-cart spad"><h5 class="text-center">Your Cart Is Empty For Now</h5>
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <div class="continue__btn">
+            <a class="btn btn-light w-100 border mt-2" id="back-button">Continue Shopping</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    {% endif %}
   <section>
     <div class="container my-5">
       <header class="mb-4">

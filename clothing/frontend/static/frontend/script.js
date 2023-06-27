@@ -252,3 +252,72 @@ function removeFromCart(product_id) {
 
     });
 }
+
+// ADD to and REMOVE from cart fucntions
+
+function addToFavorites(product_id) {
+    // Get the value of the CSRF token
+    const csrftoken = getCookie('csrftoken');
+    fetch('/add_to_favorites/', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({product_id: product_id})
+    });
+  }
+  
+  function removeFromFavorites(product_id) {
+    // Get the value of the CSRF token
+    const csrftoken = getCookie('csrftoken');
+    fetch('/remove_from_favorites/', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({product_id: product_id})
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const heartIcons = document.querySelectorAll('.product__hover a');
+    heartIcons.forEach(icon => {
+      icon.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        // Handle heart icon click here
+      });
+    });
+  });
+
+document.addEventListener('DOMContentLoaded', function() {
+      // Get the modal element
+    // Get the modal element
+
+var modal = document.getElementsByClassName('modal-body');
+
+// Get the tabs inside the modal
+var tabs = document.querySelectorAll('.sizetab');
+document.querySelector('#sizechart').addEventListener('click', () => {
+    var img = document.querySelector('.modal-img');
+    img.src = staticUrl + "s.png";
+
+}
+)
+// Use the forEach method to loop through the tabs and add an event listener for the 'click' event
+tabs.forEach(function(tab) {
+  tab.addEventListener('click', function(event) {
+    // Get the data attribute of the clicked tab
+    console.log("clicked");
+    console.log(tabValue);
+    // Get the image element inside the modal
+    var img = document.querySelector('.modal-img');
+    
+    var tabValue = event.target.dataset.value;
+    img.src = staticUrl + tabValue;
+
+  });
+});
+});
