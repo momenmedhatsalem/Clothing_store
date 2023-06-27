@@ -8,19 +8,14 @@
       <div class="hero__items set-bg" data-setbg="{% static 'frontend/img/hero/hero-1.jpg' %}">
           <div class="container">
               <div class="row">
-                  <div class="col-xl-5 col-lg-7 col-md-8">
+                  <div class="col-xl-5 col-lg-7 col-md-8 col-12">
                     <div class="hero__text">
                       <h3 style="color: red; font-weight:700">NEW</h3>
                       <h2>Because You Need<br>To Look Unique</h2>
                       <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
                       commitment to exceptional quality.</p>
-                      <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
-                      <div class="hero__social">
-                          <a href="#"><i class="fa fa-facebook"></i></a>
-                          <a href="#"><i class="fa fa-twitter"></i></a>
-                          <a href="#"><i class="fa fa-pinterest"></i></a>
-                          <a href="#"><i class="fa fa-instagram"></i></a>
-                      </div>
+                      <a href="{% url 'show_products' %}" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+
                   </div>
                   </div>
               </div>
@@ -98,27 +93,63 @@
   <!-- Banner Section End -->
 
   
-  <!-- Product Section Begin -->
-  <section class="product spad">
-      <div class="container">
-          <div class="row">
-              <div class="col-lg-12">
-                  <ul class="filter__controls">
-                      <!-- <li class="active" data-filter="*">Best Sellers</li>
-                      <li data-filter=".new-arrivals">New Arrivals</li>
-                      <li data-filter=".hot-sales">Hot Sales</li> -->
-                  </ul>
-              </div>
-          </div>
-          <div class="row product__filter">
-            {% for product in products %}
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="filter__controls">
 
-              <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                </ul>
+            </div>
+        </div>
+        <div class="row product__filter">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6 mix new-arrivals">
+
+                <div class="product__item">
+
+                    <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}"
+                        onclick="window.location.href='{{ product.get_absolute_url }}'">
+                        {% if product.label != 'N' %}
+                        <span class="label">{{ product.label }}</span>
+                        {% endif %}
+                        <ul class="product__hover">
+                            <li><a onclick="addToFavorites('{{ product.id }}')" href="#"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="product__item__text">
+                        <h6>{{ product.product_name }}</h6>
+                        <a onclick="addToCart('{{product.id}}')" class="add-cart">+ Add To Cart</a>
+                        <div class="rating">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <h5>EGP {{ product.price|floatformat:2 }}</h5>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+ 
+          </div>
+          <hr />
+          <hr />
+          <h3>Recently Viewed</h3>
+          <div class="row product__filter">
+            {% for product in recently_viewed_products %}
+
+              <div class="col-lg-3 col-md-6 col-sm-6 col-6 mix new-arrivals">
                   <div class="product__item">
-                    <span class="badge bg-{{ product.get_label_display }} pt-1 mt-3 ms-2">{{ product.label }}</span>
                     
                     <div class="product__item__pic set-bg" data-setbg="{{ product.image }}" onclick="window.location.href='{{ product.get_absolute_url }}'">
-                      {% if product.label %}
+                      {% if product.label != 'N' %}
                       <span class="label">{{ product.label }}</span>
                       {% endif %}
                       <ul class="product__hover">
@@ -137,17 +168,7 @@
                               <i class="fa fa-star-o"></i>
                           </div>
                           <h5>EGP {{ product.price|floatformat:2 }}</h5>
-                          <div class="product__color__select">
-                              <label for="pc-1">
-                                  <input type="radio" id="pc-1">
-                              </label>
-                              <label class="active black" for="pc-2">
-                                  <input type="radio" id="pc-2">
-                              </label>
-                              <label class="grey" for="pc-3">
-                                  <input type="radio" id="pc-3">
-                              </label>
-                          </div>
+
                       </div>
                   </div>
               </div>
@@ -225,9 +246,8 @@
               <div class="col-lg-4">
                   <div class="instagram__text">
                       <h2>Instagram</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.</p>
-                      <h3>#Vosmos</h3>
+                      <p>Follow Us On Insta To Stay Updated With Our Products.</p>
+                      <a href="https://www.instagram.com/vosmos.eg/"><h3>@Vosmos.eg</h3></a>
                   </div>
               </div>
           </div>
@@ -282,58 +302,6 @@
   </section> -->
   <!-- Latest Blog Section End -->
 
-  <canvas>
-      
-  </canvas>
-  <!-- Footer Section Begin -->
-  <footer class="footer">
-      <div class="container">
-          <div class="row">
-              <div class="col-lg-3 col-md-6 col-sm-6">
-                  <div class="footer__about">
-                      <div class="footer__logo">
-                          <a href="#"><img src="{% static 'frontend/img/footer-logo.png' %}" alt=""></a>
-                      </div>
-                      <p>The customer is at the heart of our unique business model, which includes design.</p>
-                      <a href="#"><img src="{% static 'frontend/img/payment.png' %}" alt=""></a>
-                  </div>
-              </div>
-              <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                  <div class="footer__widget">
-                      <h6>Shopping</h6>
-                      <ul>
-                          <li><a href="#">Clothing Store</a></li>
-                          <li><a href="#">Sale</a></li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="col-lg-2 col-md-3 col-sm-6">
-                  <div class="footer__widget">
-                      <h6>Shopping</h6>
-                      <ul>
-                          <li><a href="#">Contact Us</a></li>
-                          <li><a href="#">Payment Methods</a></li>
-                          <li><a href="#">Delivery</a></li>
-                          <li><a href="#">Return & Exchanges</a></li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                  <div class="footer__widget">
-                      <h6>NewLetter</h6>
-                      <div class="footer__newslatter">
-                          <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                          <form action="#">
-                              <input type="text" placeholder="Your email">
-                              <button type="submit"><span class="icon_mail_alt"></span></button>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </footer>
-  <!-- Footer Section End -->
 
   <!-- Search Begin -->
   <div class="search-model">
@@ -344,7 +312,20 @@
           </form>
       </div>
   </div>
-
+  <div class="product">
+    <h2>Product Name</h2>
+    <button class="add-to-cart-btn">Add to Cart</button>
+  </div>
+  
+  <div class="size-selector">
+    <h3>Choose a size:</h3>
+    <button>S</button>
+    <button>M</button>
+    <button>L</button>
+    <button>XL</button>
+    <button>XXL</button>
+  </div>
+  
 
 
 <style>
@@ -377,21 +358,47 @@
       text-align: center;
   }
   
+  .size-selector {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@media (max-width: 767px) {
+.size-selector {
+  display: none;
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  transition: bottom 0.3s ease-in-out;
+  border-radius: 12px;
+}
+}
+.size-selector--active {
+  display: block;
+  bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .size-selector--active {
+    bottom: 0;
+  }
+}
 </style>
 
+<!-- JavaScript -->
+<script>
 
 
-
-
-
-      
-  <h2>Recently Viewed Products</h2>
-  <ul>
-      {% for product in recently_viewed_products %}
-      {{product}}
-          <li><a href="{{ product.get_absolute_url }}">{{product.product_name}}</a></li>
-      {% endfor %}
-  </ul>
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    const sizeSelector = document.querySelector('.size-selector');
+    
+    addToCartBtn.addEventListener('click', () => {
+      sizeSelector.classList.add('size-selector--active');
+    });
+    </script>
 
 {% endblock %}
 

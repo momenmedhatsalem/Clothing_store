@@ -6,7 +6,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.urls import reverse
-from frontend.models import Product, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
+from frontend.models import Product, ProductImage, ProductSize, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -40,8 +40,46 @@ from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Design
+from django.core.paginator import Paginator
 
 
+
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message') 
+        message = f'Name: {name}\nEmail: {email}\nMessage: {message}'
+        subject = 'Contact Form'
+        from_email = 'vosmos.net@gmail.com'
+        recipient_list = ['vosmos.net@gmail.com']
+        
+        send_mail(subject, message, from_email, recipient_list)
+        # Send confirmation email to user
+        subject = 'Thanks for contacting us'
+        message = f'Dear {name},\n\nThank you for contacting us. We have received your inquiry and will get back to you as soon as possible.\n\nBest regards,\nVosMos Team'
+        from_email = 'vosmos.net@gmail.com'
+        recipient_list = [email]
+        send_mail(subject, message, from_email, recipient_list)
+        messages.success(request, 'Your message has been sent successfully!')
+        return redirect('contact')
+    else:
+        
+        return render(request, 'contact.html')
+
+def show_products(request, category=None, subcategory=None):
+    products = Product.objects.all()
+    if category:
+        products = products.filter(category=category)
+    if subcategory:
+        products = products.filter(subcategory=subcategory)
+
+    paginator = Paginator(products, 15) # Show 15 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {'page_obj': page_obj, 'categories': Product.CATEGORY_CHOICES,}
+    return render(request, 'products.html', context)
 
 
 @csrf_exempt
@@ -102,16 +140,20 @@ def product_detail(request, product_id):
         cart_item.save()
         return redirect('cart_detail')
     # Get the product
-    product = get_object_or_404(Product, id=product_id)
+    else:
+        product = get_object_or_404(Product, id=product_id)
 
-    # Add the product ID to the list of recently viewed products in the session
-    recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
-    if product_id not in recently_viewed_product_ids:
-        recently_viewed_product_ids.append(product_id)
-        request.session['recently_viewed_products'] = recently_viewed_product_ids
+        # Add the product ID to the list of recently viewed products in the session
+        recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
+        if product_id not in recently_viewed_product_ids:
+            recently_viewed_product_ids.append(product_id)
+            request.session['recently_viewed_products'] = recently_viewed_product_ids
+        images = ProductImage.objects.filter(product=product)
+        sizes = ProductSize.objects.filter(product=product)
+    
 
     # Render the template with the product
-    return render(request, 'product_detail.html', {'product': product})
+    return render(request, 'product.html', {'product': product, 'images': images, 'sizes': sizes})
 
 
 def login_view(request):
@@ -164,7 +206,6 @@ class RegisterForm(Form):
     last_name = CharField(label="Last Name", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = EmailField(label="Email", max_length=200, widget=forms.EmailInput(attrs={'class': 'form-control'}))
     password = CharField(label="Password", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    address = CharField(label="Address", max_length=500, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     # A phone number field that allows the user to choose a country code from a tab
     # and sets the default to +20 Egypt
@@ -313,7 +354,10 @@ def checkout(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         phone = request.POST.get('phone')
-
+        if payment_method == "COD":
+            fees = 12
+        else:
+            fees = 0
         # Check if the user is authenticated
         if request.user.is_authenticated:
             # Get the user and cart information
@@ -332,7 +376,7 @@ def checkout(request):
                 city=request.POST['city'],
                 payment_method=payment_method,
                 shipping_cost=cart.shipping_cost,
-                final_price=cart.final_price  # Set the final price of the order to the final price of the cart
+                final_price=cart.final_price + fees  # Set the final price of the order to the final price of the cart
             )
 
             # Create OrderItem instances for each item in the cart
@@ -367,7 +411,7 @@ def checkout(request):
                 
                 payment_method=payment_method,
                 shipping_cost=cart['shipping_cost'],
-                final_price=cart['final_price']  # Set the final price of the order to the final price of the anonymous cart
+                final_price=cart['final_price'] + fees # Set the final price of the order to the final price of the anonymous cart
             )
 
             # Create OrderItem instances for each item in the anonymous cart
@@ -416,11 +460,16 @@ def checkout(request):
 #@require_http_methods(["POST", "PUT"])
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    if request.method == 'GET':
-        quantity = int(request.POST.get('quantity', 1))
+    if request.method == 'GET' or request.method == 'POST':
+        quantity = int(request.POST.get('cloth_quantity'))
+        color = request.POST.get('color')
+        size = request.POST.get('size')
+        print(color)
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
-            a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+            a_cart_item, created = CartItem.objects.get_or_create(cart=cart,
+                                                                product=product, color=color,
+                                                                    size=size)
 
             if not created:
                 a_cart_item.quantity += quantity
@@ -431,19 +480,30 @@ def add_to_cart(request, product_id):
         else:
             # Handle anonymous user
             cart = request.session.get('cart', [])
-            cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+            cart_item = next((item for item in cart if item['product_id'] == product_id and item['color'] == color and item['size'] == size), None)
             if cart_item:
                 cart_item['quantity'] += quantity
+                print("found")
             else:
-                cart.append({'product_id': product_id, 'quantity': quantity})
+                print("Not")
+                cart.append({'product_id': product_id, 'quantity': quantity, 'color': color, 'size': size})
             request.session['cart'] = cart
+        return redirect('cart')
     elif request.method == 'PUT':
         data = json.loads(request.body)
         quantity = data.get('quantity', 1)
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
             a_cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-            a_cart_item.quantity = quantity
+            if created:
+                # if the cart item was created (i.e. the product was not already in the cart), set the quantity to 1
+                a_cart_item.quantity = 1
+            else:
+                if quantity == 0:
+                    a_cart_item.quantity += 1
+                # if the cart item was not created (i.e. the product was already in the cart), update the quantity
+                else:
+                    a_cart_item.quantity = quantity
             a_cart_item.save()
             total = a_cart_item.total
             total_price = cart.total_price
@@ -456,9 +516,14 @@ def add_to_cart(request, product_id):
             cart_item = next((item for item in cart if item['product_id'] == product_id), None)
 
             if cart_item:
-                cart_item['quantity'] = quantity
+                if quantity == 0:
+                    a_cart_item.quantity += 1
+                # if the product is already in the cart, update the quantity
+                else:
+                    cart_item['quantity'] = quantity
             else:
-                cart.append({'product_id': product_id, 'quantity': quantity})
+                # if the product is not in the cart, add it with a quantity of 1
+                cart.append({'product_id': product_id, 'quantity': 1})
 
             request.session['cart'] = cart
             total = product.price * int(quantity)
@@ -468,8 +533,8 @@ def add_to_cart(request, product_id):
             total_price_before_discount = anonymous_cart['total_price_before_discount']
         # calculate discount
         discount = float(total_price_before_discount) - float(total_price)
-        return JsonResponse({'success': True,'cart_total': total_price, 'total': "{:.2f}".format(total), 'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
-    return redirect('cart')
+        return JsonResponse({'success': True,'cart_total': total_price, 'total': "{:.2f}".format(total),
+                              'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount, 'product_name': product.product_name})
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -623,3 +688,50 @@ def customize(request):
     return render(request, 'customize.html')
 
 
+@csrf_exempt
+@require_http_methods(["PUT"])
+def add_to_favorites(request):
+    data = json.loads(request.body)
+    product_id = data.get('product_id')
+    product = Product.objects.get(pk=product_id)
+    if request.user.is_authenticated:
+        # Add the product to the authenticated user's favorites
+        profile = MyUser.objects.get(email =request.user.email)
+        profile.favorites.add(product)
+    else:
+        # Add the product to the anonymous user's session-based favorites
+        favorites = request.session.get('favorites', [])
+        favorites.append(product_id)
+        request.session['favorites'] = favorites
+    return JsonResponse({'status': 'success'})
+
+
+@require_http_methods(["PUT"])
+def remove_from_favorites(request):
+    data = json.loads(request.body)
+    product_id = data.get('product_id')
+    if request.user.is_authenticated:
+        # Remove the product from the authenticated user's favorites
+        profile = MyUser.objects.get(email =request.user.email)
+        profile.favorites.remove(product_id)
+    else:
+        # Remove the product from the anonymous user's session-based favorites
+        favorites = request.session.get('favorites', [])
+        if product_id in favorites:
+            favorites.remove(product_id)
+            request.session['favorites'] = favorites
+    return JsonResponse({'status': 'success'})
+
+def favorites(request):
+    if request.user.is_authenticated:
+        # Get the favorite products for the authenticated user
+        profile = MyUser.objects.get(email =request.user.email)
+        
+        favorite_products = profile.favorites.all()
+    else:
+        # Get the favorite products for the anonymous user
+        favorite_product_ids = request.session.get('favorites', [])
+        favorite_products = Product.objects.filter(pk__in=favorite_product_ids)
+
+    context = {'favorites': favorite_products}
+    return render(request, 'favorites.html', context)

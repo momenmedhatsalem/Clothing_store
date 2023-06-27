@@ -68,10 +68,14 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'frontend.context_processors.base_url',
             ],
         },
     },
 ]
+
+
+
 
 WSGI_APPLICATION = "clothing.wsgi.application"
 
@@ -147,3 +151,4 @@ EMAIL_HOST_USER = 'vosmos.net@gmail.com'
 EMAIL_HOST_PASSWORD = 'aweegjtgdwgwfuwu'
 
 EMAIL_USE_SSL = False
+
