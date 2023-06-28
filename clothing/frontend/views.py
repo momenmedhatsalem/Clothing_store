@@ -67,6 +67,8 @@ def contact(request):
         
         return render(request, 'contact.html')
 
+def Return(request):
+    return render(request, 'Return.html')
 def show_products(request, category=None, subcategory=None):
     products = Product.objects.all()
     if category:
