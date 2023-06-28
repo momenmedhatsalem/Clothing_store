@@ -1,0 +1,437 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block body %}
+<div class="cd-cart cd-cart--empty js-cd-cart">
+    <a href="#0" class="cd-cart__trigger text-replace">
+      Cart
+      <ul class="cd-cart__count"> <!-- cart items count -->
+        <li>0</li>
+        <li>0</li>
+      </ul> <!-- .cd-cart__count -->
+    </a>
+  
+    <div class="cd-cart__content">
+      <div class="cd-cart__layout">
+        <header class="cd-cart__header">
+          <h2>Cart</h2>
+          <span class="cd-cart__undo">Item removed. <a href="#0">Undo</a></span>
+        </header>
+        
+        <div class="cd-cart__body">
+          <ul>
+            <!-- products added to the cart will be inserted here using JavaScript -->
+          </ul>
+        </div>
+  
+        <footer class="cd-cart__footer">
+          <a href="#0" class="cd-cart__checkout">
+            <em>Checkout - $<span>0</span>
+              <svg class="icon icon--sm" viewBox="0 0 24 24"><g fill="none" stroke="currentColor"><line stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x1="3" y1="12" x2="21" y2="12"/><polyline stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="15,6 21,12 15,18 "/></g>
+              </svg>
+            </em>
+          </a>
+        </footer>
+      </div>
+    </div> <!-- .cd-cart__content -->
+  </div> <!-- cd-cart -->
+ <!-- Hero Section Begin -->
+ <section class="hero">
+  <div class="hero__slider owl-carousel">
+      <div class="hero__items set-bg" data-setbg="{% static 'frontend/img/hero/hero-1.jpg' %}">
+          <div class="container">
+              <div class="row">
+                  <div class="col-xl-5 col-lg-7 col-md-8 col-12">
+                    <div class="hero__text">
+                      <h3 style="color: red; font-weight:700">NEW</h3>
+                      <h2>Because You Need<br>To Look Unique</h2>
+                      <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
+                      commitment to exceptional quality.</p>
+                      <a href="{% url 'show_products' %}" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="hero__items set-bg" data-setbg="{% static 'frontend/img/hero/hero-2.jpg' %}">
+          <div class="container">
+              <div class="row">
+                  <div class="col-xl-5 col-lg-7 col-md-8">
+                      <div class="hero__text">
+                          <h6>Summer Collection</h6>
+                          <h2>Fall - Winter Collections 2030</h2>
+                          <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
+                          commitment to exceptional quality.</p>
+                          <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                          <div class="hero__social">
+                              <a href="#"><i class="fa fa-facebook"></i></a>
+                              <a href="#"><i class="fa fa-twitter"></i></a>
+                              <a href="#"><i class="fa fa-pinterest"></i></a>
+                              <a href="#"><i class="fa fa-instagram"></i></a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+<!-- Hero Section End -->
+
+
+
+
+  <!-- Banner Section Begin -->
+  <section class="banner spad">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-7 offset-lg-4">
+                  <div class="banner__item">
+                      <div class="banner__item__pic">
+                          <img src="{% static 'frontend/img/banner/banner-1.jpg' %}" alt="">
+                      </div>
+                      <div class="banner__item__text">
+                          <h2>Clothing Collections</h2>
+                          <a href="#">Shop now</a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-5">
+                  <div class="banner__item banner__item--middle">
+                      <div class="banner__item__pic">
+                          <img src="{% static 'frontend/img/banner/banner-2.jpg' %}" alt="">
+                      </div>
+                      <div class="banner__item__text">
+                          <h2>Customize As You Want!</h2>
+                          <a href="#">Shop now</a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-7">
+                  <div class="banner__item banner__item--last">
+                      <div class="banner__item__pic">
+                          <img src="{% static 'frontend/img/banner/banner-3.jpg' %}" alt="">
+                      </div>
+                      <div class="banner__item__text">
+                          <h2>Summer Women Collection 2023</h2>
+                          <a href="#">Shop now</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  <!-- Banner Section End -->
+
+  
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="filter__controls">
+
+                </ul>
+            </div>
+        </div>
+        <div class="row product__filter">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6 mix new-arrivals">
+
+                <div class="product__item">
+
+                    <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}"
+                        onclick="window.location.href='{{ product.get_absolute_url }}'">
+                        {% if product.label != 'N' %}
+                        <span class="label">{{ product.label }}</span>
+                        {% endif %}
+                        <ul class="product__hover">
+                            <li><a onclick="addToFavorites('{{ product.id }}')" href="#"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="product__item__text">
+                        <h6>{{ product.product_name }}</h6>
+                        <a onclick="addToCart('{{product.id}}')" class="add-cart">+ Add To Cart</a>
+                        <div class="rating">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <h5>EGP {{ product.price|floatformat:2 }}</h5>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+ 
+          </div>
+          <hr />
+          <hr />
+          <div class=" product__filter">
+            {% for product in recently_viewed_products %}
+            <h3>Recently Viewed</h3>
+          <div class="row">
+              <div class="col-lg-3 col-md-6 col-sm-6 col-6 mix new-arrivals">
+                  <div class="product__item">
+                    
+                    <div class="product__item__pic set-bg" data-setbg="{{ product.image }}" onclick="window.location.href='{{ product.get_absolute_url }}'">
+                      {% if product.label != 'N' %}
+                      <span class="label">{{ product.label }}</span>
+                      {% endif %}
+                      <ul class="product__hover">
+                          <li><a href="#"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
+                      </ul>
+                  </div>
+                    
+                      <div class="product__item__text">
+                          <h6>{{ product.product_name }}</h6>
+                          <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                          <div class="rating">
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                          </div>
+                          <h5>EGP {{ product.price|floatformat:2 }}</h5>
+
+                      </div>
+                  </div>
+                  </div>
+              </div>
+              {% endfor %}
+
+
+ 
+          </div>
+      </div>
+  </section>
+  <!-- Product Section End -->
+
+  <!-- Categories Section Begin -->
+  <!-- <section class="categories spad">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-3">
+                  <div class="categories__text">
+                      <h2>Clothings Hot <br /> <span>Shoe Collection</span> <br /> Accessories</h2>
+                  </div>
+              </div>
+              <div class="col-lg-4">
+                  <div class="categories__hot__deal">
+                      <img src="{% static 'frontend/img/product-sale.png' %}" alt="">
+                      <div class="hot__deal__sticker">
+                          <span>Sale Of</span>
+                          <h5>$29.99</h5>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-4 offset-lg-1">
+                  <div class="categories__deal__countdown">
+                      <span>Deal Of The Week</span>
+                      <h2>Multi-pocket Chest Bag Black</h2>
+                      <div class="categories__deal__countdown__timer" id="countdown">
+                          <div class="cd-item">
+                              <span>3</span>
+                              <p>Days</p>
+                          </div>
+                          <div class="cd-item">
+                              <span>1</span>
+                              <p>Hours</p>
+                          </div>
+                          <div class="cd-item">
+                              <span>50</span>
+                              <p>Minutes</p>
+                          </div>
+                          <div class="cd-item">
+                              <span>18</span>
+                              <p>Seconds</p>
+                          </div>
+                      </div>
+                      <a href="#" class="primary-btn">Shop now</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  Categories Section End -->
+
+  <!-- Instagram Section Begin -->
+  <section class="instagram spad">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-8">
+                  <div class="instagram__pic">
+                      <div class="instagram__pic__item set-bg" data-setbg="{% static 'frontend/img/instagram/instagram-1.jpg' %}"></div>
+                      <div class="instagram__pic__item set-bg" data-setbg="{% static 'frontend/img/instagram/instagram-2.jpg' %}"></div>
+                      <div class="instagram__pic__item set-bg" data-setbg="{% static 'frontend/img/instagram/instagram-3.jpg' %}"></div>
+                      <div class="instagram__pic__item set-bg" data-setbg="{% static 'frontend/img/instagram/instagram-4.jpg' %}"></div>
+                      <div class="instagram__pic__item set-bg" data-setbg="{% static 'frontend/img/instagram/instagram-5.jpg' %}"></div>
+                      <div class="instagram__pic__item set-bg" data-setbg="{% static 'frontend/img/instagram/instagram-6.jpg' %}"></div>
+                  </div>
+              </div>
+              <div class="col-lg-4">
+                  <div class="instagram__text">
+                      <h2>Instagram</h2>
+                      <p>Follow Us On Insta To Stay Updated With Our Products.</p>
+                      <a href="https://www.instagram.com/vosmos.eg/"><h3>@Vosmos.eg</h3></a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  <!-- Instagram Section End -->
+
+  <!-- Latest Blog Section Begin -->
+  <!-- <section class="latest spad">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="section-title">
+                      <span>Latest News</span>
+                      <h2>Fashion New Trends</h2>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-4 col-md-6 col-sm-6">
+                  <div class="blog__item">
+                      <div class="blog__item__pic set-bg" data-setbg="{% static 'frontend/img/blog/blog-1.jpg' %}"></div>
+                      <div class="blog__item__text">
+                          <span><img src="{% static 'frontend/img/icon/calendar.png' %}" alt=""> 16 February 2020</span>
+                          <h5>What Curling Irons Are The Best Ones</h5>
+                          <a href="#">Read More</a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-6">
+                  <div class="blog__item">
+                      <div class="blog__item__pic set-bg" data-setbg="{% static 'frontend/img/blog/blog-2.jpg' %}"></div>
+                      <div class="blog__item__text">
+                          <span><img src="{% static 'frontend/img/icon/calendar.png' %}" alt=""> 21 February 2020</span>
+                          <h5>Eternity Bands Do Last Forever</h5>
+                          <a href="#">Read More</a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-6">
+                  <div class="blog__item">
+                      <div class="blog__item__pic set-bg" data-setbg="{% static 'frontend/img/blog/blog-3.jpg' %}"></div>
+                      <div class="blog__item__text">
+                          <span><img src="{% static 'frontend/img/icon/calendar.png' %}" alt=""> 28 February 2020</span>
+                          <h5>The Health Benefits Of Sunglasses</h5>
+                          <a href="#">Read More</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section> -->
+  <!-- Latest Blog Section End -->
+
+
+  <!-- Search Begin -->
+  <!-- <div class="search-model">
+      <div class="h-100 d-flex align-items-center justify-content-center">
+          <div class="search-close-switch">+</div>
+          <form class="search-model-form">
+              <input type="text" id="search-input" placeholder="Search here.....">
+          </form>
+      </div>
+  </div>
+  <div class="product">
+    <h2>Product Name</h2>
+    <button class="add-to-cart-btn">Add to Cart</button>
+  </div> -->
+  
+  <div class="size-selector">
+    <h3>Choose a size:</h3>
+    <button>S</button>
+    <button>M</button>
+    <button>L</button>
+    <button>XL</button>
+    <button>XXL</button>
+  </div>
+  
+
+
+<style>
+.product-card {
+  width: calc(100% / 3);
+  margin: 10px;
+  position: relative;
+  bottom: -100%;
+  animation: moveUp 1s ease-out forwards;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@keyframes moveUp {
+  0% {
+    bottom: -100%;
+    opacity: 0;
+  }
+  100% {
+    bottom: 0;
+    opacity: 1;
+  }
+}
+  .starter-template {
+      padding: 40px 15px;
+      text-align: center;
+  }
+  
+  .size-selector {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@media (max-width: 767px) {
+.size-selector {
+  display: none;
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  transition: bottom 0.3s ease-in-out;
+  border-radius: 12px;
+}
+}
+.size-selector--active {
+  display: block;
+  bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .size-selector--active {
+    bottom: 0;
+  }
+}
+</style>
+
+<!-- JavaScript -->
+<script>
+
+
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    const sizeSelector = document.querySelector('.size-selector');
+    
+    addToCartBtn.addEventListener('click', () => {
+      sizeSelector.classList.add('size-selector--active');
+    });
+    </script>
+
+{% endblock %}
+

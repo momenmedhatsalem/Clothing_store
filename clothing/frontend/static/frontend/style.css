@@ -1,0 +1,10 @@
+
+.product__item__pic:hover {
+    cursor: pointer;
+}
+.social-media-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  

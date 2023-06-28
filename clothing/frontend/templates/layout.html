@@ -1,0 +1,393 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <script>document.getElementsByTagName("html")[0].className += " js";</script>
+        <title>{% block title %}Vosmos | Clothing Store{% endblock %}</title>
+        <!-- Use a CDN link for Bootstrap instead of a static file -->
+        <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}">
+        <!-- Use a CDN link for jQuery instead of a static file -->
+        <!-- Use a CDN link for Bootstrap instead of a static file -->
+        
+        <link rel="icon" href="{% static 'frontend/img/banner/logo.jpg'%}" type="image/x-icon">
+
+        
+        
+        <meta name="description" content="Vamos Clothing Store">
+        <meta name="keywords" content="Vamos, unica, creative, html">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+
+
+        <!--Styles-->
+        <link rel="stylesheet" href="{% static 'frontend/css/bootstrap.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/font-awesome.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/elegant-icons.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/magnific-popup.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/nice-select.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/owl.carousel.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/slicknav.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'frontend/style.css' %}" type="text/css">
+        <link rel="stylesheet" href="../static/frontend/css/query.css" type="text/css">
+
+
+        
+        <!--Scripts-->
+        <!-- Js Plugins -->
+        
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        {% block script %}
+        
+
+        <script src="{% static 'frontend/assets/js/util.js' %}"></script> <!-- util functions included in the CodyHouse framework -->
+        <script src="{% static 'frontend/assets/js/main.js' %}"></script> 
+
+        <script src="{% static 'frontend/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'frontend/js/jquery.nice-select.min.js' %}"></script>
+        <script src="{% static 'frontend/js/jquery.nicescroll.min.js' %} "></script>
+        <script src="{% static 'frontend/js/jquery.magnific-popup.min.js'%}"></script>
+        <script src="{% static 'frontend/js/jquery.countdown.min.js' %}"></script>
+        <script src="{% static 'frontend/js/jquery.slicknav.js' %}"></script>
+        <script src="{% static 'frontend/js/mixitup.min.js' %}"></script>
+        <script src="{% static 'frontend/js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'frontend/js/main.js' %}"></script>
+        <script src="{% static 'frontend/script.js' %}"></script>
+    {% endblock %}
+
+
+
+
+
+        <!-- Font Awesome Library -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+        <!-- Offcanvas Menu Begin -->
+        <div class="offcanvas-menu-overlay"></div>
+        <div class="offcanvas-menu-wrapper">
+            <div class="offcanvas__option">
+                <div class="offcanvas__links">
+                    {% if user.is_authenticated %}
+                                
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                
+                {% else %}
+                {% if request.path == '/login/' %}
+                
+                {% else %}
+                
+                {% endif %}
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+
+                {% endif %}
+                    <a href="#">FAQs</a>
+                </div>
+                <div class="offcanvas__top__hover">
+                    <span>EN <i class="arrow_carrot-down"></i></span>
+                    <ul>
+                        <li>EN</li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="offcanvas__nav__option">
+                <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
+                <a href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
+                <div class="price"></div>
+            </div>
+            <div id="mobile-menu-wrap"></div>
+            <div class="offcanvas__text">
+                <p>Free shipping, 30-day return or refund guarantee.</p>
+            </div>
+        </div>
+        <!-- Offcanvas Menu End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-7">
+                        <div class="header__top__left">
+                            <p>Free shipping, 30-day return or refund guarantee.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-5">
+                        <div class="header__top__right">
+                            <div class="header__top__links">
+                                {% if user.is_authenticated %}
+                                
+                                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                                
+                                {% else %}
+                                {% if request.path == '/login/' %}
+                                
+                                {% else %}
+                                
+                                {% endif %}
+                                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+        
+                                {% endif %}
+                                <a href="#">FAQs</a>
+                                <a id="night-mode-toggle"><i class="fas fa-moon"></i> Dark Mode</a>
+
+                            </div>
+                            <div class="header__top__hover">
+                                <span>EN <i class="arrow_carrot-down"></i></span>
+                                <ul>
+                                    <li>EN</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 col-md-8 col-6">
+                    <div class="header__logo">
+                        <a href="{% url 'index' %}"><img src="{% static 'frontend/img/logo4.png' %}" alt=""></a>
+                    </div>
+                </div>
+
+                <div style="margin-left: 80px;" class="col-lg-6 col-md-6 col-1 p-3">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            {% if request.path == '/' %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                                <h5><a class="nav-link" href="{% url 'index' %}">HOME</a></h5>
+                            </li>
+                            {% if request.path|slice:":12" == '/products/M/'  %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                            
+                            <h5><a href="{% url 'show_products' 'M' %}">MEN</a></li></h5>
+                            {% if request.path|slice:":12" == '/products/W/'  %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                            <h5><a href="{% url 'show_products' 'W' %}">WOMEN</a></li></h5>
+                            {% if request.path|slice:":12" == '/products/K/'  %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                            <h5><a href="{% url 'show_products' 'K' %}">KIDS</a></li></h5>
+                            {% if request.path|slice:":8" == '/contact'  %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                            <h5><a href="{% url 'contact' %}">Contact Us</a></li></h5>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3 p-2">
+                    <div class="header__nav__option">
+                        <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
+                        <a href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>
+                            {% if cart.count %}
+                            {{ cart.count }}
+                            {% else %}
+                            0
+                            {% endif %}
+                        </span></a>
+                        
+                        <div class="price">EGP</div>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+
+
+
+
+
+
+
+
+
+
+
+    
+                <style>
+body.night-mode {
+  background-color: #222;
+  color: #ddd;
+}
+
+body.night-mode a {
+  color: #88f;
+}
+
+body.night-mode button {
+  background-color: #333;
+  color: #fff;
+}
+
+body.night-mode #container div.white-background {
+  background-color: #333;
+}
+
+                
+                </style>
+    <!-- Use the block body tag to insert the content of each page -->
+    <script>
+
+
+
+
+        var night_mode;
+        const body = document.querySelector('body');
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            fetch('/toggle-night-mode/False')
+                .then(response => response.json())
+                .then(data => {
+                    // Print email
+                    console.log(data);
+                    night_mode = data.night_mode;
+                    console.log(night_mode);
+                    // ... do something else with email ...
+                    if (night_mode === true) {
+                        
+                        body.classList.add('night-mode');
+                        nightModeToggle.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
+                    }
+                    else {
+                        nightModeToggle.innerHTML = `<i class="fas fa-moon"></i> Dark Mode`;
+                        body.classList.remove('night-mode');
+    
+                    }
+                });
+
+});
+
+        const nightModeToggle = document.querySelector('#night-mode-toggle');
+        nightModeToggle.addEventListener('click', () => {
+
+            
+
+
+            if (nightModeToggle.innerHTML.includes("Dark Mode")) {
+                nightModeToggle.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
+                fetch('/toggle-night-mode/True', {
+                    method: 'PUT',
+
+                    })
+                    
+                    body.classList.add('night-mode');
+                }
+                else {
+                fetch('/toggle-night-mode/False', {
+                    method: 'PUT',
+
+                    })
+                nightModeToggle.innerHTML = `<i class="fas fa-moon"></i> Dark Mode`;
+                
+                body.classList.remove('night-mode');
+                }
+        
+        
+        });
+    </script>
+    {% block body %}
+    {% endblock %}
+</body>
+{% block footer %}
+   <!-- Footer Section Begin -->
+   <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="footer__about">
+                    <div class="footer__logo">
+                        <a href="#"><img src="{% static 'frontend/img/footer-logo.png' %}" alt=""></a>
+                    </div>
+                    <p>The customer is at the heart of our unique business model</p>
+                    <a href="#"><img src="{% static 'frontend/img/payment.png' %}" alt=""></a>
+                </div>
+            </div>
+            <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Shopping</h6>
+                    <ul>
+                        <li><a href="#">Clothing Store</a></li>
+                        <li><a href="#">Trending Shoes</a></li>
+                        <li><a href="#">Accessories</a></li>
+                        <li><a href="#">Sale</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Shopping</h6>
+                    <ul>
+                        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+
+                        <li><a href="{% url 'Return' %}">Return & Exchanges</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                <div class="footer__widget">
+                    <h6>NewLetter</h6>
+                    <div class="footer__newslatter">
+                        <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                        <form action="#">
+                            <input type="text" placeholder="Your email">
+                            <button type="submit"><span class="icon_mail_alt"></span></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="footer__copyright__text">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    <p>Copyright ©
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>2020
+                        All rights reserved | This template is made with <i class="fa fa-heart-o"
+                        aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    </p>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+{% endblock %}
+</html>

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% block title %}
+    Order Confirmation
+{% endblock %}
+
+    <h1>Thank you for your order!</h1>
+    <p>Your order number is: {{ order_number }}</p>
+    <p>We have sent a confirmation email to {{ email }}.</p>
+    <p>You can view your order details by logging into your account.</p>
+
+
+{% endblock %}

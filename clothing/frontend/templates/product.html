@@ -1,0 +1,268 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}
+
+
+{% endblock %}
+{% block body %}
+
+    <!-- Shop Details Section Begin -->
+    <div class="product__details__pic">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="product__details__breadcrumb">
+                            <a href="./index.html">Home</a>
+                            <a href="./shop.html">Shop</a>
+                            <span>Product Details</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-5 col-md-9">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-0" role="tabpanel">
+                                <div class="product__details__pic__item">
+                                    <img src="{{product.image.url}}" alt="">
+                                </div>
+                            </div>
+                            {% for image in images %}
+                            <div class="tab-pane" id="tabs-{{ forloop.counter }}" role="tabpanel">
+                                <div class="product__details__pic__item">
+                                    <img src="{{ image.image.url }}" alt="">
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 align-items-left">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-0" role="tab">
+                                    <div class="product__thumb__pic set-bg" data-setbg="{{product.image.url}}">
+                                    </div>
+                                </a>
+                            </li>
+
+                            {% for image in images %}
+                            <li class="nav-item ">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-{{ forloop.counter }}" role="tab">
+                                    <div class="product__thumb__pic set-bg" data-setbg="{{image.image.url}}">
+                                    </div>
+                                </a>
+                            </li>
+                            {% endfor %}
+                            
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12">
+                        <!-- move this div inside the same row as the photos -->
+                        <h2>{{product.product_name}}</h2>
+                        <!-- ... (rest of the product details) -->
+                        <h4>EGP {{ product.price }} {% if product.discount_price != 0%} <span>EGP {{ product.discount_price }}</span> {% endif %}</h4>
+                        <br>
+                        <p>{{ product.desc }}</p>
+                        <p>{{ star }}</p>
+                        <hr />
+                        <br>
+                        <!-- Button trigger modal -->
+                        <button id="sizechart" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sizeChartModal">
+                            Size Chart
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="sizeChartModal" tabindex="-1" role="dialog" aria-labelledby="sizeChartModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+
+                                        <h5 class="modal-title">Size Chart</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <!-- Nav tabs -->
+                                        <ul class="nav nav-pills" id="myTab" role="tablist">
+                                            <li class="nav-item">
+                                                <a data-value="s.png" class="nav-link active sizetab" href="#" id="tab1-tab" data-toggle="tab"
+                                                    role="tab" aria-selected="true"> S </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a data-value="m.png" class="nav-link sizetab" href="#" id="tab2-tab" data-toggle="tab"
+                                                    role="tab" aria-selected="false"> M </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a data-value="l.png" class="nav-link sizetab" href="#" id="tab2-tab" data-toggle="tab"
+                                                    role="tab" aria-selected="false"> L </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a data-value="xl.png" class="nav-link sizetab" href="#" id="tab2-tab" data-toggle="tab"
+                                                    role="tab" aria-selected="false"> XL </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a data-value="xxl.png" class="nav-link sizetab" href="#" id="tab2-tab" data-toggle="tab"
+                                                    role="tab" aria-selected="false"> XXL </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a data-value="3xl.png" class="nav-link sizetab" href="#" id="tab2-tab" data-toggle="tab"
+                                                    role="tab" aria-selected="false"> 3XL </a>
+                                            </li>
+
+                                        </ul>
+
+                                        <img src="" class="modal-img">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="product__details__option">
+                            <form id="my-form" method="POST" action="{% url 'add_to_cart' product.id %}">
+                            <div class="product__details__option__size">
+                                <span>Size:</span>
+                                {% for size in sizes %}
+                                <label for="{{ size.size }}"  {% if forloop.first %}class="active"{% endif %}>{{ size.size }}
+                                    <input name="size" type="radio" value="{{ size.size }}" id="{{ size.size }}">
+                                </label>
+                                {% endfor %}
+                                
+                            </div>
+                            <div id="color-selector" class="product__details__option__color">
+                                <span>Color:</span>
+                                {% for size in sizes %}
+                                    <input type="radio" id="sp-{{ size.color_id }}" name="color" value="{{ size.color }}" class="d-none" {% if forloop.first %}checked{% endif %}>
+                                    <label class="c-{{ size.color_id }}" for="sp-{{ size.color_id }}" title="{{ size.color }}"></label>
+                                {% endfor %}
+                            </div>
+                            <br>
+                            <br>
+                                {% csrf_token %}
+                            <div class="product__details__cart__option">
+                                <div class="sticky-bottom">
+                                    <div class="quantity">
+                                      <div class="pro-qty">
+                                        <input name="cloth_quantity" type="text" value="1">
+                                      </div>
+                                    </div>
+                                    <a href="#" class="primary-btn" id="submit-button">Add to Cart</a>
+                                  </div>                        </div>
+                            </form>
+                            <div class="product__details__btns__option">
+                                <a onclick="addToFavorites('{{ product.id }}')" href="#"><i class="fa fa-heart"></i> add to favorites</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="product__details__content">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="product__details__text">
+                            <h4>{{product.product_name}}</h4>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <span> - 5 Reviews</span>
+                            </div>
+                            
+
+                            
+
+
+                            <div class="product__details__last__option">
+                                <h5><span>Guaranteed Safe Checkout</span></h5>
+                                <img src="img/shop-details/details-payment.png" alt="">
+                                <ul>
+                                    <li><span>SKU:</span> 3812912</li>
+                                    <li><span>Categories:</span> Clothes</li>
+                                    <li><span>Tag:</span> Clothes, Skin, Body</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product__details__tab">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#tabs-5"
+                                    role="tab">Description</a>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                    <div class="product__details__tab__content">
+  
+                                            <p>{{ product.description|linebreaks }}
+                                            </p>
+  
+
+                                        <div class="product__details__tab__content__item">
+                                            <h5>Material used</h5>
+                                            <p>{{ product.material }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            <hr/>
+                            <hr/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <style>
+                input[type=radio]:checked + label {
+        border: 2px solid red;
+        box-shadow: 0 0 0 2px black;
+        border-radius: 50%;
+    }
+        </style>
+    <!-- Shop Details Section End -->
+    <script>
+        var staticUrl = "{% static 'frontend/img/size/' %}";
+    </script>
+    <script>
+        // get all the radio buttons
+        const radioButtons = document.querySelectorAll('input[type=radio][name=color]');
+    
+        // add event listeners to the radio buttons
+        radioButtons.forEach(radioButton => {
+            radioButton.addEventListener('change', () => {
+                // update the color name when a radio button is selected
+                const colorName = radioButton.value;
+                document.querySelector('#color-name').textContent = colorName;
+            });
+            radioButton.addEventListener('mouseenter', () => {
+                // update the color name when the mouse enters a radio button
+                const colorName = radioButton.value;
+                document.querySelector('#color-name').textContent = colorName;
+            });
+            radioButton.addEventListener('mouseleave', () => {
+                // clear the color name when the mouse leaves a radio button
+                document.querySelector('#color-name').textContent = '';
+            });
+        });
+        document.querySelector('#submit-button').addEventListener('click', () => {
+        document.querySelector('#my-form').submit();
+        });
+    </script>
+{% endblock %}

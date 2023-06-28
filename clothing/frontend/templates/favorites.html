@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}
+
+Cart
+{% endblock %}
+{% block body %}
+{% for element in favorites %}
+{{element}}
+{% endfor %}
+{% endblock %}
