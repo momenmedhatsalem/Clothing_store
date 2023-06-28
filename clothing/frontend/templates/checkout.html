@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% load static %}
+{% block title %}
+Checkout
+{% endblock %}
 {% block head %}
     {{ block.super }}
     <!-- Add Bootstrap CSS -->
@@ -67,7 +70,8 @@
                       <p>Don't Worry We Will Keep Your Cart Items And Designs :) </p>
                       {% endif %}
                   </div></h6>
-                  <form action="#">
+                  <form action="{% url 'checkout'%}" method="post">
+                    {% csrf_token %}
                             <h6 class="checkout__title">Billing Details</h6>
                             <div class="row">
                                 <div class="col-lg-6">
@@ -140,16 +144,6 @@
                           </div>
 
 
-                            <div class="checkout__input__checkbox">
-                                <label for="acc">
-                                    Create an account?
-                                    <input class="form-control" type="checkbox" id="acc">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <p>Create an account by entering the information below. If you are a returning customer
-                                please login at the top of the page</p>
-                            </div>
-
                             <div class="checkout__input">
                                 <p>Order notes<span></span></p>
                                 <input class="form-control" type="text"
@@ -158,7 +152,7 @@
                             <div style="font-size: 1.25rem;" class="form-group border rounded p-3 position-relative">
                               <label>Payment Method:</label>
                               <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentMethod" id="vodafoneCash" value="VF">
+                                <input required class="form-check-input" type="radio" name="payment_method" id="vodafoneCash" value="VF">
                                 <label class="form-check-label d-flex align-items-center" for="vodafoneCash">
                                   <img src="{% static 'frontend/img/pay/vod.png'%}" width="20px" alt="Vodafone Cash" class="mr-2">
                                   Vodafone Cash
@@ -167,7 +161,7 @@
                               </div>
                               <br>
                               <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentMethod" id="wePay" value="WE">
+                                <input required class="form-check-input" type="radio" name="payment_method" id="wePay" value="WE">
                                 <label class="form-check-label d-flex align-items-center" for="wePay">
                                   <img src="{% static 'frontend/img/pay/we.png'%}" width="20px" alt="We Pay" class="mr-2">
                                   We Pay
@@ -176,7 +170,7 @@
                               </div>
                               <br>
                               <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentMethod" id="cashOnDelivery" value="COD">
+                                <input required class="form-check-input" type="radio" name="payment_method" id="cashOnDelivery" value="COD">
                                 <label class="form-check-label d-flex align-items-center" for="cashOnDelivery">
                                   <img src="{% static 'frontend/img/pay/cod.png'%}" width="20px" alt="Cash On Delivery" class="mr-2">
                                   Cash On Delivery
@@ -240,11 +234,11 @@
     </section>
 
     <script>
-      const paymentMethodInputs = document.querySelectorAll('input[name=paymentMethod]');
+      const payment_methodInputs = document.querySelectorAll('input[name=payment_method]');
       const finalCart = document.querySelector('.final-cart');
       let codFeesApplied = false;
       
-      paymentMethodInputs.forEach(input => {
+      payment_methodInputs.forEach(input => {
         input.addEventListener('change', event => {
           const formTexts = document.querySelectorAll('.form-text');
           formTexts.forEach(formText => {

@@ -44,6 +44,23 @@ Shop
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseOne">Subcategories</a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="shop__sidebar__categories">
+                                                    <ul class="nice-scroll">
+                                                        {% for category, label in subcategories %}
+                                                        <li><a href="{% url 'show_products' category %}">{{ label }}</a></li>
+                                                        {% endfor %}
+            
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
             
                                     <div class="card">
                                         <div class="card-heading">
@@ -138,7 +155,7 @@ Shop
 
                                         <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}"
                                             onclick="window.location.href='{{ product.get_absolute_url }}'">
-                                            {% if product.label %}
+                                            {% if product.label != 'N' %}
                                             <span class="label">{{ product.label }}</span>
                                             {% endif %}
                                             <ul class="product__hover">
@@ -148,7 +165,7 @@ Shop
                             
                                         <div class="product__item__text">
                                             <h6>{{ product.product_name }}</h6>
-                                            <a href="{% url 'add_to_cart' product.id %}" class="add-cart hero__text primary-btn">Add To Cart</a>
+                                            <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
                                             <div class="rating">
                                                 <i class="fa fa-star-o"></i>
                                                 <i class="fa fa-star-o"></i>

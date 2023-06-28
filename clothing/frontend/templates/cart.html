@@ -13,7 +13,7 @@ Cart
     {% if cart|length != 0 %}
   
     <!-- Heading -->
-    <div class="bg-dark">
+    <div data-cart="{{ cart }}" id="cart_summary" class="bg-dark">
       <div class="container py-4">
         <!-- Breadcrumb -->
         <nav class="d-flex">
@@ -75,7 +75,7 @@ Cart
                       <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
                         <div class="float-md-end">
                           <a onclick="addToFavorites('{{ product.id }}')" href="#" class="btn btn-light border px-2 icon-hover filler" style="border-radius: 12px;"><i class="fas fa-heart fa-xs px-1 text-secondary"></i></a>
-                          <a onclick="removeFromCart('{{ item.product.id }}')" class="btn btn-light border text-danger icon-hover-danger" style="border-radius: 12px; padding: 4px 8px;"> <i class="fa fa-close"></i></a>                        </div>
+                          <a data-size="{{ item.size }}" data-color="{{ item.color }}" onclick="removeFromCart(event, '{{ item.product.id }}')" class="btn btn-light border text-danger icon-hover-danger" style="border-radius: 12px; padding: 4px 8px;"> <i class="fa fa-close"></i></a>                        </div>
                       </div>
                     </td>
                   </tr>

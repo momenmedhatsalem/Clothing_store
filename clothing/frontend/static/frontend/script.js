@@ -214,17 +214,25 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function removeFromCart(product_id) {
+function removeFromCart(event, product_id) {
     // Get the value of the CSRF token
     const csrftoken = getCookie('csrftoken');
+    var size = event.target.dataset.size;
+    console.log(size);
+    var color = event.target.dataset.color;
     // Send a PUT request to the server to remove the item from the cart
     fetch(`/cart/remove/${product_id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             // Include the CSRF token as a header
-            'X-CSRFToken': csrftoken
-        }
+            'X-CSRFToken': csrftoken, 
+
+        },
+        body: JSON.stringify({
+            color: color,
+            size: size
+        })
     })
     .then(response => response.json())
     .then(data => {
@@ -265,6 +273,37 @@ function addToFavorites(product_id) {
         'X-CSRFToken': csrftoken
       },
       body: JSON.stringify({product_id: product_id})
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // update the cart total or display a message here
+        console.log(data);
+    
+        // create the alert element
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success alert-dismissible fade show';
+        alert.role = 'alert';
+        alert.innerHTML = `<strong>Success!</strong> ${data.product_name} Added to Favorites. <br> <a href="/favorites">View Favorites</a>`;
+        
+        // set the position, top, and z-index properties of the alert element
+        alert.style.position = 'fixed';
+        alert.style.top = '50px';  // adjust this value to position the alert lower on the screen
+        alert.style.zIndex = 9999;  // set a high z-index value to make the alert appear on top of other elements
+        
+        // create the close button
+
+        
+        // append the alert to the page
+        document.body.prepend(alert);
+        
+        // remove the alert after 10 seconds
+        setTimeout(() => {
+            alert.remove();
+        }, 10000);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
     });
   }
   
@@ -278,7 +317,9 @@ function addToFavorites(product_id) {
         'X-CSRFToken': csrftoken
       },
       body: JSON.stringify({product_id: product_id})
+      
     });
+    
   }
 
   document.addEventListener('DOMContentLoaded', () => {

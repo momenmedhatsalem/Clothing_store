@@ -20,7 +20,7 @@ from django.contrib.auth import get_user_model
 # User = get_user_model()
 
 
-from django.shortcuts import render, redirect
+
 from django.forms import Form, CharField, EmailField, PasswordInput
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -80,7 +80,7 @@ def show_products(request, category=None, subcategory=None):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'page_obj': page_obj, 'categories': Product.CATEGORY_CHOICES,}
+    context = {'page_obj': page_obj, 'categories': Product.CATEGORY_CHOICES, 'subcategories': Product.SUB_CATEGORY_CHOICES}
     return render(request, 'products.html', context)
 
 
@@ -106,7 +106,7 @@ def design_save(request):
 def send_order_confirmation_email(first_name, email, order):
     subject = 'Order Confirmation'
     message = f'Thank you for your order, {first_name}! Your order number is {order.id}.'
-    from_email = 'your_email@example.com'
+    from_email = 'vosmos.net@gmail.com'
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
 
@@ -549,9 +549,8 @@ def add_to_cart(request, product_id):
                               'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount, 'product_name': product.product_name})
 
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
+
+
 
 @csrf_exempt
 
@@ -576,28 +575,32 @@ def profile(request):
 
 def remove_from_cart(request, product_id):
     if request.method == 'PUT':
+        data = json.loads(request.body)
+        color = data.get('color')
+        size = data.get('size')
         product = get_object_or_404(Product, id=product_id)
         if request.user.is_authenticated:
+            # Handle authenticated user
             cart = Cart.objects.get(user=request.user)
-            CartItem.objects.filter(cart=cart, product=product).delete()
+            CartItem.objects.filter(cart=cart, product=product, color=color, size=size).delete()
             cart_total_price = cart.total_price
             total_price_before_discount = cart.total_price_before_discount
             discount = float(total_price_before_discount) - float(cart_total_price)
         else:
             # Handle anonymous user
             cart = request.session.get('cart', [])
-            # check if the product is already in the cart
-            cart_item = next((item for item in cart if item['product_id'] == product_id), None)
-            if cart_item:
-                # update the quantity if the product is already in the cart
-                cart.remove(cart_item)
-            request.session['cart'] = cart
-        # Return a JSON response with the updated cart total
+            # Find the item in the cart
+            cart_item_index = next((index for index, item in enumerate(cart) if item['product_id'] == product_id and item['color'] == color and item['size'] == size), None)
+            if cart_item_index is not None:
+                # Remove the item from the cart
+                del cart[cart_item_index]
+                request.session['cart'] = cart
             anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
             cart_total_price = anonymous_cart['total_price']
             total_price_before_discount = anonymous_cart['total_price_before_discount']
             discount = float(total_price_before_discount) - float(cart_total_price)
         return JsonResponse({'cart_total': cart_total_price,'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
+
     else:
         # Handle other request methods (e.g. GET) as before
         ...
@@ -698,10 +701,10 @@ def orders(request):
 
 
 def customize(request):
-    return render(request, 'customize.html')
+    return render(request, 'product_detail.html')
 
 
-@csrf_exempt
+
 @require_http_methods(["PUT"])
 def add_to_favorites(request):
     data = json.loads(request.body)
@@ -716,7 +719,7 @@ def add_to_favorites(request):
         favorites = request.session.get('favorites', [])
         favorites.append(product_id)
         request.session['favorites'] = favorites
-    return JsonResponse({'status': 'success'})
+    return JsonResponse({'product_name': product.product_name})
 
 
 @require_http_methods(["PUT"])

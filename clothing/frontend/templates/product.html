@@ -3,7 +3,7 @@
 
 {% block title %}
 
-
+{{product.product_name}}
 {% endblock %}
 {% block body %}
 
@@ -73,6 +73,7 @@
                         <button id="sizechart" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sizeChartModal">
                             Size Chart
                         </button>
+                        <br>
                         <!-- Modal -->
                         <div class="modal fade" id="sizeChartModal" tabindex="-1" role="dialog" aria-labelledby="sizeChartModalLabel"
                             aria-hidden="true">
@@ -128,7 +129,7 @@
                                 <span>Size:</span>
                                 {% for size in sizes %}
                                 <label for="{{ size.size }}"  {% if forloop.first %}class="active"{% endif %}>{{ size.size }}
-                                    <input name="size" type="radio" value="{{ size.size }}" id="{{ size.size }}">
+                                    <input name="size" type="radio" value="{{ size.size }}" id="{{ size.size }}" {% if forloop.first %}checked{% endif %}>
                                 </label>
                                 {% endfor %}
                                 
