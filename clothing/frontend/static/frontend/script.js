@@ -253,7 +253,7 @@ function removeFromCart(product_id) {
     });
 }
 
-// ADD to and REMOVE from cart fucntions
+// ADD to and REMOVE from fav fucntions
 
 function addToFavorites(product_id) {
     // Get the value of the CSRF token
