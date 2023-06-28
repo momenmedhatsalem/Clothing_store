@@ -321,3 +321,55 @@ tabs.forEach(function(tab) {
   });
 });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    var face = "";
+    
+    const backButton = document.querySelector('#backcustom');
+            if (backButton.checked) {
+            console.log('Back button is selected');
+            face = back;
+        } else {
+            console.log('Back button is not selected');
+            face = "";
+        }
+
+
+
+    // get all the radio buttons
+    const radioButtons = document.querySelectorAll('input[type=radio][name=color_custom]');
+    var img = document.querySelector('#customizeimg');
+    img.src = staticUrlcustom + "white.png";
+    // add event listeners to the radio buttons
+    radioButtons.forEach(radioButton => {
+        radioButton.addEventListener('change', () => {
+            const backButton = document.querySelector('#backcustom');
+            if (backButton.checked) {
+            console.log('Back button is selected');
+            face = "back";
+        } else {
+            console.log('Back button is not selected');
+            face = "";
+        }
+
+            // update the color name when a radio button is selected
+            const colorName = radioButton.value;
+            console.log(colorName);
+            img.src = staticUrlcustom + face + colorName ;
+            document.querySelector('#color-name').textContent = colorName;
+        });
+        radioButton.addEventListener('mouseenter', () => {
+            // update the color name when the mouse enters a radio button
+            const colorName = radioButton.value;
+            console.log(colorName);
+            document.querySelector('#color-name').textContent = colorName;
+        });
+        radioButton.addEventListener('mouseleave', () => {
+            // clear the color name when the mouse leaves a radio button
+            document.querySelector('#color-name').textContent = '';
+        });
+    });
+    document.querySelector('#submit-button').addEventListener('click', () => {
+        document.querySelector('#my-form').submit();
+    });
+});

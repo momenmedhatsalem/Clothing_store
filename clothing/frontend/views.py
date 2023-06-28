@@ -155,7 +155,7 @@ def product_detail(request, product_id):
     
 
     # Render the template with the product
-    return render(request, 'product.html', {'product': product, 'images': images, 'sizes': sizes})
+    return render(request, 'product_detail.html', {'product': product, 'images': images, 'sizes': sizes})
 
 
 def login_view(request):

@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-
+{% load static %}
 {% block body %}
 
 <style>
@@ -27,7 +27,7 @@
 
       </div>
 
-<head>
+
     <title>Custom T-Shirt</title>
     <style>
         #form-box {
@@ -54,20 +54,38 @@
             height: 100%;
         }
     </style>
-</head>
+
 
     <h1>Customize your T-Shirt</h1>
     <div class="container center" id="tshirt">
         <span ></span>
         <textarea  style=" resize: none; background-color: transparent; width: 50px; height: 100px; border: 2px dashed black;" id="tshirt-text" ></textarea>
-        <img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
+        <img id="customizeimg" class="card-img-top" src="" alt="Card image cap">
         <img id="designImage" style="display: none;">
     </div><br>
     <br>
     <div class="container center" id="form-box">
-       
-            <label for="tshirt-color">T-Shirt Color:</label>
-            <input type="color" id="tshirt-color" name="tshirt-color"><br><br>
+        
+        <div id="color-selector" class="product__details__option__color">
+            <span>Color:</span>
+
+                <input type="radio" id="sp-9" name="color_custom" value="white.png" class="d-none" checked >
+                <label class="c-9" for="sp-9" title="black"></label>
+                <input type="radio" id="sp-1" name="color_custom" value="black.png" class="d-none">
+                <label class="c-1" for="sp-1" title="black"></label>
+                <input type="radio" id="sp-2" name="color_custom" value="navy.png" class="d-none">
+                <label class="c-2" for="sp-2" title="black"></label>
+
+        </div>
+
+<!-- Color options -->
+<div class="nav-tabs">
+<div class="color-option" data-color="#000000" style="background-color: #000000;"></div>
+<div class="nav-item color-option selected" data-color="#FFFFFF" style="background-color: #FFFFFF;"></div>
+<div class="nav-item color-option" data-color="#000080" style="background-color: #000080;"></div>
+<div class="nav-item color-option" data-color="#800080" style="background-color: #800080;"></div>
+</div>
+
             <label for="text-color">Text Color:</label>
             <input type="color" id="text-color" name="text-color"><br><br>
             <label for="text">Text:</label>
@@ -80,12 +98,19 @@
             <label for="a3">A3</label>
             <input type="radio" id="a3" name="size" value="a3">
             <button type="button" id="rotate">Rotate Text Area</button>
-
-            <label for="photo">Upload a photo:</label>
-            <input type="file" id="photo" name="photo"><br><br>
+            <br>
+            <br>
+            <input type="file" id="imageInput">
+            <br />
+            <br />
+            <br>
+            <br>
+            
+            <br>
+            <br>
             <input type="radio" id="front" name="side" value="front">
             <label for="front">Front</label><br>
-            <input type="radio" id="back" name="side" value="back">
+            <input type="radio" id="backcustom" name="side" value="back">
             <label for="back">Back</label><br><br>
         
         <input data-product_id="{{product.id}}" id="design_button" type="submit" value="Submit">
@@ -93,12 +118,16 @@
     
 
     <form>
-        <input type="file" id="imageInput">
-        <button data-product_id="{{product.id}}" type="button" id="uploadButton">Upload</button>
+
     </form>
     
 
     <style>
+                        input[type=radio]:checked + label {
+        border: 2px solid red;
+        box-shadow: 0 0 0 2px black;
+        border-radius: 50%;
+    }
     #increase {
         border-radius: 50%;
         width: 30px;
@@ -122,17 +151,47 @@
             transform: translate(-50%, -50%);
 }
 
-</style>
+     /* Style the color options as small boxes */
+     .color-option {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        margin-right: 5px;
+        border: 1px solid #000000;
+        cursor: pointer;
+    }
 
+    /* Add a border to the selected color option */
+    .color-option.selected {
+        border: 2px solid #FF0000;
+    }
+
+    /* Style the preview element */
+    #preview {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #000000;
+        background-color: #FFFFFF; /* Set the initial background color to white */
+    }
+
+</style>
+<script>
+    var staticUrlcustom = "{% static 'frontend/custom/' %}";
+</script>
 
 <script>
+
+
+
     // Preview Uploaded image
+
     const textarea = document.querySelector('#tshirt-text');
     const imageInput = document.querySelector('#imageInput');
     const uploadButton = document.querySelector('#uploadButton');
     const designImage = document.querySelector('#designImage');
 
-    uploadButton.addEventListener('click', () => {
+    // Add an event listener to the imageInput element that listens for the change event
+    imageInput.addEventListener('change', () => {
         // Get the selected file
         const file = imageInput.files[0];
 
@@ -296,15 +355,39 @@ function processInput() {
     resizeToFit();
 }
 
+    // Get the color options and the preview element
+    const colorOptions = document.querySelectorAll('.color-option');
+    const preview = document.querySelector('#preview');
+
+    // Add an event listener to each color option that listens for the click event
+    colorOptions.forEach((option) => {
+        option.addEventListener('click', (event) => {
+            // Get the clicked color option
+            const clickedOption = event.target;
+
+            // Remove the selected class from the previously selected color option
+            const selectedOption = document.querySelector('.color-option.selected');
+            if (selectedOption) {
+                selectedOption.classList.remove('selected');
+            }
+
+            // Add the selected class to the clicked color option
+            clickedOption.classList.add('selected');
+
+            // Get the color value from the data-color attribute
+            const color = clickedOption.getAttribute('data-color');
+
+            // Update the background color of the preview element
+            preview.style.backgroundColor = color;
+        });
+    });
+
 input.addEventListener('input', processInput);
         // Get the t-shirt color input and t-shirt element
         const tshirtColorInput = document.querySelector('#tshirt-color');
         const tshirt = document.querySelector('#tshirt');
 
-        // Add an event listener to the t-shirt color input to update the t-shirt color
-        tshirtColorInput.addEventListener('input', () => {
-            tshirt.style.backgroundColor = tshirtColorInput.value;
-        });
+
 
         // Get the text color input and t-shirt text element
         const textColorInput = document.querySelector('#text-color');
