@@ -166,31 +166,31 @@ def login_view(request):
 
         # Check if authentication successful
         if user is not None:
-
             # User has successfully logged in
             # Retrieve session cart
-            session_cart = request.session.get('cart', [])
-            # Get or create user's Cart object
-            cart, created = Cart.objects.get_or_create(user=user)
-            # Iterate over session cart items
-            for item in session_cart:
-                product_id = item['product_id']
-                quantity = item['quantity']
-                product = Product.objects.get(pk=product_id)
-                # Check if CartItem already exists for given product and cart
-                cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-                if created:
-                    # CartItem did not exist, set its quantity
-                    cart_item.quantity = int(quantity)
-                    cart_item.save()
-                else:
-                    # CartItem already exists, check if it has been customized
-                    if not cart_item.customized:
-                        # Increase its quantity
-                        cart_item.quantity += int(quantity)
+            session_key = request.session.session_key
+            if session_key:
+                session_cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
+                # Get or create user's Cart object
+                cart, created = Cart.objects.get_or_create(user=user)
+                # Iterate over session cart items
+                for item in CartItem.objects.filter(cart=session_cart):
+                    product = item.product
+                    quantity = item.quantity
+                    # Check if CartItem already exists for given product and cart
+                    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+                    if created:
+                        # CartItem did not exist, set its quantity
+                        cart_item.quantity = int(quantity)
                         cart_item.save()
-            # Clear session cart
-            request.session['cart'] = []
+                    else:
+                        # CartItem already exists, check if it has been customized
+                        if not cart_item.customized:
+                            # Increase its quantity
+                            cart_item.quantity += int(quantity)
+                            cart_item.save()
+                # Clear session cart
+                CartItem.objects.filter(cart=session_cart).delete()
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
@@ -235,39 +235,38 @@ def register_view(request):
             while MyUser.objects.filter(username=username).exists():
                 username = f"{username}_{get_random_string()}"
 
-
-
             phone_number = form.cleaned_data["phone_number"]
             user = MyUser.objects.create_user(first_name=first_name, phone=phone_number, username=username, last_name=last_name, email=email, password=password)
-        if user is not None:
-            # User has successfully logged in
-            # Retrieve session cart
-            session_cart = request.session.get('cart', [])
-            # Get or create user's Cart object
-            cart, created = Cart.objects.get_or_create(user=user)
-            # Iterate over session cart items
-            for item in session_cart:
-                product_id = item['product_id']
-                quantity = item['quantity']
-                product = Product.objects.get(pk=product_id)
-                # Check if CartItem already exists for given product and cart
-                cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-                if created:
-                    # CartItem did not exist, set its quantity
-                    cart_item.quantity = quantity
-                    cart_item.save()
-                else:
-                    # CartItem already exists, check if it has been customized
-                    if not cart_item.customized:
-                        # Increase its quantity
-                        cart_item.quantity += quantity
-                        cart_item.save()
-            # Clear session cart
-            request.session['cart'] = []
-            login(request, user)
-            # Redirect to the ecommerce website builder or another page
-            return HttpResponseRedirect(reverse("index"))
-        
+            if user is not None:
+                # User has successfully registered
+                # Retrieve session cart
+                session_key = request.session.session_key
+                if session_key:
+                    session_cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
+                    # Get or create user's Cart object
+                    cart, created = Cart.objects.get_or_create(user=user)
+                    # Iterate over session cart items
+                    for item in CartItem.objects.filter(cart=session_cart):
+                        product = item.product
+                        quantity = item.quantity
+                        # Check if CartItem already exists for given product and cart
+                        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+                        if created:
+                            # CartItem did not exist, set its quantity
+                            cart_item.quantity = int(quantity)
+                            cart_item.save()
+                        else:
+                            # CartItem already exists, check if it has been customized
+                            if not cart_item.customized:
+                                # Increase its quantity
+                                cart_item.quantity += int(quantity)
+                                cart_item.save()
+                    # Clear session cart
+                    CartItem.objects.filter(cart=session_cart).delete()
+                login(request, user)
+                # Redirect to the ecommerce website builder or another page
+                return HttpResponseRedirect(reverse("index"))
+
         # If the form is not valid, render it again with the errors
         else:
             return render(request, "register.html", {"form": form})
@@ -277,28 +276,7 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 def cart(request):
-    if request.method == 'POST':
-        product_id = request.POST.get('product_id')
-        try:
-            product = Product.objects.get(pk=product_id)
-        except Product.DoesNotExist:
-            # Handle the case where the product does not exist
-            pass
-        if request.user.is_authenticated:
-            # Handle authenticated user
-            try:
-                cart = Cart.objects.get(user=request.user)
-            except Cart.DoesNotExist:
-                # Handle the case where the cart does not exist
-                cart = Cart.objects.create(user=request.user)
-            CartItem.objects.create(cart=cart, product=product)
-        else:
-            # Handle anonymous user
-            cart = request.session.get('cart', [])
-            products = Product.objects.filter(pk__in=[item['product_id'] for item in cart])
-            context = {'cart': [{'product': product, 'quantity': next(item['quantity'] for item in cart if item['product_id'] == product.pk)} for product in products]}
-        return render(request, 'cart.html', context)
-    else:
+    if request.method == "GET":
         existing_options = [
         {'value': 1, 'label': '1'},
         {'value': 2, 'label': '2'},
@@ -313,38 +291,45 @@ def cart(request):
         ]
 
         
-        if request.user.is_authenticated:
-            # Handle authenticated user
-            try:
-                cart = Cart.objects.get(user=request.user)
-            except Cart.DoesNotExist:
-                # Handle the case where the cart does not exist
-                cart = Cart.objects.create(user=request.user)
-            CartItems = CartItem.objects.filter(cart=cart)
-            discount = cart.discount
+    if request.user.is_authenticated:
+        # Handle authenticated user
+        try:
+            cart = Cart.objects.get(user=request.user)
+        except Cart.DoesNotExist:
+            # Handle the case where the cart does not exist
+            cart = Cart.objects.create(user=request.user)
+        CartItems = CartItem.objects.filter(cart=cart)
+        discount = cart.discount
 
-            # check if authenticated user has applied a promo code
-            if cart.coupon:
-                promo_code = cart.coupon.code
-            else:
-                promo_code = False
-            context = {'promocode': promo_code, 'existing_options': existing_options,
-                       'cart': CartItems, 'user_cart': cart, 'discount': discount}
+        # check if authenticated user has applied a promo code
+        if cart.coupon:
+            promo_code = cart.coupon.code
         else:
-            # Handle anonymous user
-            # Check if user has applied a promo code
-            if 'applied_promo_code' in request.session:
-                promo_code = request.session['applied_promo_code']
-            else:
-                promo_code = False
+            promo_code = False
+        context = {'promocode': promo_code, 'existing_options': existing_options,
+                   'cart': CartItems, 'user_cart': cart, 'discount': discount}
+    else:
+        # Handle anonymous user
+        # create or retrieve a Cart object for anonymous users
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
 
-            cart = Cart.objects.get_anonymous_cart(request.session)
-            price_before = cart['total_price_before_discount']
-            total_price = cart['total_price']
-            discount = float(cart['discount'])
-            context = {'promocode': promo_code, 'existing_options': existing_options,
-                       'cart': cart['cart_items'], 'user_cart': {'total_price': total_price, 'total_price_before_discount': price_before}, 'discount': "{:.2f}".format(discount)}
-        return render(request, 'cart.html', context )
+        # retrieve the CartItem objects for the anonymous user's cart
+        CartItems = CartItem.objects.filter(cart=cart)
+        discount = cart.discount
+
+        # check if anonymous user has applied a promo code
+        if cart.coupon:
+            promo_code = cart.coupon.code
+        else:
+            promo_code = False
+        context = {'promocode': promo_code, 'existing_options': existing_options,
+                   'cart': CartItems, 'user_cart': cart, 'discount': discount}
+
+    return render(request, 'cart.html', context)
 
 
 def checkout(request):
@@ -364,7 +349,7 @@ def checkout(request):
         if request.user.is_authenticated:
             # Get the user and cart information
             user = request.user
-            cart = Cart.objects.get(user=user, ordered=False)
+            cart = Cart.objects.get(user=user)
 
             # Create a new Order instance for the authenticated user
             order = Order.objects.create(
@@ -373,7 +358,7 @@ def checkout(request):
                 last_name=last_name,
                 email=email,
                 phone=phone,
-                coupon = cart.coupon,
+                coupon=cart.coupon,
                 address=request.POST['address'],
                 city=request.POST['city'],
                 payment_method=payment_method,
@@ -382,7 +367,7 @@ def checkout(request):
             )
 
             # Create OrderItem instances for each item in the cart
-            for item in cart.items.all():
+            for item in CartItem.objects.filter(cart=cart):
                 OrderItem.objects.create(
                     order=order,
                     product=item.product,
@@ -395,12 +380,17 @@ def checkout(request):
             order.save()
 
             # Clear the cart for authenticated users
-            cart.items.all().delete()
+            CartItem.objects.filter(cart=cart).delete()
             cart.coupon = None
             cart.save()
         else:
-            # Get or create a cart for the guest user using the CartManager model
-            cart = Cart.objects.get_anonymous_cart(request.session)
+            # Handle anonymous user
+            # create or retrieve a Cart object for anonymous users
+            session_key = request.session.session_key
+            if not session_key:
+                request.session.create()
+                session_key = request.session.session_key
+            cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
 
             # Create a new Order instance for the anonymous user without setting the user field
             order = Order.objects.create(
@@ -410,28 +400,30 @@ def checkout(request):
                 address=request.POST['address'],
                 phone=phone,
                 city=request.POST['city'],
-                
+
                 payment_method=payment_method,
-                shipping_cost=cart['shipping_cost'],
-                final_price=cart['final_price'] + fees # Set the final price of the order to the final price of the anonymous cart
+                shipping_cost=cart.shipping_cost,
+                final_price=cart.final_price + fees  # Set the final price of the order to the final price of the anonymous cart
             )
 
             # Create OrderItem instances for each item in the anonymous cart
-            for item in cart['cart_items']:
+            for item in CartItem.objects.filter(cart=cart):
                 OrderItem.objects.create(
                     order=order,
-                    product=item['product'],
-                    price=item['product'].price,
-                    quantity=item['quantity'],
-                    
-                    # customized=item['customized']
+                    product=item.product,
+                    price=item.product.price,
+                    quantity=item.quantity,
+
+                    customized=item.customized
                 )
 
             # Save the order
             order.save()
 
             # Clear the cart for anonymous users
-            request.session['cart'] = []
+            CartItem.objects.filter(cart=cart).delete()
+            cart.coupon = None
+            cart.save()
 
         # Redirect to the order confirmation page
         send_order_confirmation_email(first_name, email, order)
@@ -447,10 +439,20 @@ def checkout(request):
             context = {'cart': CartItems, 'user_cart': cart}
         else:
             # Handle anonymous user
-            anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-            
-            context = {'cart': anonymous_cart['cart_items'], 'user_cart': anonymous_cart}
-    
+            # create or retrieve a Cart object for anonymous users
+            session_key = request.session.session_key
+            if not session_key:
+                request.session.create()
+                session_key = request.session.session_key
+            cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
+
+            # retrieve the CartItem objects for the anonymous user's cart
+            CartItems = CartItem.objects.filter(cart=cart)
+            if float(cart.total_price) > 1000:
+                cart.shipping_cost = 0
+                cart.save()
+            context = {'cart': CartItems, 'user_cart': cart}
+
         return render(request, 'checkout.html', context)
         
 
@@ -462,36 +464,35 @@ def checkout(request):
 #@require_http_methods(["POST", "PUT"])
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
+
     if request.method == 'GET' or request.method == 'POST':
         quantity = int(request.POST.get('cloth_quantity', 1))
         color = request.POST.get('color')
         size = request.POST.get('size')
-        print("size " + size)
-        print("color " + color)
+
+        # create or retrieve a Cart object for both authenticated and anonymous users
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
-            a_cart_item, created = CartItem.objects.get_or_create(cart=cart,
-                                                                product=product, color=color,
-                                                                    size=size)
-
-            if not created:
-                a_cart_item.quantity += quantity
-            else:
-                a_cart_item.quantity = quantity
-            a_cart_item.save()
-            
         else:
-            # Handle anonymous user
-            cart = request.session.get('cart', [])
-            cart_item = next((item for item in cart if item['product_id'] == product_id and item['color'] == color and item['size'] == size), None)
-            if cart_item:
-                cart_item['quantity'] += quantity
-                print("found")
-            else:
-                print("Not")
-                cart.append({'product_id': product_id, 'quantity': quantity, 'color': color, 'size': size})
-            request.session['cart'] = cart
+            session_key = request.session.session_key
+            if not session_key:
+                request.session.create()
+                session_key = request.session.session_key
+            cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
+
+        # create or retrieve a CartItem object for the specified product, color, and size
+        a_cart_item, created = CartItem.objects.get_or_create(cart=cart,
+                                                              product=product, color=color,
+                                                              size=size)
+
+        if not created:
+            a_cart_item.quantity += quantity
+        else:
+            a_cart_item.quantity = quantity
+        a_cart_item.save()
+
         return redirect('cart')
+
     elif request.method == 'PUT':
         data = json.loads(request.body)
         quantity = data.get('quantity', 1)
@@ -499,53 +500,37 @@ def add_to_cart(request, product_id):
         color = Product_detail[0].color
         size = Product_detail[0].size
 
-
-        print(color)
-        print(size)
+        # create or retrieve a Cart object for both authenticated and anonymous users
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
-            a_cart_item, created = CartItem.objects.get_or_create(cart=cart,
-                                                                product=product, color=color,
-                                                                    size=size)
-
-            if created:
-                # if the cart item was created (i.e. the product was not already in the cart), set the quantity to 1
-                a_cart_item.quantity = 1
-            else:
-                if quantity == 0:
-                    a_cart_item.quantity += 1
-                # if the cart item was not created (i.e. the product was already in the cart), update the quantity
-                else:
-                    a_cart_item.quantity = quantity
-            a_cart_item.save()
-            total = a_cart_item.total
-            total_price = cart.total_price
-            total_price_before_discount = cart.total_price_before_discount
         else:
-            # Handle anonymous user
+            session_key = request.session.session_key
+            if not session_key:
+                request.session.create()
+                session_key = request.session.session_key
+            cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
 
-            product = Product.objects.get(pk=product_id)
-            cart = request.session.get('cart', [])
-            cart_item = next((item for item in cart if item['product_id'] == product_id and item['color'] == color and item['size'] == size), None)
+        # create or retrieve a CartItem object for the specified product, color, and size
+        a_cart_item, created = CartItem.objects.get_or_create(cart=cart,
+                                                              product=product, color=color,
+                                                              size=size)
 
-            if cart_item:
-                if quantity == 0:
-                    cart_item['quantity'] += 1
-                # if the product is already in the cart, update the quantity
-                else:
-                    cart_item['quantity'] = quantity
+        if created:
+            # if the cart item was created (i.e. the product was not already in the cart), set the quantity to 1
+            a_cart_item.quantity = 1
+        else:
+            if quantity == 0:
+                a_cart_item.quantity += 1
             else:
-                # if the product is not in the cart, add it with a quantity of 1
-                cart.append({'product_id': product_id, 'quantity': 1, 'color': color, 'size': size})
+                a_cart_item.quantity = quantity
+        a_cart_item.save()
+        total = a_cart_item.total
+        total_price = cart.total_price
+        total_price_before_discount = cart.total_price_before_discount
 
-            request.session['cart'] = cart
-            total = product.price * int(quantity)
-
-            anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-            total_price = anonymous_cart['total_price']
-            total_price_before_discount = anonymous_cart['total_price_before_discount']
         # calculate discount
         discount = float(total_price_before_discount) - float(total_price)
+
         return JsonResponse({'success': True,'cart_total': total_price, 'total': "{:.2f}".format(total),
                               'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount, 'product_name': product.product_name})
 
@@ -579,6 +564,8 @@ def remove_from_cart(request, product_id):
         data = json.loads(request.body)
         color = data.get('color')
         size = data.get('size')
+
+        
         product = get_object_or_404(Product, id=product_id)
         if request.user.is_authenticated:
             # Handle authenticated user
@@ -589,17 +576,19 @@ def remove_from_cart(request, product_id):
             discount = float(total_price_before_discount) - float(cart_total_price)
         else:
             # Handle anonymous user
-            cart = request.session.get('cart', [])
-            # Find the item in the cart
-            cart_item_index = next((index for index, item in enumerate(cart) if item['product_id'] == product_id and item['color'] == color and item['size'] == size), None)
-            if cart_item_index is not None:
-                # Remove the item from the cart
-                del cart[cart_item_index]
-                request.session['cart'] = cart
-            anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-            cart_total_price = anonymous_cart['total_price']
-            total_price_before_discount = anonymous_cart['total_price_before_discount']
+            # create or retrieve a Cart object for anonymous users
+            session_key = request.session.session_key
+            if not session_key:
+                request.session.create()
+                session_key = request.session.session_key
+            cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
+
+            # delete the specified CartItem object for the anonymous user's cart
+            CartItem.objects.filter(cart=cart, product=product, color=color, size=size).delete()
+            cart_total_price = cart.total_price
+            total_price_before_discount = cart.total_price_before_discount
             discount = float(total_price_before_discount) - float(cart_total_price)
+
         return JsonResponse({'cart_total': cart_total_price,'discount': "{:.2f}".format(discount), 'cart_total_before_discount': total_price_before_discount})
 
     else:
@@ -622,9 +611,7 @@ def apply_coupon(request):
     promo_code = data.get('promo_code')
     if request.user.is_authenticated:
         cart = Cart.objects.get(user=request.user)
-    else:
-        anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-        cart_total_price = anonymous_cart['total_price']
+
     
     promo = PromoCode.objects.filter(code=promo_code).first()
     if promo:
@@ -660,11 +647,6 @@ def apply_coupon(request):
 def remove_coupon(request):
     if request.user.is_authenticated:
         cart = Cart.objects.get(user=request.user)
-    else:
-        anonymous_cart = Cart.objects.get_anonymous_cart(request.session)
-        cart_total_price = anonymous_cart['total_price']
-    
-    if request.user.is_authenticated:
         # remove coupon if applied
         if cart.coupon:
             cart.applied_coupons.remove(cart.coupon)
