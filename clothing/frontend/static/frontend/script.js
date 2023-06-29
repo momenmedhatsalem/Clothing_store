@@ -214,12 +214,14 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function removeFromCart(event, product_id) {
+function removeFromCart(event, product_id, product_size, product_color ) {
+    event.preventDefault();
     // Get the value of the CSRF token
     const csrftoken = getCookie('csrftoken');
-    var size = event.target.dataset.size;
+    var row = document.getElementById("x" + product_id + product_size + product_color);
+    const size = row.dataset.size;
     console.log(size);
-    var color = event.target.dataset.color;
+    const color = row.dataset.color;
     // Send a PUT request to the server to remove the item from the cart
     fetch(`/cart/remove/${product_id}`, {
         method: 'PUT',
@@ -239,7 +241,6 @@ function removeFromCart(event, product_id) {
         console.log("success : " + data)
         // Update the page to reflect the changes
         // For example, you could update the cart total and remove the item from the cart display
-        var row = document.getElementById("x" + product_id);
     row.style.transition = "opacity 1s";
     row.style.opacity = 0;
     

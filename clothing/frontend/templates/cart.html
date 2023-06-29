@@ -13,7 +13,7 @@ Cart
     {% if cart|length != 0 %}
   
     <!-- Heading -->
-    <div data-cart="{{ cart }}" id="cart_summary" class="bg-dark">
+    <div data-cart="{{ cart }}"  class="bg-dark">
       <div class="container py-4">
         <!-- Breadcrumb -->
         <nav class="d-flex">
@@ -46,8 +46,7 @@ Cart
                 </thead>
                 <tbody>
                   {% for item in cart %}
-  
-                  <tr id="x{{ item.product.id }}" style="position: relative;">
+                  <tr id="x{{ item.product.id }}{{ item.size }}{{ item.color }}" data-size="{{ item.size }}" data-color="{{ item.color }}" style="position: relative;">
                     <td class="product__cart__item">
                       <a href="{{ item.product.get_absolute_url }}">
                       <div class="product__cart__item__pic">
@@ -75,7 +74,8 @@ Cart
                       <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
                         <div class="float-md-end">
                           <a onclick="addToFavorites('{{ product.id }}')" href="#" class="btn btn-light border px-2 icon-hover filler" style="border-radius: 12px;"><i class="fas fa-heart fa-xs px-1 text-secondary"></i></a>
-                          <a data-size="{{ item.size }}" data-color="{{ item.color }}" onclick="removeFromCart(event, '{{ item.product.id }}')" class="btn btn-light border text-danger icon-hover-danger" style="border-radius: 12px; padding: 4px 8px;"> <i class="fa fa-close"></i></a>                        </div>
+                          <a href="#" onclick="removeFromCart(event, '{{ item.product.id }}', '{{ item.size }}', '{{ item.color }}' )" class="btn btn-light border text-danger icon-hover-danger" style="border-radius: 12px; padding: 4px 8px;"> <i class="fa fa-close"></i></a>
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -124,7 +124,7 @@ Cart
                 </div>
   
             </div>
-            <div class="cart__total">
+            <div id="cart_summary" class="cart__total">
               <h6>Cart total</h6>
               <ul>
                 
