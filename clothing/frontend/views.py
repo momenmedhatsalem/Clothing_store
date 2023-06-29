@@ -466,7 +466,8 @@ def add_to_cart(request, product_id):
         quantity = int(request.POST.get('cloth_quantity', 1))
         color = request.POST.get('color')
         size = request.POST.get('size')
-        
+        print("size " + size)
+        print("color " + color)
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
             a_cart_item, created = CartItem.objects.get_or_create(cart=cart,

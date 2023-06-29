@@ -236,17 +236,18 @@ function removeFromCart(event, product_id) {
     })
     .then(response => response.json())
     .then(data => {
+        console.log("success : " + data)
         // Update the page to reflect the changes
         // For example, you could update the cart total and remove the item from the cart display
         var row = document.getElementById("x" + product_id);
     row.style.transition = "opacity 1s";
     row.style.opacity = 0;
+    
+    var cart_total = document.getElementById('cart_total_discount');
+    cart_total.innerHTML = `EGP ${data.cart_total}`;
     setTimeout(function() {
         row.parentNode.removeChild(row);
     }, 1000);
-
-        var cart_total = document.getElementById('cart_total_discount');
-        cart_total.innerHTML = `EGP ${data.cart_total}`;
         var cart_total = document.getElementById('cart_total').innerHTML = `EGP ${data.cart_total_before_discount}`;
         var cart_total = document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
         var cart_summary = document.getElementById('cart_summary');

@@ -6,6 +6,7 @@
 Favorites
 {% endblock %}
 {% block body %}
+{% if favorites|length != 0 %}
 <div class="container">
 <div class="shopping__cart__table">
     <table>
@@ -47,4 +48,18 @@ Favorites
     </table>
   </div>
 </div>
+{% else %}
+<section class="shopping-cart spad"><h5 class="text-center">You Haven't Added Anything to Favorites For Now</h5>
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <div class="continue__btn">
+        <a class="btn btn-light w-100 border mt-2" id="back-button">Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endif %}
 {% endblock %}
