@@ -94,7 +94,7 @@ function addToCart(productId) {
         // remove the alert after 10 seconds
         setTimeout(() => {
             alert.remove();
-        }, 10000);
+        }, 7000);
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -321,7 +321,13 @@ function addToFavorites(product_id) {
       body: JSON.stringify({product_id: product_id})
       
     });
-    
+    var fav = document.getElementById("x" + product_id);
+    if (fav) {
+        fav.classList.add('fade-away');
+          fav.addEventListener('transitionend', () => {
+              fav.remove();
+          });
+      }
   }
 
   document.addEventListener('DOMContentLoaded', () => {

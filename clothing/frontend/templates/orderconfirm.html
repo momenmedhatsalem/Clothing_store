@@ -4,11 +4,11 @@
 {% block title %}
     Order Confirmation
 {% endblock %}
-
+    <div>
     <h1>Thank you for your order!</h1>
     <p>Your order number is: {{ order_number }}</p>
     <p>We have sent a confirmation email to {{ email }}.</p>
-    <p>You can view your order details by logging into your account.</p>
-
+    <p>You can view your order details by copying order number and clicking <a href="{% url 'orders' %}">here</a></p>
+    </div>
 
 {% endblock %}

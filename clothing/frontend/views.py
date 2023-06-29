@@ -663,22 +663,28 @@ def remove_coupon(request):
 
 
 def orders(request):
-    if request.GET.get('order_number'):
+    # User is viewing their order history
+    if request.user.is_authenticated:
+        # Get the orders for the authenticated user
+        orders = Order.objects.filter(user=request.user)
+    else:
+        orders = []
+    if request.method == 'POST':
+        
         # User is looking up an order using an order number
-        order_number = request.GET.get('order_number')
+        order_number = request.POST.get('order_number')
         try:
             # Try to get the order with the given order number
             order = Order.objects.get(order_number=order_number)
             # Return the order details page
             # Calculate the width of each progress bar segment
             segment_width = 100 / order.items.count()
-            return render(request, 'order.html', {'order': order, 'segment_width': segment_width})
+            return render(request, 'order.html', {'order': order, 'orders': orders, 'segment_width': segment_width})
         except Order.DoesNotExist:
             # Order with the given order number does not exist
             # Display an error message
             messages.error(request, 'Order not found.')
-    # User is viewing their order history
-    orders = Order.objects.filter(user=request.user)
+
     return render(request, 'order.html', {'orders': orders})
 
 
