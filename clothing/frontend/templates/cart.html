@@ -148,11 +148,15 @@ Cart
                   {% endif %}
                 </div>
               </ul>
-              <a href="{% url 'checkout' %}" class="primary-btn">Proceed to checkout</a>
+              <a href="{% url 'checkout' %}" class="primary-btn w-screen">Proceed to checkout</a>
             </div>
           </div>
         </div>
       </div>
+      <div class="mobile-btn" style="display: none;">
+        <p id="cart_total_discount" class="mb-2 fw-bold">  <span>Total:</span>EGP {{user_cart.total_price}}</p>
+      <a href="{% url 'checkout' %}" class="primary-btn">Proceed to checkout</a>
+       </div>
     </section>
     <!-- Shopping Cart Section End -->
     {% else %}

@@ -118,14 +118,10 @@
     <!-- Header Section Begin -->
     <header class="header">
         <div class="header__top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-7">
+                <div class="row justify-content-around align-items-center">
                         <div class="header__top__left">
                             <p>Free shipping, 30-day return or refund guarantee.</p>
                         </div>
-                    </div>
-                    <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__links">
                                 {% if user.is_authenticated %}
@@ -152,22 +148,22 @@
 
                                 </ul>
                             </div>
-                        </div>
                     </div>
-                </div>
             </div>
         </div>
         
         <div class="container">
-            <div class="row">
-                <div class="col-lg-2 col-md-8 col-6">
+            <div class="row flex-nowrap align-items-center">
                     <div class="header__logo">
                         <a href="{% url 'index' %}"><img src="{% static 'frontend/img/logo4.png' %}" alt=""></a>
                     </div>
-                </div>
+                <div class="col-lg-2 col-md-8 col-6 d-flex justify-content-end align-items-center n-mobile">
+                    <a  href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
+                    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+                    </div>
 
-                <div style="margin-left: 80px;" class="col-lg-6 col-md-6 col-1 p-3">
-                    <nav class="header__menu mobile-menu">
+                <div style="margin-left: 80px;" class="col-lg-6 col-md-6 col-1 p-3 header__menu mobile-menu">
+                    <nav class="">
                         <ul>
                             {% if request.path == '/' %}
                             <li class="nav-item active">
@@ -204,8 +200,8 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="col-lg-3 col-md-3 p-2">
-                    <div class="header__nav__option">
+                <div class="col-lg-3 col-md-3 p-2 header__nav__option">
+                    <div class="">
                         <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
                         <a href="{% url 'favorites'%}"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a>
                         <a href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>
@@ -220,7 +216,6 @@
                     </div>
                 </div>
             </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
     </header>
     <!-- Header Section End -->
