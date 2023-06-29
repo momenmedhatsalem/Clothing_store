@@ -1,33 +1,6 @@
-/* Extra small devices (less than 576px) */
-/* .product{
-    display: none;
-} */
-.hero .hero__items{
-    height: 100vh ;
-    background-position: 60%;
-}
-.banner  .container .row .banner__item__text a::after{
-    background: red;
-  }
-
 
 @media (max-width: 575.98px) {
-  .owl-nav button{
-    display: none;
-  }
-  .hero__text p{
-    color: black;
-  }
-  .banner .container .row .banner__item{
-   position: relative;
-   border: 1px solid black;
-  }
-   .banner  .container .row .banner__item__text{
-    position: absolute ;
-    top: unset ;
-    bottom: 0 ;
-    padding: 25px ;
-  }
+
 
    .instagram{
     padding-top: 30px;
@@ -44,18 +17,3 @@
 }
 }
 
-  
-  /* Small devices (576px and up) */
-@media (min-width: 576px) {
-    /* CSS styles for small devices */
-}
-  
-  /* Medium devices (768px and up) */
-@media (min-width: 768px) {
-    /* CSS styles for medium devices */
-}
-  
-  /* Large devices (992px and up) */
-@media (min-width: 992px) {
-    /* CSS styles for large devices */
-}
