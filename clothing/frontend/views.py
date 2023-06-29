@@ -538,19 +538,7 @@ def add_to_cart(request, product_id):
 
 
 
-@csrf_exempt
 
-def toggle_night_mode(request, mode):
-    if request.method == 'PUT':
-        if mode == 'True':
-            request.session['darkmode'] = True
-        else:
-            request.session['darkmode'] = False
-        return JsonResponse({'night_mode':  request.session.get('darkmode')})
-    else:
-        night_mode = request.session.get('darkmode')
-        
-        return JsonResponse({'night_mode':  night_mode})
 
 
 def profile(request):

@@ -69,7 +69,7 @@ Login
 
         <form action="{% url 'login' %}" method="post">
             {% csrf_token %}
-            <input type="text" name="email" placeholder="Enter your email or phone number" required>
+            <input type="text" name="email" placeholder="Enter your email" required>
             <input type="password" name="password" placeholder="Enter your password" required>
             <button type="submit">Login</button>
         </form>

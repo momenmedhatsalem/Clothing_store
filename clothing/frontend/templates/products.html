@@ -209,60 +209,6 @@ Shop
         </div>
     </section>
     <!-- Shop Section End -->
-    <style>
-@media (min-width: 992px) {
-    #filters {
-        display: block;
-    }
-}
-    </style>
-<script>
-    $('.shop__sidebar__price a').on('click', function(e) {
-  e.preventDefault();
 
-  // Get the minimum and maximum price from the link text
-  var priceRange = $(this).text().split(' - ');
-  var minPrice = parseFloat(priceRange[0].replace('$', ''));
-  var maxPrice = parseFloat(priceRange[1].replace('$', ''));
 
-  // Filter the products by price
-  $('.product__item').each(function() {
-    var price = parseFloat($(this).data('price'));
-    if (price >= minPrice && price <= maxPrice) {
-      $(this).show();
-    } else {
-      $(this).hide();
-    }
-  });
-});
-
-$('.shop__sidebar__size input[type="checkbox"]').on('change', function(e) {
-  // Add or remove the active class
-  if ($(this).is(':checked')) {
-    $(this).closest('label').addClass('active');
-  } else {
-    $(this).closest('label').removeClass('active');
-  }
-});
-
-// Sort by price
-$('.sort-by-price').on('click', function(e) {
-  e.preventDefault();
- console.log("hello");
-  // Get the selected sort order
-  var sortOrder = $(this).data('sort-order');
-
-  // Sort the products by price
-  $('.product__item').sort(function(a, b) {
-    var priceA = parseFloat($(a).data('price'));
-    var priceB = parseFloat($(b).data('price'));
-    if (sortOrder === 'asc') {
-      return priceA - priceB;
-    } else {
-      return priceB - priceA;
-    }
-  }).appendTo('.product__list');
-});
-
-</script>
 {% endblock %}
