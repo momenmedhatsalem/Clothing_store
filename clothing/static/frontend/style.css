@@ -2,11 +2,124 @@
 .product__item__pic:hover {
     cursor: pointer;
 }
-@media (min-width: var(--breakpoint-md)) {
+.social-media-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .fade-in {
+    animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+      #remove-coupon-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+.fade-away {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.hidden {
+  height: 0;
+  transition: height 4s ease-in-out;
+}
+.free-shipping {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.product-card {
+    width: calc(100% / 3);
+    margin: 10px;
+    position: relative;
+    bottom: -100%;
+    animation: moveUp 1s ease-out forwards;
+  }
+  
+  .product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  @keyframes moveUp {
+    0% {
+      bottom: -100%;
+      opacity: 0;
+    }
+    100% {
+      bottom: 0;
+      opacity: 1;
+    }
+  }
+    .starter-template {
+        padding: 40px 15px;
+        text-align: center;
+    }
+    
+    .size-selector {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  @media (max-width: 767px) {
+  .size-selector {
+    display: none;
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    transition: bottom 0.3s ease-in-out;
+    border-radius: 12px;
+  }
+  }
+  .size-selector--active {
+    display: block;
+    bottom: 0;
+  }
+  
+  @media (max-width: 767px) {
+    .size-selector--active {
+      bottom: 0;
+    }
+  }
+  input[type=radio]:checked + label {
+    border: 2px solid red;
+    box-shadow: 0 0 0 2px black;
+    border-radius: 50%;
+}
+@media (min-width: 992px) {
     #filters {
         display: block;
     }
 }
-body {
-    background-color: yellow;
+
+#id_phone_number_0 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+    float: left;
+    position: relative;
+    width: 100px;
+    background-color: white;
+vertical-align: middle;
+margin-right: 10px;
+}
+#id_phone_number_1 {
+    width:auto;
+    float: left;
+    position: absolute;
+    background-color: white;
+vertical-align: middle;
+margin-left: 110px;
 }
