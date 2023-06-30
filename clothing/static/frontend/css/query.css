@@ -1,0 +1,19 @@
+
+@media (max-width: 575.98px) {
+
+
+   .instagram{
+    padding-top: 30px;
+    padding-bottom: 30px;
+   }
+  .instagram__pic__item{
+    background-position: center 20%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  .product__item__text .add-cart{
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+}
+
