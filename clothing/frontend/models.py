@@ -60,13 +60,20 @@ class ProductImage(models.Model):
 
 class ProductSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="psize")
-    size = models.CharField(max_length=10)
-    quantity = models.PositiveIntegerField()
-    color = models.CharField(max_length=10)
-    color_id = models.CharField(max_length=10, default="1")
-    class Meta:
-        unique_together = ('product', 'size', 'color')
+    size = models.CharField(max_length=10 , blank=True, null=True)
+    quantity = models.PositiveIntegerField( blank=True, null=True)
 
+    class Meta:
+        unique_together = ('product', 'size')
+
+class ProductColor(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="pcolor")
+    color = models.CharField(max_length=10 , blank=True, null=True)
+    color_id = models.CharField(max_length=10 , blank=True, null=True)
+    quantity = models.PositiveIntegerField( blank=True, null=True)
+
+    class Meta:
+        unique_together = ('product', 'color')
 
 class Design(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
