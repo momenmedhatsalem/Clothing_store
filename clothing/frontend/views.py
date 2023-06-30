@@ -465,7 +465,7 @@ def checkout(request):
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
-    if request.method == 'GET' or request.method == 'POST':
+    if request.method == 'POST':
         quantity = int(request.POST.get('cloth_quantity', 1))
         color = request.POST.get('color')
         size = request.POST.get('size')
