@@ -6,7 +6,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.urls import reverse
-from frontend.models import Product, ProductImage, ProductSize, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
+from frontend.models import Product, ProductImage, ProductSize, ProductColor, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -152,10 +152,10 @@ def product_detail(request, product_id):
             request.session['recently_viewed_products'] = recently_viewed_product_ids
         images = ProductImage.objects.filter(product=product)
         sizes = ProductSize.objects.filter(product=product)
-    
+        colors = ProductColor.objects.filter(product=product)
 
     # Render the template with the product
-    return render(request, 'product.html', {'product': product, 'images': images, 'sizes': sizes})
+    return render(request, 'product.html', {'product': product, 'images': images, 'sizes': sizes, 'colors': colors})
 
 
 def login_view(request):
@@ -374,6 +374,8 @@ def checkout(request):
                     price=item.product.price,
                     quantity=item.quantity,
                     customized=item.customized,
+                                        size = item.size,
+                    color = item.color,
                 )
 
             # Save the order
@@ -413,7 +415,8 @@ def checkout(request):
                     product=item.product,
                     price=item.product.price,
                     quantity=item.quantity,
-
+                    size = item.size,
+                    color = item.color,
                     customized=item.customized
                 )
 
@@ -497,7 +500,8 @@ def add_to_cart(request, product_id):
         data = json.loads(request.body)
         quantity = data.get('quantity', 1)
         Product_detail = ProductSize.objects.filter(product=product)
-        color = Product_detail[0].color
+        product_detail2 = ProductColor.objects.filter(product=product)
+        color = product_detail2[0].color
         size = Product_detail[0].size
 
         # create or retrieve a Cart object for both authenticated and anonymous users
