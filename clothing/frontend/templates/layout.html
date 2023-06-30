@@ -160,9 +160,12 @@
                     <div class="header__logo">
                         <a href="{% url 'index' %}"><img src="{% static 'frontend/img/logo4.png' %}" alt=""></a>
                     </div>
-                <div class="col-lg-2 col-md-8 col-6 d-flex justify-content-end align-items-center n-mobile">
-                    <a  href="{% url 'cart' %}"><span>0</span><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""></a>
-                    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+                    <div class="col-lg-2 col-md-8 col-6 d-flex justify-content-end align-items-center n-mobile">
+                        <a class="cart-link" href="{% url 'cart' %}">
+                            <span>0</span>
+                            <img src="{% static 'frontend/img/icon/cart.png' %}" alt="">
+                        </a>
+                        <div class="canvas__open"><i class="fa fa-bars"></i></div>
                     </div>
 
                 <div style="margin-left: 80px;" class="col-lg-6 col-md-6 col-1 p-3 header__menu mobile-menu">
