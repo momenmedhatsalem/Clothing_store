@@ -63,7 +63,7 @@
                         <!-- move this div inside the same row as the photos -->
                         <h2>{{product.product_name}}</h2>
                         <!-- ... (rest of the product details) -->
-                        <h4>EGP {{ product.price }} {% if product.discount_price != 0%} <span>EGP {{ product.discount_price }}</span> {% endif %}</h4>
+                        <h4>EGP {{ product.price }} {% if product.discount_price != 0%} <span style="text-decoration: line-through; opacity: 0.5;">EGP {{ product.discount_price }}</s {% endif %}</h4>
                         <br>
                         <p>{{ product.desc }}</p>
                         <p>{{ star }}</p>
