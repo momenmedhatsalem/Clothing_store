@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var cart_total = document.getElementById('cart_total');
             cart_total.innerHTML = `EGP ${data.cart_total_before_discount}`;
             document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
-            document.querySelector('#765lt').innerHTML = `EGP ${data.cart_total}`;
+
             document.getElementById('cart_total_discount').innerHTML = `EGP ${data.cart_total}`;
         })
         .catch((error) => {
@@ -145,7 +145,7 @@ function Apply_promo_function() {
         }
         else{
         document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
-        document.querySelector('#765lt').innerHTML = `EGP ${data.cart_total}`;
+
     document.getElementById('cart_total_discount').innerHTML = `EGP ${data.cart_total}`;
 
     // check if coupon div already exists
@@ -186,7 +186,6 @@ function removeCoupon() {
             // update cart total
             document.querySelector('#cart_total').textContent = data.cart_total;
             document.querySelector('#cart_total_discount').textContent = data.cart_total;
-            document.querySelector('.cart_total_discount_mobile').textContent = data.cart_total;
         }
         //remove the discount 
         document.getElementById('discount').innerHTML = `EGP 0.00`;
@@ -249,7 +248,6 @@ function removeFromCart(event, product_id, product_size, product_color ) {
     
     var cart_total = document.getElementById('cart_total_discount');
     cart_total.innerHTML = `EGP ${data.cart_total}`;
-    document.querySelector('.cart_total_discount_mobile').innerHTML = `EGP ${data.cart_total}`;;
     
     setTimeout(function() {
         row.parentNode.removeChild(row);

@@ -110,7 +110,7 @@ class Cart(models.Model):
     @property
     def shipping_remainder(self):
         if self.shipping_cost > 0:
-            return 1000 - float(self.total_price)
+            return 500 - float(self.total_price)
         else:
             return 0
     @property

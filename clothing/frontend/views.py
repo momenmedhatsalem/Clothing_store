@@ -105,7 +105,7 @@ def design_save(request):
 
 def send_order_confirmation_email(first_name, email, order):
     subject = 'Order Confirmation'
-    message = f'Thank you for your order, {first_name}! Your order number is {order.id}.'
+    message = f'Thank you for your order, {first_name}! Your order number is {order.id}. Your order is being processed'
     from_email = 'vosmos.net@gmail.com'
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
@@ -436,7 +436,7 @@ def checkout(request):
             # Handle authenticated user
             cart = Cart.objects.get(user=request.user)
             CartItems = CartItem.objects.filter(cart=cart)
-            if float(cart.total_price) > 1000:
+            if float(cart.total_price) > 500:
                 cart.shipping_cost = 0
                 cart.save()
             context = {'cart': CartItems, 'user_cart': cart}
@@ -451,7 +451,7 @@ def checkout(request):
 
             # retrieve the CartItem objects for the anonymous user's cart
             CartItems = CartItem.objects.filter(cart=cart)
-            if float(cart.total_price) > 1000:
+            if float(cart.total_price) > 500:
                 cart.shipping_cost = 0
                 cart.save()
             context = {'cart': CartItems, 'user_cart': cart}
