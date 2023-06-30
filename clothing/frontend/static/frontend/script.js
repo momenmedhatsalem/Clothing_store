@@ -249,8 +249,8 @@ function removeFromCart(event, product_id, product_size, product_color ) {
     
     var cart_total = document.getElementById('cart_total_discount');
     cart_total.innerHTML = `EGP ${data.cart_total}`;
-    var cart_total = document.getElementById('cart_total_discount_mobile');
-    cart_total.innerHTML = `EGP ${data.cart_total}`;
+    document.getElementById('cart_total_discount_mobile').innerHTML = `EGP ${data.cart_total}`;;
+    
     setTimeout(function() {
         row.parentNode.removeChild(row);
     }, 1000);
