@@ -109,7 +109,7 @@
             <div class="offcanvas__nav__option">
                 <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
                 <a href="{% url 'favorites'%}"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a>
-                <a href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
+                <a href="{% url 'cart' %}"><span>0</span><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""></a>
                 <div class="price"></div>
             </div>
             <div id="mobile-menu-wrap"></div>
@@ -161,7 +161,7 @@
                         <a href="{% url 'index' %}"><img src="{% static 'frontend/img/logo4.png' %}" alt=""></a>
                     </div>
                 <div class="col-lg-2 col-md-8 col-6 d-flex justify-content-end align-items-center n-mobile">
-                    <a  href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
+                    <a  href="{% url 'cart' %}"><span>0</span><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""></a>
                     <div class="canvas__open"><i class="fa fa-bars"></i></div>
                     </div>
 
@@ -207,13 +207,13 @@
                     <div class="">
                         <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
                         <a href="{% url 'favorites'%}"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a>
-                        <a href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>
+                        <a href="{% url 'cart' %}"><span>
                             {% if cart.count %}
                             {{ cart.count }}
                             {% else %}
                             0
                             {% endif %}
-                        </span></a>
+                        </span><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""></a>
                         
                         <div class="price">EGP</div>
                     </div>
