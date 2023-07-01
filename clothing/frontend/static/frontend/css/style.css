@@ -553,16 +553,19 @@ ol {
 .hero__slider.owl-carousel .owl-item.active .hero__text h6 {
 	top: 0;
 	opacity: 1;
+	text-shadow: 0px 0px 5px white;
 }
 
 .hero__slider.owl-carousel .owl-item.active .hero__text h2 {
 	top: 0;
 	opacity: 1;
+	text-shadow: 0px 0px 5px white;
 }
 
 .hero__slider.owl-carousel .owl-item.active .hero__text p {
 	top: 0;
 	opacity: 1;
+	text-shadow: 0px 0px 5px white;
 }
 
 .hero__slider.owl-carousel .owl-item.active .hero__text .primary-btn {
