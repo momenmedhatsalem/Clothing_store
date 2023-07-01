@@ -42,7 +42,7 @@ class Product(models.Model):
     discount_price = models.FloatField(default=0)
     desc = models.CharField(max_length=300)
     pub_date = models.DateField()
-    image = models.ImageField(upload_to="static/images", default="", blank=True, null=True)
+    image = models.ImageField(upload_to=rename_image, default="", blank=True, null=True)
     material = models.CharField(max_length=50, default="Coton 100%")
     description = models.TextField(default="Description")
     
