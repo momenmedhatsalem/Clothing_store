@@ -6,8 +6,8 @@ import random
 from django.db import models
 import os
 def rename_image(instance, filename):
-    return os.path.join('static/images', filename)
-
+    name, ext = os.path.splitext(filename)
+    return os.path.join('static/images', f'{name}{ext}')
 
 class Product(models.Model):
     CATEGORY_CHOICES = (
