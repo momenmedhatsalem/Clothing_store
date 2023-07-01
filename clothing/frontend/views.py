@@ -105,7 +105,7 @@ def design_save(request):
 
 def send_order_confirmation_email(first_name, email, order):
     subject = 'Order Confirmation'
-    message = f'Thank you for your order, {first_name}! Your order number is {order.id}. Your order is being processed'
+    message = f'Thank you for your order, {first_name}! Your order number is {order.order_number}. Your order is being processed'
     from_email = 'vosmos.net@gmail.com'
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
@@ -202,74 +202,50 @@ def login_view(request):
     else:
         return render(request, "login.html")
 
-# A form class that takes the username, email, and password of the user
-class RegisterForm(Form):
-    first_name = CharField(label="First Name", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = CharField(label="Last Name", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email = EmailField(label="Email", max_length=200, widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    password = CharField(label="Password", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    
-    # A phone number field that allows the user to choose a country code from a tab
-    # and sets the default to +20 Egypt
-    phone_number = PhoneNumberField(label="Phone Number", initial="",
-                                     widget=PhoneNumberPrefixWidget(initial="EG", 
-                                                                    attrs={'class': 'form-control'}))
+
 
 # A view function that displays the register form and handles the registration
 def register_view(request):
-    # If the request is a GET request, create a blank RegisterForm and render it
     if request.method == "GET":
-        form = RegisterForm()
-        return render(request, "register.html", {"form": form})
-    # If the request is a POST request, get the data from the form and validate it
+        return render(request, "register.html")
     elif request.method == "POST":
-        form = RegisterForm(request.POST)
-        # If the form is valid, create a new user and log them in
-        if form.is_valid():
-            first_name = form.cleaned_data["first_name"]
-            last_name = form.cleaned_data["last_name"]
-            email = form.cleaned_data["email"]
-            password = form.cleaned_data["password"]
-            # Generate a unique username from the email address
-            username = email.split('@')[0]
-            while MyUser.objects.filter(username=username).exists():
-                username = f"{username}_{get_random_string()}"
+        # Get form data from POST request
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        phone_number = request.POST.get("phone_number")
+        
+        # Check if user already exists
+        if MyUser.objects.filter(username=email).exists():
+            messages.error(request, "An account with this email address already exists. Please log in instead.")
+            return HttpResponseRedirect(reverse("login"))
+        
+        # Create user
+        user = MyUser.objects.create_user(first_name=first_name, phone=phone_number, username=email, last_name=last_name, email=email, password=password)
+        
+        # Copy cart items from session cart to user cart
+        session_key = request.session.session_key
+        if session_key:
+            session_cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
+            cart, created = Cart.objects.get_or_create(user=user)
+            for item in CartItem.objects.filter(cart=session_cart):
+                product = item.product
+                quantity = item.quantity
+                cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+                if created:
+                    cart_item.quantity = int(quantity)
+                    cart_item.save()
+                else:
+                    if not cart_item.customized:
+                        cart_item.quantity += int(quantity)
+                        cart_item.save()
+            CartItem.objects.filter(cart=session_cart).delete()
+        
+        # Log in user and redirect to index page
+        login(request, user)
+        return HttpResponseRedirect(reverse("index"))
 
-            phone_number = form.cleaned_data["phone_number"]
-            user = MyUser.objects.create_user(first_name=first_name, phone=phone_number, username=username, last_name=last_name, email=email, password=password)
-            if user is not None:
-                # User has successfully registered
-                # Retrieve session cart
-                session_key = request.session.session_key
-                if session_key:
-                    session_cart, created = Cart.objects.get_or_create(user=None, session_key=session_key)
-                    # Get or create user's Cart object
-                    cart, created = Cart.objects.get_or_create(user=user)
-                    # Iterate over session cart items
-                    for item in CartItem.objects.filter(cart=session_cart):
-                        product = item.product
-                        quantity = item.quantity
-                        # Check if CartItem already exists for given product and cart
-                        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-                        if created:
-                            # CartItem did not exist, set its quantity
-                            cart_item.quantity = int(quantity)
-                            cart_item.save()
-                        else:
-                            # CartItem already exists, check if it has been customized
-                            if not cart_item.customized:
-                                # Increase its quantity
-                                cart_item.quantity += int(quantity)
-                                cart_item.save()
-                    # Clear session cart
-                    CartItem.objects.filter(cart=session_cart).delete()
-                login(request, user)
-                # Redirect to the ecommerce website builder or another page
-                return HttpResponseRedirect(reverse("index"))
-
-        # If the form is not valid, render it again with the errors
-        else:
-            return render(request, "register.html", {"form": form})
         
 def logout_view(request):
     logout(request)

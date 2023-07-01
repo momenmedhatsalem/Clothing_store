@@ -63,10 +63,13 @@ Login
         .google-btn:hover {
             background-color: #357ae8;
         }
+        
         </style>
     <div class="container col-12" id="body">
             <h2>Login</h2>
-
+            {% if message %}
+            <div class="container" id="body">{{ message }}</div>
+        {% endif %}
         <form action="{% url 'login' %}" method="post">
             {% csrf_token %}
             <input type="text" name="email" placeholder="Enter your email" required>
@@ -79,8 +82,6 @@ Login
         type="submit"><i class="fab fa-google me-2"></i> <a href="http://127.0.0.1:8000/accounts/google/login/?process=login">Sign in using Google</a></button>
         <p>Don't have an account? <a href="{% url 'register' %}">Sign up here</a></p>
     </div>
-    {% if message %}
-        <div class="container" id="body">{{ message }}</div>
-    {% endif %}
+
 
 {% endblock %}
