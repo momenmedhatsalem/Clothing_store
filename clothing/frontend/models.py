@@ -4,9 +4,11 @@ from django.conf import settings
 import random
 # Create your models here.
 from django.db import models
-
+import os
 def rename_image(instance, filename):
-    return f'{filename}'
+    ext = filename.split('.')[-1]
+    filename = f'{instance.product_name}.{ext}'
+    return os.path.join('static/images', filename)
 
 class Product(models.Model):
     CATEGORY_CHOICES = (
