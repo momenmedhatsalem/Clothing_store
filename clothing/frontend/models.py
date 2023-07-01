@@ -7,7 +7,7 @@ from django.db import models
 import os
 def rename_image(instance, filename):
     ext = filename.split('.')[-1]
-    name = filename.split('_')[0]
+    name = 'x'
     filename = f'{name}.{ext}'
     return os.path.join('static/images', filename)
 
