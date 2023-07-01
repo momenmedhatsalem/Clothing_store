@@ -256,7 +256,8 @@ function removeFromCart(event, product_id, product_size, product_color ) {
         var cart_total = document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
         var cart_summary = document.getElementById('cart_summary');
         const cart_count = cart_summary.dataset.cart;
-        if (!cart_count) {
+        console.log(data.cart_total_before_discount);
+        if (data.cart_total_before_discount == '0.00') {
           cart_summary.classList.add('fade-away');
             cart_summary.addEventListener('transitionend', () => {
                 cart_summary.remove();

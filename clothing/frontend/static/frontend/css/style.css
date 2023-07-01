@@ -1798,19 +1798,19 @@ ol {
 }
 
 .product__details__option__color label.c-4 {
-	background: #ed1c24;
+	background: gray;
 }
 
 .product__details__option__color label.c-5 {
-	background: #57594d;
+	background: green;
 }
 
 .product__details__option__color label.c-6 {
-	background: #e8bac4;
+	background: purple;
 }
 
 .product__details__option__color label.c-7 {
-	background: #d6c1d7;
+	background: pink;
 }
 
 .product__details__option__color label.c-8 {
