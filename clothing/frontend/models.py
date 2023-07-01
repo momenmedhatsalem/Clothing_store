@@ -3,6 +3,11 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 import random
 # Create your models here.
+from django.db import models
+
+def rename_image(instance, filename):
+    return f'{filename}'
+
 class Product(models.Model):
     CATEGORY_CHOICES = (
         ('M', 'Men'),
@@ -34,14 +39,21 @@ class Product(models.Model):
     discount_price = models.FloatField(default=0)
     desc = models.CharField(max_length=300)
     pub_date = models.DateField()
-    image = models.ImageField(upload_to="static/images", default="")
+    image = models.ImageField(upload_to="static/images", default="", blank=True, null=True)
     material = models.CharField(max_length=50, default="Coton 100%")
     description = models.TextField(default="Description")
+    
     def get_absolute_url(self):
         return f"/product_detail/{self.id}/"
 
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to="static/images", default="", blank=True, null=True)
+
+
     def __str__(self):
         return self.product_name
+    
 class MyUser(AbstractUser):
     country = models.CharField(max_length=50, default="")
     city = models.CharField(max_length=50, default="")
@@ -51,12 +63,6 @@ class MyUser(AbstractUser):
     pass 
 
 
-class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to="static/images")
-
-    def __str__(self):
-        return self.product.product_name
 
 class ProductSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="psize")
