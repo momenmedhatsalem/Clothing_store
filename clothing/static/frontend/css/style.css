@@ -717,22 +717,27 @@ ol {
 }
 
 .banner__item__text h2 {
-	color: #111111;
+	color: white;
 	font-weight: 700;
 	line-height: 46px;
 	margin-bottom: 10px;
+	margin-left: 5px;
+	text-shadow: 0px 0px 8px black;
 }
 
 .banner__item__text a {
 	display: inline-block;
-	color: #111111;
+	color: white;
 	font-size: 13px;
 	font-weight: 700;
 	letter-spacing: 4px;
 	text-transform: uppercase;
 	padding: 3px 0;
 	position: relative;
+	margin-left: 5px;
+	text-shadow: 0px 0px 8px black;
 }
+
 
 .banner__item__text a:after {
 	position: absolute;
