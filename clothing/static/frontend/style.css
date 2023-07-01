@@ -94,7 +94,7 @@
       bottom: 0;
     }
   }
-  input[type=radio]:checked + label {
+  input[name="color"]:checked + label {
     border: 2px solid red;
     box-shadow: 0 0 0 2px black;
     border-radius: 50%;
@@ -122,4 +122,14 @@ margin-right: 10px;
     background-color: white;
 vertical-align: middle;
 margin-left: 110px;
+}
+.cart-link {
+  position: relative;
+}
+
+.cart-link span {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
