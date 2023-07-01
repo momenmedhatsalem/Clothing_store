@@ -8,7 +8,7 @@ import os
 def rename_image(instance, filename):
     ext = filename.split('.')[-1]
     name = filename.split('_')[0]
-    filename = f'{name}.{ext}'
+    filename = f'{name}'
     return os.path.join('static/images', filename)
 
 class Product(models.Model):
