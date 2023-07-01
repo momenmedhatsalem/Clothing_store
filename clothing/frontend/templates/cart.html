@@ -50,7 +50,7 @@ Cart
                     <td class="product__cart__item">
                       <a href="{{ item.product.get_absolute_url }}">
                       <div class="product__cart__item__pic">
-                        <img src="{{ item.product.image }}" width="50px" alt="">
+                        <img src="{{ item.product.image.url }}" width="50px" alt="">
                       </div>
                       <div class="product__cart__item__text">
                         <h6>{{ item.product.product_name }}</h6>
@@ -155,10 +155,11 @@ Cart
           </div>
         </div>
       </div>
+      <!--
       <div class="mobile-btn" style="display: none;">
         <span>Total:</span><p id="a765lt" class="mb-2 fw-bold">  EGP {{user_cart.total_price}}</p>
       <a href="{% url 'checkout' %}" class="primary-btn">Proceed to checkout</a>
-       </div>
+       </div>-->
     </section>
     <!-- Shopping Cart Section End -->
     {% else %}
