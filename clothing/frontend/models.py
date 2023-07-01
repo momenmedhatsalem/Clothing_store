@@ -52,7 +52,7 @@ class ProductImage(models.Model):
 
 
     def __str__(self):
-        return self.product_name
+        return self.product.product_name
     
 class MyUser(AbstractUser):
     country = models.CharField(max_length=50, default="")
