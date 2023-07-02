@@ -4,23 +4,49 @@
     <head>
         <meta charset="UTF-8">
         <script>document.getElementsByTagName("html")[0].className += " js";</script>
-        <title>{% block title %}Vosmos | Clothing Store{% endblock %}</title>
+        <title>{% block title %}Vosmos Clothing Store - Buy Clothes and T-Shirts in Egypt{% endblock %}</title>
         <!-- Use a CDN link for Bootstrap instead of a static file -->
         <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}">
-
+    
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}">
         <!-- Use a CDN link for jQuery instead of a static file -->
         <!-- Use a CDN link for Bootstrap instead of a static file -->
         
         <link rel="icon" href="{% static 'frontend/img/banner/logo.jpg'%}" type="image/x-icon">
-
+    
         
         
-        <meta name="description" content="Vosmos Clothing Store. Buy clothes, T Shirts">
+        
         <meta name="keywords" content="Vosmos, clothing, t shirts, vosmos clothing, Clothes Egypt">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+        <!-- Add descriptive URLs for your pages -->
+        <link rel="canonical" href="https://www.vos-mos.com">
+    
+        <!-- Add descriptive titles and meta descriptions -->
+   
+        <meta name="description" content="Shop the latest fashion trends at Vosmos Clothing Store. We offer a wide range of clothes and t-shirts for men and women in Egypt.">
+    
+        <!-- Add header tags (H1, H2, H3) in your HTML -->
+        <h1>Vosmos Clothing Store</h1>
+    
+        <!-- Add alt tags for images -->
+        <img src="{% static 'frontend/img/banner/logo.jpg'%}" alt="Vosmos Clothing Store Logo">
+    
+        <!-- Add internal linking -->
+        <a href="/about-us">About Us</a>
+    
+        <!-- Add external linking -->
+        <a href="https://www.facebook.com/vosmos.eg">Follow us on Facebook</a>
+    
+        <!-- Add social media sharing buttons -->
+        <div class="share-buttons">
+            <a href="https://www.facebook.com/vosmos.eg" class="facebook">Share on Facebook</a>
+            <a href="https://www.twitter.com/vos_mos" class="twitter">Share on Twitter</a>
+            <a href="https://www.instagram.com/vosmos.eg" class="linkedin">Share on Instagram</a>
+        </div>
         
         <!-- Google Font -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
