@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
         #Code to load the data into database
         for row in DictReader(open('./Products.csv')):
-            product=Product(product_name=row['product_name'], category=row['category'], label=row['label'], subcategory=['subcategory'],  image=row['image'], price=row['price'], discount_price=row['discount_price'], pub_date=row['pub_date'], material=row['material'] , description=row['description'])  
+            product=Product(product_name=row['product_name'], category=row['category'], label=row['label'], subcategory=['subcategory'], price=row['price'], discount_price=row['discount_price'], pub_date=row['pub_date'])  
             product.save()
 
             # Get size data for this product from the file
@@ -46,8 +46,4 @@ class Command(BaseCommand):
                 color_instance = ProductColor(product=product, color=color_name, color_id=color_id, quantity=color_quantity)
                 color_instance.save()
 
-            # Get image data for this product from the file
-            images = row['images'].split(';')
-            for image in images:
-                image_instance = ProductImage(product=product, image=image)
-                image_instance.save()
+
