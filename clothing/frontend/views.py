@@ -37,7 +37,7 @@ from django.core.mail import send_mail
 
 import base64
 from django.core.files.base import ContentFile
-from django.views.decorators.csrf import csrf_exempt
+
 from django.http import JsonResponse
 from .models import Design
 from django.core.paginator import Paginator
@@ -84,7 +84,7 @@ def show_products(request, category=None, subcategory=None):
     return render(request, 'products.html', context)
 
 
-@csrf_exempt
+
 def design_save(request):
     if request.method == 'POST':
         # Get the image data from the request body
