@@ -1,0 +1,3 @@
+product_name,category,label,subcategory,price,discount_price,pub_date,image,material,description,sizes,colors,images
+cat,W,NEW,subcategory,349.98,449.98,2023-07-03,cat.png,100% poly,none,S:5;M:6;L:7,Black:1:5;Yellow:3:9,cats.png
+Befree,M,NEW,subcategory,349.98,1000,2023-07-03,befree.png,100% Cotton,none,S:5;M:6;L:7;Xl:5,Black:1:5;Yellow:3:9;White:9:1,befree2.png

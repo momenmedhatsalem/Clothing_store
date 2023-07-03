@@ -40,7 +40,6 @@ class Product(models.Model):
     subcategory = models.CharField(choices= SUB_CATEGORY_CHOICES ,max_length=50, default="")
     price = models.FloatField(default=0)
     discount_price = models.FloatField(default=0)
-    desc = models.CharField(max_length=300)
     pub_date = models.DateField()
     image = models.ImageField(upload_to=rename_image, default="", blank=True, null=True)
     material = models.CharField(max_length=50, default="Coton 100%")
