@@ -1,11 +1,19 @@
-product_name,category,label,subcategory,price,discount_price,pub_date,sizes,colors
-Cat Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9
-Befree Elite T-shirt,M,NEW,S,349.98,1000,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
-Authentic Basic T-shirt,M,New,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
-Butterfly Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
-Butterfly Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
-Butterfly Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
-Girl Power Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
-Re Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
-Shine Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
-Shine Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1
+product_name,category,label,subcategory,price,discount_price,pub_date,sizes,colors,id
+Cat meow Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Yellow:3:9;purple:6:10;Pink:7:10;white:9:10,33
+Befree Elite T-shirt,M,NEW,S,349.98,1000,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1,34
+Authentic Basic T-shirt,M,New,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1,35
+Butterfly Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Green:5:10;Pink:6:10,36
+Butterfly Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Green:5:10;Pink:6:10,37
+Butterfly Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Green:5:10;Pink:6:10,38
+Girl Power Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Yellow:3:10;Gray:4:10;Pink:6:10;Purple:7:10;Red:8:20;White:9:10,39
+Re Cycle Re Use Re New Re Think Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Green:5:10;Red:8:20,40
+Shine Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Pink:6:10;Purple:7:10,41
+Shine Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Pink:6:10;Purple:7:10,42
+Bat Basic T-shirt,M,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Green:5:10;Pink:6:10;Purple:7:10;Red:8:10,43
+Believe Basic T-shirt,M,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Green:5:10;Pink:6:10;Purple:7:10;Red:8:10,44
+HOPE Basic T-shirt,M,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Green:5:10;Red:8:10,45
+Born To Be Wild T-shirt,M,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Yellow:3:20;Gray:4:10;Pink:6:10;Purple:7:10;White:9:10,46
+Limited Basic T-shirt,M,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Yellow:3:20;Gray:4:10,47
+Listen Basic T-shirt,M,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Pink:6:10;Purple:7:10;Red:8:10,48
+Error 404 Black Edition T-shirt,M,NEW,S,399.98,500,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5,49
+Astronaut Elite T-shirt,M,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1,50
