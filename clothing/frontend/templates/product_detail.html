@@ -1,396 +1,533 @@
-{% extends 'layout.html' %}
-
-{% block body %}
-
-<style>
-    .product-card {
-      width: calc(100% / 3);
-      margin: 10px;
-      position: relative;
-      bottom: -100%;
-      animation: moveUp 1s ease-out forwards;
-    }
-    </style>
-<div class="product-card">
-    <span class="badge bg-{{ product.get_label_display }} pt-1 mt-3 ms-2">{{ product.label }}</span>
-    <div class="product-image">
-      <img class="card-img-top" src="{{product.image}}" width="50" height="50" alt="Card image cap">
-
-    </div>
-    </div>
-    <h1>{{ product.product_name }}</h1>
-    <p>{{ product.desc }}</p>
-    <p>Price: {{ product.price }}</p>
-    <p>{{ star }}</p>
-    <div class="product-image">
-        <p class="product-description">{{ product.desc|truncatewords:20 }}</p>
-
-      </div>
+{% extends 'layout.html' %} {% block body %}
 
 <head>
     <title>Custom T-Shirt</title>
     <style>
-        #form-box {
-            width: 300px;
-            padding: 20px;
-            border: 1px solid black;
+        .form h2 {
+            font-weight: 700;
+            font-size: 35px;
+            line-height: 42px;
+            margin-top: 50px;
+            margin-bottom: 50px;
         }
-        #tshirt {
-            width: 300px;
-            background-color: white;
+        .tshirt-size-option {
+  display: inline-block;
+  /* padding: 10px; */
+  margin: 5px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.tshirt-size-option.selected {
+  background-color: #ccc;
+   }
+   .color-option {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .color-option:hover {
+            border: 2px solid black;
+        }
+        .color-option.selected {
+            border: 2px solid black;
+        }
+.form form div{
+    padding: 15px;
+}
+.font-size span:nth-child(1){
+    font-size: small;
+}
+.font-size span:nth-child(2){
+    font-size:medium;
+}
+.font-size span:nth-child(3){
+    font-size: large;
+}
+.font-size button{
+    background-color: white;
+    border: 1px solid #ccc;
+}
+.rotate button , .upload button{
+    background-color: white;
+    border: 1px solid #ccc;
+}
+.color-input {
+            height: 50px;
+            width: 50px;
+            padding: 0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            outline: none;
+        }     
+.canva-box{
+position: relative;
+}  
+.border-box{
+    position: absolute;
+    left: 226px;
+    background-color: transparent;
+    width: 250px;
+    top: 25%;
+    height: 300px;
+    border: 2px dotted black;
+} 
+.image-container {
             position: relative;
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 10px;
         }
-        #tshirt-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        #tshirt-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+
+.delete-button {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: #fff;
+    border: none;
+    padding: 2px 6px;
+    font-size: 8px;
+    cursor: pointer;
+}
+#preview {
+      width: 400px;
+      height: 300px;
+      overflow: hidden;
+    }
+.img-window{
+    /* background-color: black; */
+    min-width: 70%;
+    z-index: 100;
+}    
+.img-window .row{
+    min-width: 70%;
+    z-index: 100;
+}    
     </style>
 </head>
 
-    <h1>Customize your T-Shirt</h1>
-    <div class="container center" id="tshirt">
-        <span ></span>
-        <textarea  style=" resize: none; background-color: transparent; width: 50px; height: 100px; border: 2px dashed black;" id="tshirt-text" ></textarea>
-        <img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
-        <img id="designImage" style="display: none;">
-    </div><br>
-    <br>
-    <div class="container center" id="form-box">
-       
-            <label for="tshirt-color">T-Shirt Color:</label>
-            <input type="color" id="tshirt-color" name="tshirt-color"><br><br>
-            <label for="text-color">Text Color:</label>
-            <input type="color" id="text-color" name="text-color"><br><br>
-            <label for="text">Text:</label>
-            <textarea id="text" name="text"></textarea><br><br>
-            <button type="button" id="increase">+</button>
-            <button type="button" id="decrease">-</button>
-            <label for="a4">A4</label>
-            <input type="radio" id="a4" name="size" value="a4" checked>
+<!-- <div class="product-card">
+    <span class="badge bg-{{ product.get_label_display }} pt-1 mt-3 ms-2">{{ product.label }}</span>
+    <div class="product-image">
+        <img class="card-img-top" src="{{product.image}} " width="50" height="50" alt="Card image cap" />
+    </div>
+</div>
+<h1>{{ product.product_name }}</h1>
+<p>{{ product.desc }}</p>
+<p>Price: {{ product.price }}</p>
+<p>{{ star }}</p> -->
 
-            <label for="a3">A3</label>
-            <input type="radio" id="a3" name="size" value="a3">
-            <button type="button" id="rotate">Rotate Text Area</button>
 
-            <label for="photo">Upload a photo:</label>
-            <input type="file" id="photo" name="photo"><br><br>
-            <input type="radio" id="front" name="side" value="front">
-            <label for="front">Front</label><br>
-            <input type="radio" id="back" name="side" value="back">
-            <label for="back">Back</label><br><br>
-        
-        <input data-product_id="{{product.id}}" id="design_button" type="submit" value="Submit">
+<div class="container position-relative">
+
+<div class="img-window  " id="editingWindow" >   
+<div class="control_panel d-flex justify-content-end">
+    <button id="zoom-in">Zoom In</button>
+    <button id="zoom-out">Zoom Out</button>
+    <button id="move-up">Move Up</button>
+    <button id="move-down">Move Down</button>
+    <button id="move-left">Move Left</button>
+    <button id="move-right">Move Right</button>
+</div>    
+<div class="row justify-content-between ">
+ <div class="canva-col col"> 
+    <div class="canva-box">
+        <canvas class="myCanvas"></canvas>
+        <div class="border-box"></div>
+        </div>
+</div>  
+ <div class="img-col col"> 
+    <div id="preview">
+        <img src="../static/images/blue.jpg" id="img" alt="">
+    </div>
+</div>  
+</div>
+</div> 
+
+
+    <div class="row  justify-content-between ">
+        <div class="col">
+            <div class="product-image">
+                <div class="canva-box">
+                <canvas id="myCanvas" class="myCanvas"></canvas>
+                <div class="border-box"></div>
+                </div>
+                <p class="product-description">{{ product.desc|truncatewords:20 }}</p>
+            </div>
+        </div>
+        <div class="col form " id="tshirt">
+            <h2>Customize your Shirt</h2>
+
+            <!-- <img class="card-img-top" src="{{product.image.url}}" alt="Card image cap" />
+            <img id="designImage" style="display: none" /> -->
+
+    <form id="form-box">
+        <div class="d-flex align-items-center justify-content-between size_options">
+            <div class="tshirt-size-option" data-size="XS">XS</div>
+            <div class="tshirt-size-option" data-size="SM">SM</div>
+            <div class="tshirt-size-option" data-size="L">L</div>
+            <div class="tshirt-size-option" data-size="XL">XL</div>
+            <div class="tshirt-size-option" data-size="2XL">2XL</div>
+            <input type="hidden" id="selected-size" name="selected-size" />
+        </div>   
+    <div class="d-flex align-items-center justify-content-between size_options">
+    <div class="color-option selected" style="background-color: white"></div>
+    <div class="color-option" style="background-color: black"></div>
+    <div class="color-option" style="background-color: grey"></div>
+    <div class="color-option" style="background-color: navy"></div>
+    <div class="color-option" style="background-color: purple"></div>
+    </div>
+    <div>   
+        <input type="radio" id="a4" name="size" value="a4" checked />
+        <label for="a4" style="padding-right: 57px;">A4</label>
+        <input type="radio" id="a3" name="size" value="a3" />
+        <label for="a3">A3</label>
+    </div> 
+    <div >
+        <input type="radio" id="front" name="side" value="front" />
+        <label for="front" style="padding-right: 40px;">Front</label>
+        <input type="radio" id="back" name="side" value="back"/>
+        <label for="back">Back</label>
+    </div> 
+    <div>
+        <label for="imageInput">image input</label><br />
+        <input type="file" id="imageInput" accept=".jpg, .jpeg, .png, .webp"/>
+        <div id="image-viewer"></div>
     </div>
     
+        <!-- <div class="upload">
+            <button data-product_id="{{product.id}}" type="button" id="uploadButton">
+                Upload
+            </button>
+        </div> -->
+             <div>
+               <label for="text">Text:</label><br/>
+               <textarea id="text"  name="text" style="
+               resize: none;
+               background-color: transparent;
+               width: 100%;
+               height: 100px;
+               "></textarea>
+            </div>
+            <div >
+                <label for="text-color">Text Color:</label>
+                <br/> 
+                <input type="color" class="color-input" id="text-color" name="text-color" />
+            </div>  
+            <div class="font-size">   
+                <button type="button" id="decrease">-</button>
+                <span title="Normal Font"><span>A</span><span>A</span><span>A</span></span>
+                <button type="button" id="increase">+</button>
 
-    <form>
-        <input type="file" id="imageInput">
-        <button data-product_id="{{product.id}}" type="button" id="uploadButton">Upload</button>
-    </form>
-    
+        </div>
+            <div class="rotate">
+                <button type="button" id="rotate">Rotate Text Area</button>
+            </div>    
+            <!-- <div>
+                <label for="photo">Upload a photo:</label>
+                <input type="image" id="photo" name="photo" />
+            </div>     -->
+                <div class="submit">
+                    <input data-product_id="{{product.id}}" id="design_button" type="submit" value="Submit" />
+                </div>
 
-    <style>
-    #increase {
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-    }
+            </form>
 
-    #decrease {
-        transform: rotate(90deg);
-        width: 30px;
-        height: 30px;
-    }
-    #tshirt {
-    position: relative;
-}
+        </div>
 
-#tshirtImage,
-#designImage {
-    position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-}
 
-</style>
 
+    </div>
+</div>
+
+<script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
 
 <script>
-    // Preview Uploaded image
-    const textarea = document.querySelector('#tshirt-text');
-    const imageInput = document.querySelector('#imageInput');
-    const uploadButton = document.querySelector('#uploadButton');
-    const designImage = document.querySelector('#designImage');
 
-    uploadButton.addEventListener('click', () => {
-        // Get the selected file
-        const file = imageInput.files[0];
+//Render Canvas elements
 
-        // Use the FileReader API to read the contents of the file
+const canvases = document.getElementsByClassName("myCanvas");
+var ctxArray = [];
+
+for (var i = 0; i < canvases.length; i++) {
+      var canvas = canvases[i];
+      var ctx = canvas.getContext('2d');
+      ctxArray.push(ctx);
+    //   console.log(ctx);
+
+      canvas.width = 700;
+      canvas.height = 700;
+
+      var backgroundImage = new Image();
+      backgroundImage.src = "../static/images/white-shirt.png";
+
+      backgroundImage.onload = function() {
+         renderText(); 
+        };  
+}
+
+
+//handle image input
+
+const inputElement = document.getElementById("imageInput");
+const imageViewer = document.getElementById('image-viewer');
+const editingWindow=document.getElementById("editingWindow");
+let   addedImage ="";
+let photo=document.getElementById('img');
+    let cropper = new Cropper(photo, {
+    aspectRatio: 16 / 9, 
+      viewMode: 2, 
+      zoomable: true,
+      movable: true,
+}); 
+
+inputElement.addEventListener('change',function(event){
+    console.log("hla wlla")
+    //run 1st function
+    handleImageUpload(event);
+    //run 2nd function
+    showOnShirt(event);
+    //run 3rd function
+    editimg();
+    //run 4th function
+    displayWindow();
+});
+
+//1st view in field 
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
         const reader = new FileReader();
-        reader.onload = (event) => {
-            // Get a data URL representing the image data
-            const dataURL = event.target.result;
-
-            // Set the src attribute of the designImage element to the data URL
-            designImage.src = dataURL;
-            const style = window.getComputedStyle(textarea);
-            
-            // Set the width and height of the designImage element to match that of textarea
-            designImage.style.width = style.getPropertyValue('width');
-            designImage.style.height = style.getPropertyValue('height');
-            designImage.style.display = 'block';
-        };
         reader.readAsDataURL(file);
-    });
-
-
-    // Save Image
-
-
-    uploadButton.addEventListener('click', () => {
-        // Get the selected file
-        const file = imageInput.files[0];
-
-        // Use the FileReader API to read the contents of the file
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            // Get a data URL representing the image data
-            const dataURL = event.target.result;
-            const product_id = uploadButton.dataset.product_id;
-                // Send a POST request to a Django view with the image data
-                fetch('/design_save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    image: dataURL,
-                    product_id: product_id
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Do something with response data
+        reader.onload = function() {
+            const imageSrc = reader.result;
+            const imageContainer = document.createElement('div');
+            imageContainer.classList.add('image-container');
+            const imageElement = document.createElement('img');
+            imageElement.src = imageSrc;
+            imageElement.style.maxHeight = '70px';
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function() {
+                imageContainer.remove();
             });
+            imageContainer.appendChild(imageElement);
+            imageContainer.appendChild(deleteButton);
+            imageViewer.appendChild(imageContainer);
         };
-        reader.readAsDataURL(file);
+    }
+}
+//2nd put it on canva (show it on the shirt)
+function showOnShirt (event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    const image   =new Image();
+    reader.onload = function(e) {
+      image.src = e.target.result;
+
+      image.onload = function() {
+        ctx.drawImage(image, 226, 200, 250, 150);
+      };
+    };
+
+    reader.readAsDataURL(file);
+  }
+};
+
+//3rd put it on cropping section
+function editimg(){
+    var canvas = cropper.getCroppedCanvas();
+    var croppedImageDataURL = canvas.toDataURL('image/jpeg');
+    var croppedImageElement = document.createElement('img');
+    croppedImageElement.src = croppedImageDataURL;
+    document.body.appendChild(croppedImageElement);
+}
+//4th display the image editing window
+function displayWindow(){
+    editingWindow.style.display="block";
+}
+
+//handle text input, font size, text rotation, and text color
+let width=250;
+let xline=226;
+let font = 16;
+let rotationAngle = 0;
+let textColor = 'black';
+var textareaValue = document.getElementById("text");
+var userInput = "";
+const a4RadioButton = document.getElementById('a4');
+const a3RadioButton = document.getElementById('a3');
+
+textareaValue.addEventListener("input", function(event) {
+  userInput = event.target.value;
+  renderText(); 
+});
+
+
+a4RadioButton.addEventListener('change', function() {
+  if (a4RadioButton.checked) {
+    width=250;
+    xline=226;
+    const borderBox = document.querySelector('.border-box');
+    borderBox.style.width = '250px';
+    borderBox.style.left = `${xline}px`;
+    renderText();
+  }
+});
+
+a3RadioButton.addEventListener('change', function() {
+  if (a3RadioButton.checked) {
+    width=150;
+    xline=277;
+    const borderBox = document.querySelector('.border-box');
+    borderBox.style.width = '150px';
+    borderBox.style.left = `${xline}px`;
+    renderText();
+  }
+});
+
+document.getElementById('rotate').addEventListener('click', function() {
+  rotationAngle += Math.PI / 4; 
+  renderText();
+});
+
+document.getElementById('increase').addEventListener('click', function() {
+  font++;
+  renderText();
+});
+
+document.getElementById('decrease').addEventListener('click', function() {
+  font--;
+  renderText();
+});
+
+document.getElementById('text-color').addEventListener('input', function(event) {
+  textColor = event.target.value;
+  renderText();
+});
+
+function renderText() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);  
+  // Render text
+  ctx.fillStyle = textColor;
+  ctx.font = `${font}px Arial`;
+  const maxWidth = width;
+  const maxHeight = 300;
+  const lineHeight = 35;
+  const x = xline;
+  let y = 200;
+
+  // Apply rotation only to the text
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotationAngle);
+  ctx.translate(-x, -y);
+
+  const words = userInput.split(" ");
+  let lines = [];
+  let currentLine = "";
+  for (let i = 0; i < words.length; i++) {
+    const testLine = currentLine + words[i] + " ";
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth && i > 0) {
+      lines.push(currentLine.trim());
+      currentLine = words[i] + " ";
+    } else {
+      currentLine = testLine;
+    }
+  }
+  lines.push(currentLine.trim());
+
+  for (let i = 0; i < lines.length; i++) {
+    if (y + lineHeight <= y + maxHeight) {
+      ctx.fillText(lines[i], x, y);
+      y += lineHeight;
+    } else {
+      lines.splice(i);
+      break; 
+    }
+  }
+  
+  if (y + lineHeight > y + maxHeight) {
+    lines.splice(-1); 
+  }
+  
+  ctx.restore();
+}
+//Image control panel
+document.getElementById('zoom-in').addEventListener('click', function() {
+      cropper.zoom(0.1); // Zoom in by 10%
     });
 
+    document.getElementById('zoom-out').addEventListener('click', function() {
+      cropper.zoom(-0.1); // Zoom out by 10%
+    });
 
+    document.getElementById('move-up').addEventListener('click', function() {
+      cropper.move(0, -10); // Move up by 10 pixels
+    });
 
+    document.getElementById('move-down').addEventListener('click', function() {
+      cropper.move(0, 10); // Move down by 10 pixels
+    });
 
-    // Save
-const text = textarea.value;
-const designbutton = document.querySelector('#design_button');
-designbutton.addEventListener('click', () => {
-    // Create a canvas element and set its size
-    const canvas = document.createElement('canvas');
-    canvas.width = 500;
-    canvas.height = 500;
-    const context = canvas.getContext('2d');
+    document.getElementById('move-left').addEventListener('click', function() {
+      cropper.move(-10, 0); // Move left by 10 pixels
+    });
 
-    // Get the computed style of the textarea
-    const style = window.getComputedStyle(textarea);
+    document.getElementById('move-right').addEventListener('click', function() {
+      cropper.move(10, 0); // Move right by 10 pixels
+    });
+    // select size
+    document.addEventListener('DOMContentLoaded', function() {
+    var tshirtSizeOptions = document.querySelectorAll('.tshirt-size-option');
 
-    // Set the font of the canvas context to match that of textarea
-    context.font = style.getPropertyValue('font-size') + ' ' + style.getPropertyValue('font-family');
-
-    // Split the text into separate lines
-    const lines = text.split('\n');
-
-    // Draw each line onto the canvas
-    let y = 50;
-    for (const line of lines) {
-        context.fillText(line, 10, y);
-        y += 30;
+    function updateSelectedSize() {
+        var selectedSizes = Array.from(document.querySelectorAll('.tshirt-size-option.selected'))
+            .map(function(option) {
+                return option.getAttribute('data-size');
+            });
+        document.getElementById('selected-size').value = selectedSizes.join(',');
     }
 
-    // Get a data URL representing the image data
-    const dataURL = canvas.toDataURL();
-    const product_id = designbutton.dataset.product_id;
-    // Send a POST request to a Django view with the image data
-    fetch('/design_save', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            image: dataURL,
-            product_id: product_id
-            
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Do something with response data
+    tshirtSizeOptions.forEach(function(option) {
+        option.addEventListener('click', function() {
+            tshirtSizeOptions.forEach(function(otherOption) {
+                if (otherOption !== option) {
+                    otherOption.classList.remove('selected');
+                }
+            });
+            option.classList.toggle('selected');
+            updateSelectedSize();
+        });
     });
 });
-        // Resize Text
-        const increaseButton = document.querySelector('#increase');
-        const decreaseButton = document.querySelector('#decrease');
-        increaseButton.addEventListener('click', () => {
-        const style = window.getComputedStyle(textarea);
-        const fontSize = style.fontSize;
-        textarea.style.fontSize = (parseFloat(fontSize) + 1) + 'px';
-        });
 
-        decreaseButton.addEventListener('click', () => {
-            const style = window.getComputedStyle(textarea);
-            const fontSize = style.fontSize;
-            textarea.style.fontSize = (parseFloat(fontSize) - 1) + 'px';
-        });
-            // Rotate
-            const rotateButton = document.querySelector('#rotate');
+            // select color
 
-            rotateButton.addEventListener('click', () => {
-                const style = window.getComputedStyle(textarea);
-                const width = style.width;
-                const height = style.height;
-                textarea.style.width = height;
-                textarea.style.height = width;
+        document.addEventListener('DOMContentLoaded', function() {
+            var colorOptions = document.querySelectorAll('.color-option');
+
+            function selectColor() {
+                colorOptions.forEach(function(option) {
+                    option.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            }
+
+            colorOptions.forEach(function(option) {
+                option.addEventListener('click', selectColor);
             });
-
-
-            const a4RadioButton = document.querySelector('#a4');
-    const a3RadioButton = document.querySelector('#a3');
-
-    a4RadioButton.addEventListener('change', () => {
-        if (a4RadioButton.checked) {
-            textarea.style.width = '50px';
-            textarea.style.height = '100px';
-        }
-    });
-
-    a3RadioButton.addEventListener('change', () => {
-        if (a3RadioButton.checked) {
-            textarea.style.width = '62.5px';
-            textarea.style.height = '125px';
-        }
-    });
-        const input = document.querySelector('input');
-const output = document.querySelector('.output');
-const outputContainer = document.querySelector('.container');
-
-function resizeToFit() {
-    let fontSize = window.getComputedStyle(output).fontSize;
-    output.style.fontSize = (parseFloat(fontSize) - 1) + 'px';
-    if (output.clientHeight >= outputContainer.clientHeight) {
-        resizeToFit();
-    }
-}
-
-function processInput() {
-    output.innerHTML = this.value;
-    output.style.fontSize = '100px'; // Default font size
-    resizeToFit();
-}
-
-input.addEventListener('input', processInput);
-        // Get the t-shirt color input and t-shirt element
-        const tshirtColorInput = document.querySelector('#tshirt-color');
-        const tshirt = document.querySelector('#tshirt');
-
-        // Add an event listener to the t-shirt color input to update the t-shirt color
-        tshirtColorInput.addEventListener('input', () => {
-            tshirt.style.backgroundColor = tshirtColorInput.value;
         });
 
-        // Get the text color input and t-shirt text element
-        const textColorInput = document.querySelector('#text-color');
-        const tshirtText = document.querySelector('#tshirt-text');
-
-        // Add an event listener to the text color input to update the text color
-        textColorInput.addEventListener('input', () => {
-            tshirtText.style.color = textColorInput.value;
-        });
-
-        // Get the text input
-        const textInput = document.querySelector('#text');
-
-        // Add an event listener to the text input to update the text
-        textInput.addEventListener('input', () => {
-            tshirtText.textContent = textInput.value;
-        });
-
-        // Get the photo input and t-shirt image element
-        const photoInput = document.querySelector('#photo');
-        const tshirtImage = document.querySelector('#tshirt-image');
-
-        // Add an event listener to the photo input to display the uploaded photo on the t-shirt
-        photoInput.addEventListener('change', () => {
-            const file = photoInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    tshirtImage.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Get the front and back radio buttons
-        const frontRadioButton = document.querySelector('#front');
-        const backRadioButton = document.querySelector('#back');
-
-        // Add event listeners to the front and back radio buttons to transfer the photo between front and back of t-shirt
-        frontRadioButton.addEventListener('change', () => {
-            if (frontRadioButton.checked) {
-                // Transfer photo to front of t-shirt
-                console.log('Transfer photo to front of t-shirt');
-                // ...
-                // Update data in Django database using PUT method
-                fetch('/api/tshirts/1/', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        side: 'front',
-                        // Other data to update...
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Do something with the updated data
-                    console.log(data);
-                });
-            }
-        });
-
-        backRadioButton.addEventListener('change', () => {
-            if (backRadioButton.checked) {
-                // Transfer photo to back of t-shirt
-                console.log('Transfer photo to back of t-shirt');
-                // ...
-                // Update data in Django database using PUT method
-                fetch('/api/tshirts/1/', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        side: 'back',
-                        // Other data to update...
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Do something with the updated data
-                    console.log(data);
-                });
-            }
-        });
-    </script>
+</script>
 
 {% endblock %}
