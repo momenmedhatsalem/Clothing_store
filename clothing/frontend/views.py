@@ -406,7 +406,7 @@ def checkout(request):
 
         # Redirect to the order confirmation page
         send_order_confirmation_email(first_name, email, order)
-        return render(request, 'orderconfirm.html', {"order_number": order.order_number})
+        return render(request, 'orderconfirm.html', {"order_number": order.order_number, "email":email})
     else:
         if request.user.is_authenticated:
             # Handle authenticated user
