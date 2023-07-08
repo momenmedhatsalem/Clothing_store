@@ -137,7 +137,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 import os
-MEDIA_URL = '/media/'
+MEDIA_URL = '/clothing/media/'
 STATIC_URL = '/static/'
 # Application definition
 STATICFILES_DIRS = [
