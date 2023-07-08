@@ -9,7 +9,7 @@ def rename_image(instance, filename):
     ext = filename.split('.')[-1]
     name = filename.split('_')[0]
     filename = f'{name}.{ext}'
-    return os.path.join('static/images', filename)
+    return os.path.join('media/static/images', filename)
 
 class Product(models.Model):
     CATEGORY_CHOICES = (
