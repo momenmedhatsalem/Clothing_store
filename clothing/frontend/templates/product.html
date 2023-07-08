@@ -25,13 +25,13 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabs-0" role="tabpanel">
                                 <div class="product__details__pic__item">
-                                    <img src="{{product.image.url}}" alt="">
+                                    <img src="{% static product.path %}" alt="">
                                 </div>
                             </div>
                             {% for image in images %}
                             <div class="tab-pane" id="tabs-{{ forloop.counter }}" role="tabpanel">
                                 <div class="product__details__pic__item">
-                                    <img src="{{ image.image.url }}" alt="">
+                                    <img src="{% static image.path %}" alt="">
                                 </div>
                             </div>
                             {% endfor %}
@@ -42,7 +42,7 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#tabs-0" role="tab">
-                                    <div class="product__thumb__pic set-bg" data-setbg="{{product.image.url}}">
+                                    <div class="product__thumb__pic set-bg" data-setbg="{% static product.path %}">
                                     </div>
                                 </a>
                             </li>
@@ -50,7 +50,7 @@
                             {% for image in images %}
                             <li class="nav-item ">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-{{ forloop.counter }}" role="tab">
-                                    <div class="product__thumb__pic set-bg" data-setbg="{{image.image.url}}">
+                                    <div class="product__thumb__pic set-bg" data-setbg="{% static image.path %}">
                                     </div>
                                 </a>
                             </li>

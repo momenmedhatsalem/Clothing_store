@@ -51,7 +51,7 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=rename_image, default="", blank=True, null=True)
-
+    path = models.CharField(max_length=50, default="")   
 
     def __str__(self):
         return self.product.product_name

@@ -180,7 +180,7 @@
               <div class="col-lg-3 col-md-6 col-sm-6 col-6 mix new-arrivals">
                   <div class="product__item">
                     
-                    <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}" onclick="window.location.href='{{ product.get_absolute_url }}'">
+                    <div class="product__item__pic set-bg" data-setbg="{% static product.path %}" onclick="window.location.href='{{ product.get_absolute_url }}'">
                       {% if product.label != 'N' %}
                       <span class="label">{{ product.label }}</span>
                       {% endif %}

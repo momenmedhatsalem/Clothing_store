@@ -50,7 +50,7 @@ Cart
                     <td class="product__cart__item">
                       <a href="{{ item.product.get_absolute_url }}">
                       <div class="product__cart__item__pic">
-                        <img src="{{ item.product.image.url }}" width="50px" alt="">
+                        <img src="{% static item.product.path %}" width="50px" alt="">
                       </div>
                       <div class="product__cart__item__text">
                         <h6>{{ item.product.product_name }}</h6>
