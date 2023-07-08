@@ -140,7 +140,7 @@
 
                 <div class="product__item">
 
-                    <div class="product__item__pic set-bg" data-setbg="{% static 'images/kim.png' %}">
+                    <div class="product__item__pic set-bg" data-setbg="{% static product.path %}"
 
                         onclick="window.location.href='{{ product.get_absolute_url }}'">
                         {% if product.label != 'N' %}

@@ -44,7 +44,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to=rename_image, default="", blank=True, null=True)
     material = models.CharField(max_length=50, default="Coton 100%")
     description = models.TextField(default="Are you looking for a t shirt that is comfortable, stylish and affordable? Look no further than our new collection of t shirts, designed to suit any occasion and personality. Whether you want to express your creativity, show your support for a cause, or simply enjoy a casual day out, we have the perfect t shirt for you. Our t shirts are made from high-quality cotton, which is soft, breathable and durable. They come in a variety of colors, sizes and designs, so you can find the one that matches your style and mood.  Our t shirts are easy to wash and care for, and they will not fade or shrink over time. They are also eco-friendly and ethically produced, so you can wear them with confidence and pride. Order your t shirt today and enjoy free shipping for orders over EGP 500. You will love how you look and feel in our t shirts, and so will everyone else. Don't miss this opportunity to get the best t shirt ever.")
-    
+    path = models.CharField(max_length=50, default="")
     def get_absolute_url(self):
         return f"/product_detail/{self.id}/"
 
