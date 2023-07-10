@@ -119,7 +119,7 @@ def index(request):
     recently_viewed_products = Product.objects.filter(id__in=recently_viewed_product_ids)
 
     # Get all products
-    products = Product.objects.all()
+    products = Product.objects.all()[:10]
 
     # Render the template with the products and recently viewed products
     return render(request, 'index.html', {
