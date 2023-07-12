@@ -661,7 +661,6 @@ def customize(request):
     return render(request, 'product_detail.html')
 
 
-
 @require_http_methods(["PUT"])
 def add_to_favorites(request):
     data = json.loads(request.body)
