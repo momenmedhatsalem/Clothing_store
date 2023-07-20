@@ -120,7 +120,7 @@ Shop
                                 
                                     <div class="product__item" data-size="{{ product.size }}" data-price="{{ product.price }}">
 
-                                        <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}"
+                                        <div class="product__item__pic set-bg" data-setbg="{% static product.path %}"
                                             onclick="window.location.href='{{ product.get_absolute_url }}'">
                                             {% if product.label != 'N' %}
                                             <span class="label">{{ product.label }}</span>

@@ -24,7 +24,7 @@ Favorites
           <td class="product__cart__item">
             <a href="{{ product.get_absolute_url }}">
             <div class="product__cart__item__pic">
-              <img src="{{ product.image }}" width="50px" alt="">
+              <img src="{% static product.path %}" width="50px" alt="">
             </div>
             <div class="product__cart__item__text">
               <h6>{{ product.product_name }}</h6>

@@ -150,7 +150,7 @@ def product_detail(request, product_id):
         if product_id not in recently_viewed_product_ids:
             recently_viewed_product_ids.append(product_id)
             request.session['recently_viewed_products'] = recently_viewed_product_ids
-        images = ProductImage.objects.filter(product=product)
+        images = ProductImage.objects.filter(product=product, color="black")
         sizes = ProductSize.objects.filter(product=product)
         colors = ProductColor.objects.filter(product=product)
 
