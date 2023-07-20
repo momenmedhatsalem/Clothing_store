@@ -18,20 +18,17 @@ class Command(BaseCommand):
     help = "Loads data from products.csv"
 
     def handle(self, *args, **options):
-    
-
-
-
         for row in DictReader(open('./Products.csv')):
             # Check if product with this id already exists
             product_id = row['id']
             existing_product = Product.objects.filter(id=product_id).first()
             if existing_product:
-                # Product already exists, skip creating a new one
-                continue
+                # Product already exists, update its path
+                existing_product.path = row['path']
+                existing_product.save()
             else:
                 # Product does not exist, create a new one
-                product = Product(product_name=row['product_name'], category=row['category'], label=row['label'], subcategory=['subcategory'], price=row['price'], discount_price=row['discount_price'], pub_date=row['pub_date'])
+                product = Product(product_name=row['product_name'], category=row['category'], label=row['label'], subcategory=['subcategory'], price=row['price'], discount_price=row['discount_price'], pub_date=row['pub_date'], path=row['path'])
                 product.save()
 
                 # Get size data for this product from the file
@@ -52,5 +49,25 @@ class Command(BaseCommand):
                     color_quantity = int(color_data[2])
                     color_instance = ProductColor(product=product, color=color_name, color_id=color_id, quantity=color_quantity)
                     color_instance.save()
+
+            # Update or create ProductImage instances
+            images = row['images'].split(';')
+            for image in images:
+                image_data = image.split(':')
+                image_path = image_data[0]
+                image_id = int(image_data[1])
+                image_color = image_data[2]
+                existing_image = ProductImage.objects.filter(id=image_id, product=existing_product or product).first()
+                if existing_image:
+                    # Image already exists, update its path
+                    existing_image.path = image_path
+                    existing_image.color = image_color
+                    existing_image.save()
+                else:
+                    # Image does not exist, create a new one
+                    new_image = ProductImage(product=existing_product or product, path=image_path, color=image_color)
+                    new_image.save()
+
+
 
 
