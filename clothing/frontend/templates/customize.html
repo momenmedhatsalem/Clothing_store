@@ -227,7 +227,7 @@
               <div class="border-box"></div>
             </div>
           </div>
-          <div class="img-col col-sm">
+          <div class="img-col col-sm align-self-center">
             <div id="preview">
               <img src="" id="img" alt="">
             </div>
@@ -628,9 +628,9 @@ var backgroundImage = new Image();
     renderText();
   });
 
-  function renderbg() {
+  function renderbg(arg) {
 
-    getvalues();
+    arg==true?"": getvalues();
 
     if (imageViewer.childElementCount != 0) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -718,9 +718,9 @@ xline=226;
 }
   }
 
-  function renderText() {
+  function renderText(arg) {
 
-    renderbg();
+    renderbg(arg);
     // Render text
     ctx.fillStyle = textColor;
     ctx.font = `${font}px ${font_family}`;
@@ -779,26 +779,26 @@ xline=226;
   //Image control panel
   document.getElementById('zoom-in').addEventListener('click', function () {
     cropper.zoom(0.1); // Zoom in by 10%
-    renderText();
+    renderText(true);
   });
 
   document.getElementById('zoom-out').addEventListener('click', function () {
     cropper.zoom(-0.1); // Zoom out by 10%
-    renderText();
+    renderText(true);
   });
 
   document.getElementById('rotate-right').addEventListener('click', function () {
     cropper.rotate(90);
-    renderText();
+    renderText(true);
 
   });
   document.getElementById('rotate-left').addEventListener('click', function () {
     cropper.rotate(-90);
-    renderText();
+    renderText(true);
 
   });
   document.getElementById('img').addEventListener('cropmove', (event) => {
-    renderText();
+    renderText(true);
 
   });
 
@@ -806,7 +806,7 @@ xline=226;
   document.getElementById('move-photo-up').addEventListener('click', (event) => {
 
     shirtimg_y >= 180 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-    renderText();
+    renderText(true);
 
   });
 
@@ -814,20 +814,20 @@ xline=226;
   document.getElementById('move-photo-down').addEventListener('click', (event) => {
 
     shirtimg_y <= 320 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-    renderText();
+    renderText(true);
   });
 
   document.getElementById('move-photo-right').addEventListener('click', (event) => {
 
     shirtimg_x >= crossline ? shirtimg_x : shirtimg_x = shirtimg_x + 10;
-    renderText();
+    renderText(true);
 
   });
 
   document.getElementById('move-photo-left').addEventListener('click', (event) => {
 
     a3 == false ? shirtimg_x > 226 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x : shirtimg_x > 277 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x
-    renderText();
+    renderText(true);
 
   });
 
@@ -836,7 +836,7 @@ xline=226;
     a3 == false ? shirtimg_w >= 250 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 : shirtimg_w >= 150 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
 
 
-    renderText();
+    renderText(true);
 
   });
   document.getElementById('zoom-photo-out').addEventListener('click', (event) => {
@@ -844,7 +844,7 @@ xline=226;
     crossline = crossline + 10;
     shirtimg_w = shirtimg_w - 10;
 
-    renderText();
+    renderText(true);
 
   });
 
