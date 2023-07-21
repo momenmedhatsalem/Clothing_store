@@ -107,7 +107,7 @@
     height: 143px;
 }
 }
-@media screen and (min-width: 501px) and (max-width: 730px) {
+@media screen and (min-width: 501px) and (max-width: 776px) {
   .border-box{
     left: 141px;
     width: 169px;
@@ -191,6 +191,13 @@
     .product-image{
       text-align: center;
     }
+    .img-upload{
+      max-width: 100%;
+      overflow: hidden;
+    }
+    #rotate{
+      transform: translateY(13px);
+    }
   </style>
 </head>
 
@@ -243,7 +250,7 @@
           <h2 class="head">Customize your Shirt</h2>
 
           <form id="form-box">
-            <div class="d-flex align-items-center justify-content-between size_options">
+            <div class="d-flex align-items-center justify-content-between size_options flex-wrap">
               <div class="tshirt-size-option" data-size="XS">XS</div>
               <div class="tshirt-size-option" data-size="SM">SM</div>
               <div class="tshirt-size-option" data-size="L">L</div>
@@ -267,7 +274,7 @@
               </div>
               <div>
                 <label for="imageInput"><strong>Image Input</strong></label><br />
-                <input type="file" id="imageInput" accept=".jpg, .jpeg, .png, .webp" />
+               <div class="img-upload"> <input type="file" id="imageInput" accept=".jpg, .jpeg, .png, .webp" /></div>
                 <div id="image-viewer"></div>
               </div>
             </div>
@@ -280,7 +287,7 @@
                height: 100px;
                "></textarea>
             </div>
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
               <div>
                 <label for="fontFamilySelect">Font Type</label><br />
                 <select id="fontFamilySelect">
@@ -362,7 +369,7 @@
   canvas.height =250;
   seccanva.width = 250;
   seccanva.height =250;
-}else if(window.innerWidth > 500 && window.innerWidth <=730){
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
   canvas.width = 450;
   canvas.height =450;
   seccanva.width = 450;
@@ -391,7 +398,7 @@ function handleResize() {
 
   renderText();
 
-}else if(window.innerWidth > 500 && window.innerWidth <=730){
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
   canvas.width = 450;
   canvas.height =450;
   seccanva.width = 450;
@@ -678,7 +685,7 @@ xline=80;
 shirtimg_w=123;
 shirtimg_x=80;
 }
-}else if(window.innerWidth > 500 && window.innerWidth <=730){
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
 height=258;
 yline=130;
 shirtimg_y=130;
