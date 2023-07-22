@@ -114,7 +114,14 @@
     height: 258px;
   }
 }
-
+@media (min-width: 992px) {
+  .flex-lg-nowrap {
+    flex-wrap: nowrap;
+  }
+  .font-size{
+      margin: auto;
+  } 
+}
     .image-container {
       position: relative;
       display: inline-block;
@@ -175,7 +182,10 @@
     .head {
       text-align: center;
     }
-
+    .line-height button{
+    background-color: white;
+    border: 1px solid #ccc;
+    }
     .submit input {
       padding-left: 20px;
       padding-right: 20px;
@@ -200,6 +210,14 @@
     #rotate{
       transform: translateY(13px);
     }
+    .control_panel button{
+      background-color: white;
+    border: 1px solid;
+    margin: 2px;
+    padding-top: 3px;
+    padding-bottom: 0px;
+    }
+
   </style>
 </head>
 
@@ -207,14 +225,14 @@
   <div class="container position-relative">
 
     <div class="img-window " id="editingWindow">
-      <div id="closeWindow"><i class="fa-regular fa-arrow-left"></i></i></div>
+      <div id="closeWindow">x</div>
         <div class="control_panel d-flex justify-content-end align-items-center">
-          <button id="move-photo-up">Move Up</button>
-          <button id="move-photo-down">Move Down</button>
-          <button id="move-photo-right">Move Right</button>
-          <button id="move-photo-left">Move Left</button>
-          <button id="zoom-photo-in">Zoom</button>
-          <button id="zoom-photo-out">Zoom out</button>
+          <button id="move-photo-up"> <span class="arrow_up"></span></button>
+          <button id="move-photo-down"> <span class="arrow_down"></span></button>
+          <button id="move-photo-right"> <span class="arrow_right"></span></button>
+          <button id="move-photo-left"> <span class="arrow_left"></span></button>
+          <button id="zoom-photo-in">+</button>
+          <button id="zoom-photo-out">-</button>
         </div>
         <div class="control_panel d-flex justify-content-end">
           <button id="zoom-in">Zoom In</button>
@@ -238,8 +256,8 @@
       </div>
 
     <div id="mainWindow">
-      <div class="row  justify-content-between ">
-        <div class="col">
+      <div class="row  justify-content-between flex-lg-nowrap">
+        <div class="col ">
           <div class="product-image ">
             <div class="canva-box">
               <canvas id="myCanvas" class="myCanvas"></canvas>
@@ -304,6 +322,14 @@
                   <option value="Impact, Charcoal, sans-serif">Impact</option>
                   <option value="Lucida Sans Unicode, Lucida Grande, sans-serif">Lucida Sans Unicode</option>
                 </select>
+
+              </div>
+
+              <div class="line-height">
+                <br />
+                <button type="button" id="decrease-line">-</button>
+                <span >Line Height</span>
+                <button type="button" id="increase-line">+</button>
 
               </div>
               <div class="font-size">
@@ -497,7 +523,16 @@ var backgroundImage = new Image();
   var shirtimg_x = 226;
   var shirtimg_y = 200;
   var shirtimg_w = 250;
-  let crossline = 226;
+  let crossline=226 ;
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  crossline=104;
+}else if(window.innerWidth <= 330){
+  crossline=100;
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  crossline=141;
+}else{
+  crossline=226;
+}
   var cropper;
 
   function changePhotoSrc(event) {
@@ -565,6 +600,7 @@ var backgroundImage = new Image();
   let font_family = "Comic Sans MS, cursive";
   let rotationAngle = 0;
   let textColor = 'black';
+  let lineHeight=32;
   var textareaValue = document.getElementById("text");
   var userInput = "";
 
@@ -622,6 +658,14 @@ var backgroundImage = new Image();
 
   document.getElementById('decrease').addEventListener('click', function () {
     font--;
+    renderText();
+  });
+  document.getElementById('decrease-line').addEventListener('click', function () {
+    lineHeight=lineHeight-2;
+    renderText();
+  });
+  document.getElementById('increase-line').addEventListener('click', function () {
+    lineHeight=lineHeight+2;
     renderText();
   });
 
@@ -730,7 +774,6 @@ xline=226;
     ctx2.font = `${font}px ${font_family}`;
     let maxWidth = width;
     let maxHeight = height;
-    let lineHeight = 35;
     let x = xline;
     let y = yline;
 
@@ -807,35 +850,65 @@ xline=226;
 
   document.getElementById('move-photo-up').addEventListener('click', (event) => {
 
-    shirtimg_y >= 180 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  shirtimg_y >= 100? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+}else if(window.innerWidth <= 330){
+
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  shirtimg_y >= 118 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+}else{
+  shirtimg_y >= 180 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+}
     renderText(true);
 
   });
 
 
   document.getElementById('move-photo-down').addEventListener('click', (event) => {
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  shirtimg_y <= 120 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+}else if(window.innerWidth <= 330){
 
-    shirtimg_y <= 320 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  shirtimg_y <= 218 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+}else{
+  shirtimg_y <= 320 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+}
     renderText(true);
   });
 
   document.getElementById('move-photo-right').addEventListener('click', (event) => {
-
-    shirtimg_x >= crossline ? shirtimg_x : shirtimg_x = shirtimg_x + 10;
+shirtimg_x >= crossline ? shirtimg_x : shirtimg_x = shirtimg_x + 10;
     renderText(true);
 
   });
 
   document.getElementById('move-photo-left').addEventListener('click', (event) => {
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  shirtimg_x > 104 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+}else if(window.innerWidth <= 330){
 
-    a3 == false ? shirtimg_x > 226 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x : shirtimg_x > 277 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+ shirtimg_x > 141 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+ console.log(shirtimg_x)
+}else{
+  a3 == false ? shirtimg_x > 226 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x : shirtimg_x > 277 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x
+}
+    // crossline=crossline+10;
     renderText(true);
 
   });
 
   document.getElementById('zoom-photo-in').addEventListener('click', (event) => {
-    //  crossline=crossline+10;
-    a3 == false ? shirtimg_w >= 250 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 : shirtimg_w >= 150 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  shirtimg_w >= 123 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 
+}else if(window.innerWidth <= 330){
+
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  shirtimg_w >= 169 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 
+}else{
+  a3 == false ? shirtimg_w >= 250 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 : shirtimg_w >= 150 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
+}
 
 
     renderText(true);
