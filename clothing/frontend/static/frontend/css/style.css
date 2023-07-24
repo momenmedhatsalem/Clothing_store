@@ -553,19 +553,16 @@ ol {
 .hero__slider.owl-carousel .owl-item.active .hero__text h6 {
 	top: 0;
 	opacity: 1;
-	text-shadow: 0px 0px 5px white;
 }
 
 .hero__slider.owl-carousel .owl-item.active .hero__text h2 {
 	top: 0;
 	opacity: 1;
-	text-shadow: 0px 0px 5px white;
 }
 
 .hero__slider.owl-carousel .owl-item.active .hero__text p {
 	top: 0;
 	opacity: 1;
-	text-shadow: 0px 0px 5px white;
 }
 
 .hero__slider.owl-carousel .owl-item.active .hero__text .primary-btn {
@@ -720,27 +717,22 @@ ol {
 }
 
 .banner__item__text h2 {
-	color: white;
+	color: #111111;
 	font-weight: 700;
 	line-height: 46px;
 	margin-bottom: 10px;
-	margin-left: 5px;
-	text-shadow: 0px 0px 8px black;
 }
 
 .banner__item__text a {
 	display: inline-block;
-	color: white;
+	color: #111111;
 	font-size: 13px;
 	font-weight: 700;
 	letter-spacing: 4px;
 	text-transform: uppercase;
 	padding: 3px 0;
 	position: relative;
-	margin-left: 5px;
-	text-shadow: 0px 0px 8px black;
 }
-
 
 .banner__item__text a:after {
 	position: absolute;
@@ -1801,22 +1793,6 @@ ol {
 }
 
 .product__details__option__color label.c-4 {
-	background: gray;
-}
-
-.product__details__option__color label.c-5 {
-	background: green;
-}
-
-.product__details__option__color label.c-6 {
-	background: purple;
-}
-
-.product__details__option__color label.c-7 {
-	background: pink;
-}
-
-.product__details__option__color label.c-8 {
 	background: #ed1c24;
 }
 

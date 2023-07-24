@@ -44,7 +44,8 @@
                     <div class="hero__text">
                       <h3 style="color: red; font-weight:700">NEW</h3>
                       <h2>Because You Need<br>To Look Unique</h2>
-                      <p>Our Clothes Are Made With Special Care</p>
+                      <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
+                      commitment to exceptional quality.</p>
                       <a href="{% url 'show_products' %}" class="primary-btn">Shop now <span class="arrow_right"></span></a>
 
                   </div>
@@ -60,7 +61,7 @@
                       <div class="hero__text">
                           <h6>Summer Collection</h6>
                           <h2>Fall - Winter Collections 2030</h2>
-                          <p> Ethically crafted with an unwavering
+                          <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
                           commitment to exceptional quality.</p>
                           <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
                           <div class="hero__social">
@@ -92,7 +93,7 @@
                       </div>
                       <div class="banner__item__text">
                           <h2>Clothing Collections</h2>
-                          <a href="{% url 'show_products' 'W' %}">Shop now</a>
+                          <a href="#">Shop now</a>
                       </div>
                   </div>
               </div>
@@ -102,19 +103,19 @@
                           <img src="{% static 'frontend/img/banner/banner-2.jpg' %}" alt="">
                       </div>
                       <div class="banner__item__text">
-                          <h2>Summer Men Collection 2023</h2>
-                          <a href="{% url 'show_products' 'W' %}">Shop now</a>
+                          <h2>Customize As You Want!</h2>
+                          <a href="#">Shop now</a>
                       </div>
                   </div>
               </div>
               <div class="col-lg-7">
                   <div class="banner__item banner__item--last">
                       <div class="banner__item__pic">
-                          <img src="{% static 'frontend/img/banner/backbutter.png' %}" alt="">
+                          <img src="{% static 'frontend/img/banner/banner-3.jpg' %}" alt="">
                       </div>
                       <div class="banner__item__text">
                           <h2>Summer Women Collection 2023</h2>
-                          <a href="{% url 'show_products' 'W' %}">Shop now</a>
+                          <a href="#">Shop now</a>
                       </div>
                   </div>
               </div>
@@ -185,13 +186,13 @@
                       <span class="label">{{ product.label }}</span>
                       {% endif %}
                       <ul class="product__hover">
-                          <li><a href="{% url 'favorites' %}"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
+                          <li><a href="#"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
                       </ul>
                   </div>
                     
                       <div class="product__item__text">
                           <h6>{{ product.product_name }}</h6>
-                          <a onclick="addToCart('{{product.id}}')" href="#" class="add-cart">+ Add To Cart</a>
+                          <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
                           <div class="rating">
                               <i class="fa fa-star-o"></i>
                               <i class="fa fa-star-o"></i>
@@ -286,15 +287,79 @@
           </div>
       </div>
   </section>
-  <br>
-  <br>
   <!-- Instagram Section End -->
 
+  <!-- Latest Blog Section Begin -->
+  <!-- <section class="latest spad">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="section-title">
+                      <span>Latest News</span>
+                      <h2>Fashion New Trends</h2>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-4 col-md-6 col-sm-6">
+                  <div class="blog__item">
+                      <div class="blog__item__pic set-bg" data-setbg="{% static 'frontend/img/blog/blog-1.jpg' %}"></div>
+                      <div class="blog__item__text">
+                          <span><img src="{% static 'frontend/img/icon/calendar.png' %}" alt=""> 16 February 2020</span>
+                          <h5>What Curling Irons Are The Best Ones</h5>
+                          <a href="#">Read More</a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-6">
+                  <div class="blog__item">
+                      <div class="blog__item__pic set-bg" data-setbg="{% static 'frontend/img/blog/blog-2.jpg' %}"></div>
+                      <div class="blog__item__text">
+                          <span><img src="{% static 'frontend/img/icon/calendar.png' %}" alt=""> 21 February 2020</span>
+                          <h5>Eternity Bands Do Last Forever</h5>
+                          <a href="#">Read More</a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-6">
+                  <div class="blog__item">
+                      <div class="blog__item__pic set-bg" data-setbg="{% static 'frontend/img/blog/blog-3.jpg' %}"></div>
+                      <div class="blog__item__text">
+                          <span><img src="{% static 'frontend/img/icon/calendar.png' %}" alt=""> 28 February 2020</span>
+                          <h5>The Health Benefits Of Sunglasses</h5>
+                          <a href="#">Read More</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section> -->
+  <!-- Latest Blog Section End -->
 
 
-
+  <!-- Search Begin -->
+  <!-- <div class="search-model">
+      <div class="h-100 d-flex align-items-center justify-content-center">
+          <div class="search-close-switch">+</div>
+          <form class="search-model-form">
+              <input type="text" id="search-input" placeholder="Search here.....">
+          </form>
+      </div>
+  </div>
+  <div class="product">
+    <h2>Product Name</h2>
+    <button class="add-to-cart-btn">Add to Cart</button>
+  </div> -->
   
-
+  <div class="size-selector">
+    <h3>Choose a size:</h3>
+    <button>S</button>
+    <button>M</button>
+    <button>L</button>
+    <button>XL</button>
+    <button>XXL</button>
+  </div>
+  
 
 
 <style>
@@ -358,6 +423,16 @@
 </style>
 
 <!-- JavaScript -->
+<script>
+
+
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    const sizeSelector = document.querySelector('.size-selector');
+    
+    addToCartBtn.addEventListener('click', () => {
+      sizeSelector.classList.add('size-selector--active');
+    });
+    </script>
 
 {% endblock %}
 

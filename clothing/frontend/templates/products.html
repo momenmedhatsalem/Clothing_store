@@ -20,7 +20,10 @@ Shop
                         <div id="filters" class="collapse">
                         <div class="shop__sidebar">
                             <div class="shop__sidebar__search">
-      
+                                <form action="#">
+                                    <input type="text" placeholder="Search...">
+                                    <button type="submit"><span class="icon_search"></span></button>
+                                </form>
                             </div>
                             <div class="shop__sidebar__accordion">
                                 <div class="accordion" id="accordionExample">
@@ -41,26 +44,30 @@ Shop
                                             </div>
                                         </div>
                                     </div>
-                                    <!--
+            
                                     <div class="card">
                                         <div class="card-heading">
-                                            <a data-toggle="collapse" data-target="#collapseOne">Subcategories</a>
+                                            <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
                                         </div>
-                                        <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                        <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
                                             <div class="card-body">
-                                                <div class="shop__sidebar__categories">
-                                                    <ul class="nice-scroll">
-                                                        {% for subcategory, label in subcategories %}
-                                                        <li><a href="{% url 'show_products' subcategory %}">{{ label }}</a></li>
-                                                        {% endfor %}
-            
-                                                    </ul>
+                                                <div class="shop__sidebar__price">
+                                                    <ul>
+                                                        <button class="sort-by-price" data-sort-order="asc">Low to High</button>
+<button class="sort-by-price" data-sort-order="desc">High to Low</button>
+                                                        <li><a href="#" class="sort-by-price" data-sort-order="asc">Low to High</a></li>
+                                                        <li><a href="#">EGP 0.00 - EGP 50.00</a></li>
+                                                        <li><a href="#">EGP 50.00 - EGP 100.00</a></li>
+                                                        <li><a href="#">EGP 100.00 - EGP 150.00</a></li>
+                                                        <li><a href="#">EGP 150.00 - EGP 200.00</a></li>
+                                                        <li><a href="#">EGP 200.00 - EGP 250.00</a></li>
+                                                        <li><a href="#">EGP 250.00+</a></li>
+                                                        <li><a href="#" class="sort-by-price" data-sort-order="desc">High to Low</a></li>
+                                                      </ul>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>-->
-            
-
+                                    </div>
                                     <div class="card">
                                         <div class="card-heading">
                                             <a data-toggle="collapse" data-target="#collapseFour">Size</a>
@@ -106,10 +113,19 @@ Shop
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__left">
-                                    <p></p>
+                                    <p>Showing 1–12 of 126 results</p>
                                 </div>
                             </div>
-
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__right">
+                                    <p>Sort by Price:</p>
+                                    <select>
+                                        <option value="">Low To High</option>
+                                        <option value="">$0 - $55</option>
+                                        <option value="">$55 - $100</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -122,7 +138,7 @@ Shop
 
                                         <div class="product__item__pic set-bg" data-setbg="{% static product.path %}"
                                             onclick="window.location.href='{{ product.get_absolute_url }}'">
-                                            {% if product.label != 'N' %}
+                                            {% if product.label %}
                                             <span class="label">{{ product.label }}</span>
                                             {% endif %}
                                             <ul class="product__hover">
@@ -132,7 +148,7 @@ Shop
                             
                                         <div class="product__item__text">
                                             <h6>{{ product.product_name }}</h6>
-                                            <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                                            <a href="{% url 'add_to_cart' product.id %}" class="add-cart hero__text primary-btn">Add To Cart</a>
                                             <div class="rating">
                                                 <i class="fa fa-star-o"></i>
                                                 <i class="fa fa-star-o"></i>
@@ -176,6 +192,60 @@ Shop
         </div>
     </section>
     <!-- Shop Section End -->
+    <style>
+@media (min-width: 992px) {
+    #filters {
+        display: block;
+    }
+}
+    </style>
+<script>
+    $('.shop__sidebar__price a').on('click', function(e) {
+  e.preventDefault();
 
+  // Get the minimum and maximum price from the link text
+  var priceRange = $(this).text().split(' - ');
+  var minPrice = parseFloat(priceRange[0].replace('$', ''));
+  var maxPrice = parseFloat(priceRange[1].replace('$', ''));
 
+  // Filter the products by price
+  $('.product__item').each(function() {
+    var price = parseFloat($(this).data('price'));
+    if (price >= minPrice && price <= maxPrice) {
+      $(this).show();
+    } else {
+      $(this).hide();
+    }
+  });
+});
+
+$('.shop__sidebar__size input[type="checkbox"]').on('change', function(e) {
+  // Add or remove the active class
+  if ($(this).is(':checked')) {
+    $(this).closest('label').addClass('active');
+  } else {
+    $(this).closest('label').removeClass('active');
+  }
+});
+
+// Sort by price
+$('.sort-by-price').on('click', function(e) {
+  e.preventDefault();
+ console.log("hello");
+  // Get the selected sort order
+  var sortOrder = $(this).data('sort-order');
+
+  // Sort the products by price
+  $('.product__item').sort(function(a, b) {
+    var priceA = parseFloat($(a).data('price'));
+    var priceB = parseFloat($(b).data('price'));
+    if (sortOrder === 'asc') {
+      return priceA - priceB;
+    } else {
+      return priceB - priceA;
+    }
+  }).appendTo('.product__list');
+});
+
+</script>
 {% endblock %}

@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <script>document.getElementsByTagName("html")[0].className += " js";</script>
-        <title>{% block title %}Vosmos Clothing Store - Buy Clothes and T-Shirts in Egypt{% endblock %}</title>
+        <title>{% block title %}Vosmos | Clothing Store{% endblock %}</title>
         <!-- Use a CDN link for Bootstrap instead of a static file -->
         <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}">
         <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css">
@@ -13,29 +13,16 @@
         <!-- Use a CDN link for jQuery instead of a static file -->
         <!-- Use a CDN link for Bootstrap instead of a static file -->
         
-        <link rel="icon" href="{% static 'frontend/img/banner/logo.jpg'%}" alt="Vosmos Clothing Store Logo" type="image/x-icon">
-    
+        <link rel="icon" href="{% static 'frontend/img/banner/logo.jpg'%}" type="image/x-icon">
+
         
         
         <meta name="author" content="Momen Medhat">
         <meta name="keywords" content="Vosmos, vos mos, vosmos clothes, clothing, t shirts, vosmos clothing, Clothes Egypt">
+        <meta name="description" content="Vamos Clothing Store">
+        <meta name="keywords" content="Vamos, unica, creative, html">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-        <!-- Add descriptive URLs for your pages -->
-        <link rel="canonical" href="https://www.vos-mos.com">
-    
-        <!-- Add descriptive titles and meta descriptions -->
-   
-        <meta name="description" content="Shop the latest fashion trends at Vosmos Clothing Store. We offer a wide range of clothes and t-shirts for men and women in Egypt.">
-    
-
-    
-
-
-
-    
-
         
         <!-- Google Font -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
@@ -53,7 +40,7 @@
         <link rel="stylesheet" href="{% static 'frontend/css/slicknav.min.css' %}" type="text/css">
         <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}" type="text/css">
         <link rel="stylesheet" href="{% static 'frontend/style.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'frontend/css/query.css' %}" type="text/css">
+        <link rel="stylesheet" href="../static/frontend/css/query.css" type="text/css">
 
 
         
@@ -108,7 +95,7 @@
                     <a class="nav-link" href="{% url 'login' %}">Login</a>
 
                 {% endif %}
-                    
+                    <a href="#">FAQs</a>
                 </div>
                 <div class="offcanvas__top__hover">
                     <span>EN <i class="arrow_carrot-down"></i></span>
@@ -119,14 +106,13 @@
                 </div>
             </div>
             <div class="offcanvas__nav__option">
-
-                <a href="{% url 'favorites'%}"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a>
-                <a href="{% url 'cart' %}"><span>0</span><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""></a>
+                <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
+                <a href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
                 <div class="price"></div>
             </div>
             <div id="mobile-menu-wrap"></div>
             <div class="offcanvas__text">
-                <p>Free shipping on orders over EGP 500, 30-day return or refund guarantee.</p>
+                <p>Free shipping, 30-day return or refund guarantee.</p>
             </div>
         </div>
         <!-- Offcanvas Menu End -->
@@ -135,7 +121,7 @@
         <div class="header__top">
                 <div class="row justify-content-around align-items-center">
                         <div class="header__top__left">
-                            <p>Free shipping on orders over EGP 500, 30-day return or refund guarantee.</p>
+                            <p>Free shipping, 30-day return or refund guarantee.</p>
                         </div>
                         <div class="header__top__right">
                             <div class="header__top__links">
@@ -152,8 +138,8 @@
                                     <a class="nav-link" href="{% url 'login' %}">Login</a>
         
                                 {% endif %}
-                                
-                                
+                                <a href="#">FAQs</a>
+                                <a id="night-mode-toggle"><i class="fas fa-moon"></i> Dark Mode</a>
 
                             </div>
                             <div class="header__top__hover">
@@ -172,12 +158,9 @@
                     <div class="header__logo">
                         <a href="{% url 'index' %}"><img src="{% static 'frontend/img/logo4.png' %}" alt=""></a>
                     </div>
-                    <div class="col-lg-2 col-md-8 col-6 d-flex justify-content-end align-items-center n-mobile">
-                        <a class="cart-link" href="{% url 'cart' %}">
-                            <span>0</span>
-                            <img src="{% static 'frontend/img/icon/cart.png' %}" alt="">
-                        </a>
-                        <div class="canvas__open"><i class="fa fa-bars"></i></div>
+                <div class="col-lg-2 col-md-8 col-6 d-flex justify-content-end align-items-center n-mobile">
+                    <a  href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>0</span></a>
+                    <div class="canvas__open"><i class="fa fa-bars"></i></div>
                     </div>
 
                 <div style="margin-left: 80px;" class="col-lg-6 col-md-6 col-1 p-3 header__menu mobile-menu">
@@ -220,15 +203,14 @@
                 </div>
                 <div class="col-lg-3 col-md-3 p-2 header__nav__option">
                     <div class="">
-                        
-                        <a href="{% url 'favorites'%}"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a>
-                        <a href="{% url 'cart' %}"><span>
+                        <a href="#" class="search-switch"><img src="{% static 'frontend/img/icon/search.png' %}" alt=""></a>
+                        <a href="{% url 'cart' %}"><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""><span>
                             {% if cart.count %}
                             {{ cart.count }}
                             {% else %}
                             0
                             {% endif %}
-                        </span><img src="{% static 'frontend/img/icon/cart.png' %}" alt=""></a>
+                        </span></a>
                         
                         <div class="price">EGP</div>
                     </div>
@@ -247,6 +229,91 @@
 
 
 
+
+
+    
+                <style>
+body.night-mode {
+  background-color: #222;
+  color: #ddd;
+}
+
+body.night-mode a {
+  color: #88f;
+}
+
+body.night-mode button {
+  background-color: #333;
+  color: #fff;
+}
+
+body.night-mode #container div.white-background {
+  background-color: #333;
+}
+
+                
+                </style>
+    <!-- Use the block body tag to insert the content of each page -->
+    <script>
+
+
+
+
+        var night_mode;
+        const body = document.querySelector('body');
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            fetch('/toggle-night-mode/False')
+                .then(response => response.json())
+                .then(data => {
+                    // Print email
+                    console.log(data);
+                    night_mode = data.night_mode;
+                    console.log(night_mode);
+                    // ... do something else with email ...
+                    if (night_mode === true) {
+                        
+                        body.classList.add('night-mode');
+                        nightModeToggle.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
+                    }
+                    else {
+                        nightModeToggle.innerHTML = `<i class="fas fa-moon"></i> Dark Mode`;
+                        body.classList.remove('night-mode');
+    
+                    }
+                });
+
+});
+
+        const nightModeToggle = document.querySelector('#night-mode-toggle');
+        nightModeToggle.addEventListener('click', () => {
+
+            
+
+
+            if (nightModeToggle.innerHTML.includes("Dark Mode")) {
+                nightModeToggle.innerHTML = `<i class="fas fa-sun"></i> Light Mode`;
+                fetch('/toggle-night-mode/True', {
+                    method: 'PUT',
+
+                    })
+                    
+                    body.classList.add('night-mode');
+                }
+                else {
+                fetch('/toggle-night-mode/False', {
+                    method: 'PUT',
+
+                    })
+                nightModeToggle.innerHTML = `<i class="fas fa-moon"></i> Dark Mode`;
+                
+                body.classList.remove('night-mode');
+                }
+        
+        
+        });
+    </script>
     {% block body %}
     {% endblock %}
 </body>
@@ -258,7 +325,7 @@
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="footer__about">
                     <div class="footer__logo">
-                        <a href="#{% url 'index' %}><img src="{% static 'frontend/img/logo4.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'frontend/img/footer-logo.png' %}" alt=""></a>
                     </div>
                     <p>The customer is at the heart of our unique business model</p>
                     <a href="#"><img src="{% static 'frontend/img/payment.png' %}" alt=""></a>
@@ -287,10 +354,13 @@
             </div>
             <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
                 <div class="footer__widget">
-                    <h6>NewsLetter</h6>
+                    <h6>NewLetter</h6>
                     <div class="footer__newslatter">
-                        <p>comming Soon!</p>
-
+                        <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                        <form action="#">
+                            <input type="text" placeholder="Your email">
+                            <button type="submit"><span class="icon_mail_alt"></span></button>
+                        </form>
                     </div>
                 </div>
             </div>

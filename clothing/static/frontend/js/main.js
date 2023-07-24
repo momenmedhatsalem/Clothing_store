@@ -22,7 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
         /*------------------
             Gallery filter
         --------------------*/
-
+        $('.filter__controls li').on('click', function () {
+            $('.filter__controls li').removeClass('active');
+            $(this).addClass('active');
+        });
         if ($('.product__filter').length > 0) {
             var containerEl = document.querySelector('.product__filter');
             var mixer = mixitup(containerEl);
@@ -99,13 +102,13 @@ document.addEventListener('DOMContentLoaded', function() {
     /*--------------------------
         Select
     ----------------------------*/
-    
+    $("select").niceSelect();
 
     /*-------------------
 		Radio Btn
 	--------------------- */
-    $(".product__color__select label,  .product__details__option__size label").on('click', function () {
-        $(".product__color__select label,  .product__details__option__size label").removeClass('active');
+    $(".product__color__select label, .shop__sidebar__size label, .product__details__option__size label").on('click', function () {
+        $(".product__color__select label, .shop__sidebar__size label, .product__details__option__size label").removeClass('active');
         $(this).addClass('active');
     });
 

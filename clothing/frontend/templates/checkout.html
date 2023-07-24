@@ -1,278 +1,302 @@
 {% extends "layout.html" %}
 {% load static %}
-{% block title %}
-Checkout
-{% endblock %}
 {% block head %}
-{{ block.super }}
-<!-- Add Bootstrap CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- Add custom CSS -->
-<style>
-  body {
-    padding-top: 50px;
-  }
-
-  .form-group {
-    margin-bottom: 15px;
-  }
-
-  label {
-    display: inline-block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-</style>
+    {{ block.super }}
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Add custom CSS -->
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-<!-- Breadcrumb Section Begin -->
-<div class="bg-dark">
-  <div class="container py-4">
-    <!-- Breadcrumb -->
-    <nav class="d-flex">
-      <h6 class="mb-0">
-        <a href="{% url 'index' %}" class="text-white-50">Home</a>
-        <span class="text-white-50 mx-2"> > </span>
-        <a href="{% url 'cart' %}" class="text-white-50">Cart</a>
-        <span class="text-white-50 mx-2"> > </span>
-        <a href="{% url 'checkout' %}" class="text-white"><u>Checkout</u></a>
-
-      </h6>
-    </nav>
-    <!-- Breadcrumb -->
-  </div>
-</div>
-<!-- Breadcrumb Section End -->
-
-
-
-
-<!-- Checkout Section Begin -->
-<section class="checkout spad">
-  <div class="container">
-    <div class="checkout__form">
-      <div class="row">
-        <div id="main_coupon_div" class="col-lg-8 col-md-6">
-
+    <!-- Breadcrumb Section Begin -->
+    <div class="bg-dark">
+      <div class="container py-4">
+        <!-- Breadcrumb -->
+        <nav class="d-flex">
+          <h6 class="mb-0">
+            <a href="{% url 'index' %}" class="text-white-50">Home</a>
+            <span class="text-white-50 mx-2"> > </span>
+            <a href="{% url 'cart' %}" class="text-white-50">Cart</a>
+            <span class="text-white-50 mx-2"> > </span>
+            <a href="{% url 'checkout' %}" class="text-white"><u>Checkout</u></a>
+            
           </h6>
-          <form action="{% url 'checkout'%}" method="post">
-            {% csrf_token %}
-            <h6 class="checkout__title">Billing Details</h6>
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="checkout__input">
-                  <p>First Name<span>*</span></p>
-                  <input class="form-control" required name="first_name" value="{{ user.first_name}}" type="text">
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="checkout__input">
-                  <p>Last Name<span>*</span></p>
-                  <input class="form-control" required name="last_name" value="{{ user.last_name}}" type="text">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="checkout__input">
-                  <p>Phone<span>*</span></p>
-                  <input class="form-control" required name="phone" value="{{ user.phone }}" type="text">
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="checkout__input">
-                  <p>Email<span>*</span></p>
-                  <input class="form-control" required name="email" value="{{ user.email }}" type="text">
-                </div>
-              </div>
-            </div>
-            <div class="checkout__input">
-              <p>Address<span>*</span></p>
-              <input class="form-control" required name="address" type="text" placeholder="Street Address"
-                class="checkout__input__add">
-              <input class="form-control" type="text" placeholder="Apartment, suite, unite ect (optinal)">
-            </div>
-            <div class="checkout__input">
-              <p>Governorate<span>*</span></p>
-              <select class="form-control" required name="governorate">
-                <option selected disabled value="">--Please choose an option--</option>
-                <option value="Ad Daqahliyah">Ad Daqahliyah</option>
-                <option value="Al Bahr al Ahmar">Al Bahr al Ahmar</option>
-                <option value="Al Buhayrah">Al Buhayrah</option>
-                <option value="Al Fayyum">Al Fayyum</option>
-                <option value="Al Gharbiyah">Al Gharbiyah</option>
-                <option value="Al Iskandariyah">Al Iskandariyah</option>
-                <option value="Al Isma'iliyah">Al Isma'iliyah</option>
-                <option value="Al Jizah">Al Jizah</option>
-                <option value="Al Minufiyah">Al Minufiyah</option>
-                <option value="Al Minya">Al Minya</option>
-                <option value="Al Qahirah">Al Qahirah</option>
-                <option value="Al Qalyubiyah">Al Qalyubiyah</option>
-                <option value="Al Wadi al Jadid">Al Wadi al Jadid</option>
-                <option value="Ash Sharqiyah">Ash Sharqiyah</option>
-                <option value="As Suways">As Suways</option>
-                <option value="Aswan">Aswan</option>
-                <option value="Asyut">Asyut</option>
-                <option value="Bani Suwayf">Bani Suwayf</option>
-                <option value="Bur Sa'id">Bur Sa'id</option>
-                <option value="Dumyat">Dumyat</option>
-                <option value="Janub Sina'">Janub Sina'</option>
-                <option value="Kafr ash Shaykh">Kafr ash Shaykh</option>
-                <option value="Matruh">Matruh</option>
-                <option value="Qina">Qina</option>
-                <option value="Shamal Sina'">Shamal Sina'</option>
-                <option value="Suhaj">Suhaj</option>
-              </select>
-            </div>
-            <div class="checkout__input">
-              <p>City<span>*</span></p>
-              <input placeholder="eg. Maadi" class="form-control" required name="city" type="text">
-            </div>
-
-            <div class="checkout__input">
-              <p>Order notes<span></span></p>
-              <input class="form-control" type="text"
-                placeholder="Notes about your order, e.g. special notes for delivery.">
-            </div>
-            <div style="font-size: 1.25rem;" class="form-group border rounded p-3 position-relative">
-              <label>Payment Method:</label>
-              <div class="form-check">
-                <input required class="form-check-input" type="radio" name="payment_method" id="vodafoneCash"
-                  value="VF">
-                <label class="form-check-label d-flex align-items-center" for="vodafoneCash">
-                  <img src="{% static 'frontend/img/pay/vod.png'%}" width="20px" alt="Vodafone Cash" class="mr-2">
-                  Vodafone Cash
-                </label>
-                <small class="form-text text-muted d-none">You will be contacted by a sales representative to confirm
-                  payment.</small>
-              </div>
-              <br>
-              <div class="form-check">
-                <input required class="form-check-input" type="radio" name="payment_method" id="wePay" value="WE">
-                <label class="form-check-label d-flex align-items-center" for="wePay">
-                  <img src="{% static 'frontend/img/pay/we.png'%}" width="20px" alt="We Pay" class="mr-2">
-                  We Pay
-                </label>
-                <small class="form-text text-muted d-none">You will be contacted by a sales representative to confirm
-                  payment.</small>
-              </div>
-              <br>
-              <div class="form-check">
-                <input required class="form-check-input" type="radio" name="payment_method" id="cashOnDelivery"
-                  value="COD">
-                <label class="form-check-label d-flex align-items-center" for="cashOnDelivery">
-                  <img src="{% static 'frontend/img/pay/cod.png'%}" width="20px" alt="Cash On Delivery" class="mr-2">
-                  Cash On Delivery
-                </label>
-                <small class="form-text text-muted d-none">COD fees of EGP 12 will be applied.</small>
-              </div>
-            </div>
-        </div>
-
-
-
-
-        <div class="col-lg-4 col-md-6">
-          <div class="checkout__order">
-            <h4 class="order__title">Your order</h4>
-            <div class="checkout__order__products">Product <span>Total</span></div>
-            <ul class="checkout__total__products">
-              {% for item in cart %}
-              <li>
-                <span class="translate-middle badge rounded-pill badge-light float-left">{{item.quantity}} </span>
-                . {{ item.product.product_name }}
-                <span>EGP {{item.total}}</span>
-              </li>
-              {% endfor %}
-
-            </ul>
-            <ul class="checkout__total__all">
-              <div class="final-cart">
-                <li>Subtotal <span>EGP {{user_cart.total_price_before_discount}}</span></li>
-                <div class="d-flex justify-content-between">
-                  <p class="mb-2">Discount:</p>
-                  <p id="discount" class="mb-2 text-danger">- EGP {{user_cart.discount}}</p>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <p class="mb-2">Shipping cost:</p>
-                  {% if user_cart.shipping_cost == 0 %}
-                  <p class="mb-2">Free Shipping</p>
-                  {% else %}
-                  <p class="mb-2">+ EGP {{user_cart.shipping_cost}}</p>
-                  {% endif %}
-                </div>
-              </div>
-              <hr />
-              {% if user_cart.shipping_cost != 0 %}
-              <div class="free-shipping">
-                Add items worth EGP {{ user_cart.shipping_remainder }} or more to your cart and get free shipping!
-              </div>
-              <hr />
-              {% endif %}
-              <li>Total <span id="cart_total_discount">EGP {{user_cart.final_price}}</span></li>
-            </ul>
-
-
-            <button type="submit" class="site-btn">PLACE ORDER</button>
-          </div>
-        </div>
+        </nav>
+        <!-- Breadcrumb -->
       </div>
-      </form>
     </div>
-  </div>
-</section>
+  <!-- Breadcrumb Section End -->
 
-<script>
-  const payment_methodInputs = document.querySelectorAll('input[name=payment_method]');
-  const finalCart = document.querySelector('.final-cart');
-  let codFeesApplied = false;
+ 
 
-  payment_methodInputs.forEach(input => {
-    input.addEventListener('change', event => {
-      const formTexts = document.querySelectorAll('.form-text');
-      formTexts.forEach(formText => {
-        formText.classList.add('d-none');
-      });
 
-      const formCheck = event.target.closest('.form-check');
-      const formText = formCheck.querySelector('.form-text');
-      formText.classList.remove('d-none');
+    <!-- Checkout Section Begin -->
+    <section class="checkout spad">
+        <div class="container">
+            <div class="checkout__form">
+              <div class="row">
+                <div id="main_coupon_div" class="col-lg-8 col-md-6">
+                  <h6 class="coupon__code"><span class="icon_tag_alt"></span> Have a coupon?             <div class="input-group mt-3 mb-4">
+                    {% if user.is_authenticated %}
+                    <div class="input-group">
+                      <input id="promo_code" type="text" class="form-control border" name="promo_code" placeholder="Coupon code" />
+                      <button id="apply-promo-code" onclick="Apply_promo_function()" class="btn btn-light border">Apply</button>
+                    </div>
+                      <div id="coupon-div">
+                        {% if promocode %}
+                            <p>Coupon applied: {{ promocode }}<button id="remove-coupon-btn" title="remove code">x</button></p>
+                            
+                        {% endif %}
+                      </div>
+                      {% else %}
+                      <h5><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Create An Account</a> To Use Coupons</h5>
+                      <hr />
+                      <p>Don't Worry We Will Keep Your Cart Items And Designs :) </p>
+                      {% endif %}
+                  </div></h6>
+                  <form action="#">
+                            <h6 class="checkout__title">Billing Details</h6>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>First Name<span>*</span></p>
+                                        <input class="form-control" required name="first_name" value="{{ user.first_name}}" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Last Name<span>*</span></p>
+                                        <input class="form-control" required name="last_name" value="{{ user.last_name}}" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-lg-6">
+                                <div class="checkout__input">
+                                  <p>Phone<span>*</span></p>
+                                  <input class="form-control" required name="phone" value="{{ user.phone }}" type="text">
+                                </div>
+                              </div>
+                              <div class="col-lg-6">
+                                <div class="checkout__input">
+                                  <p>Email<span>*</span></p>
+                                  <input class="form-control" required name="email" value="{{ user.email }}" type="text">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Address<span>*</span></p>
+                                <input class="form-control" required name="address" type="text" placeholder="Street Address" class="checkout__input__add">
+                                <input class="form-control" type="text" placeholder="Apartment, suite, unite ect (optinal)">
+                            </div>
+                            <div class="checkout__input">
+                                <p>City<span>*</span></p>
+                                <input class="form-control" required name="city" type="text">
+                            </div>
+                            <div class="checkout__input">
+                              <p>Governorate<span>*</span></p>
+                              <select class="form-control" required name="governorate">
+                                  <option selected disabled value="">--Please choose an option--</option>
+                                  <option value="Ad Daqahliyah">Ad Daqahliyah</option>
+                                  <option value="Al Bahr al Ahmar">Al Bahr al Ahmar</option>
+                                  <option value="Al Buhayrah">Al Buhayrah</option>
+                                  <option value="Al Fayyum">Al Fayyum</option>
+                                  <option value="Al Gharbiyah">Al Gharbiyah</option>
+                                  <option value="Al Iskandariyah">Al Iskandariyah</option>
+                                  <option value="Al Isma'iliyah">Al Isma'iliyah</option>
+                                  <option value="Al Jizah">Al Jizah</option>
+                                  <option value="Al Minufiyah">Al Minufiyah</option>
+                                  <option value="Al Minya">Al Minya</option>
+                                  <option value="Al Qahirah">Al Qahirah</option>
+                                  <option value="Al Qalyubiyah">Al Qalyubiyah</option>
+                                  <option value="Al Wadi al Jadid">Al Wadi al Jadid</option>
+                                  <option value="Ash Sharqiyah">Ash Sharqiyah</option>
+                                  <option value="As Suways">As Suways</option>
+                                  <option value="Aswan">Aswan</option>
+                                  <option value="Asyut">Asyut</option>
+                                  <option value="Bani Suwayf">Bani Suwayf</option>
+                                  <option value="Bur Sa'id">Bur Sa'id</option>
+                                  <option value="Dumyat">Dumyat</option>
+                                  <option value="Janub Sina'">Janub Sina'</option>
+                                  <option value="Kafr ash Shaykh">Kafr ash Shaykh</option>
+                                  <option value="Matruh">Matruh</option>
+                                  <option value="Qina">Qina</option>
+                                  <option value="Shamal Sina'">Shamal Sina'</option>
+                                  <option value="Suhaj">Suhaj</option>
+                              </select>
+                          </div>
 
-      if (event.target.value === 'COD') {
-        const codFeesDiv = document.createElement('div');
-        codFeesDiv.classList.add('d-flex', 'justify-content-between', 'cod-fees');
-        codFeesDiv.innerHTML = `
+
+                            <div class="checkout__input__checkbox">
+                                <label for="acc">
+                                    Create an account?
+                                    <input class="form-control" type="checkbox" id="acc">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <p>Create an account by entering the information below. If you are a returning customer
+                                please login at the top of the page</p>
+                            </div>
+
+                            <div class="checkout__input">
+                                <p>Order notes<span></span></p>
+                                <input class="form-control" type="text"
+                                placeholder="Notes about your order, e.g. special notes for delivery.">
+                            </div>
+                            <div style="font-size: 1.25rem;" class="form-group border rounded p-3 position-relative">
+                              <label>Payment Method:</label>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="vodafoneCash" value="VF">
+                                <label class="form-check-label d-flex align-items-center" for="vodafoneCash">
+                                  <img src="{% static 'frontend/img/pay/vod.png'%}" width="20px" alt="Vodafone Cash" class="mr-2">
+                                  Vodafone Cash
+                                </label>
+                                <small class="form-text text-muted d-none">You will be contacted by a sales representative to confirm payment.</small>
+                              </div>
+                              <br>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="wePay" value="WE">
+                                <label class="form-check-label d-flex align-items-center" for="wePay">
+                                  <img src="{% static 'frontend/img/pay/we.png'%}" width="20px" alt="We Pay" class="mr-2">
+                                  We Pay
+                                </label>
+                                <small class="form-text text-muted d-none">You will be contacted by a sales representative to confirm payment.</small>
+                              </div>
+                              <br>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="cashOnDelivery" value="COD">
+                                <label class="form-check-label d-flex align-items-center" for="cashOnDelivery">
+                                  <img src="{% static 'frontend/img/pay/cod.png'%}" width="20px" alt="Cash On Delivery" class="mr-2">
+                                  Cash On Delivery
+                                </label>
+                                <small class="form-text text-muted d-none">COD fees of EGP 12 will be applied.</small>
+                              </div>
+                            </div>
+                        </div>
+                        
+
+                        
+
+                        <div class="col-lg-4 col-md-6">
+                            <div class="checkout__order">
+                                <h4 class="order__title">Your order</h4>
+                                <div class="checkout__order__products">Product <span>Total</span></div>
+                                <ul class="checkout__total__products">
+                                  {% for item in cart %}
+                                  <li>
+                                      <span class="translate-middle badge rounded-pill badge-light float-left">{{item.quantity}} </span>
+                                      . {{ item.product.product_name }}
+                                      <span>EGP {{item.total}}</span>
+                                  </li>
+                              {% endfor %}
+
+                                </ul>
+                                <ul class="checkout__total__all">
+                                  <div class="final-cart">
+                                    <li>Subtotal <span>EGP {{user_cart.total_price_before_discount}}</span></li>
+                                    <div class="d-flex justify-content-between">
+                                      <p class="mb-2">Discount:</p>
+                                      <p id="discount" class="mb-2 text-danger">- EGP {{user_cart.discount}}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                      <p class="mb-2">Shipping cost:</p>
+                                      {% if user_cart.shipping_cost == 0 %}
+                                      <p class="mb-2">Free Shipping</p>
+                                      {% else %}
+                                      <p class="mb-2">+ EGP {{user_cart.shipping_cost}}</p>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                    <hr />
+                                    {% if user_cart.shipping_cost != 0 %}
+                                    <div class="free-shipping">
+                                      Add items worth EGP {{ user_cart.shipping_remainder }} or  more to your cart and get free shipping!
+                                    </div>
+                                    <hr />
+                                    {% endif %}
+                                    <li>Total <span id="cart_total_discount">EGP {{user_cart.final_price}}</span></li>
+                                </ul>
+
+
+                                <button type="submit" class="site-btn">PLACE ORDER</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+      const paymentMethodInputs = document.querySelectorAll('input[name=paymentMethod]');
+      const finalCart = document.querySelector('.final-cart');
+      let codFeesApplied = false;
+      
+      paymentMethodInputs.forEach(input => {
+        input.addEventListener('change', event => {
+          const formTexts = document.querySelectorAll('.form-text');
+          formTexts.forEach(formText => {
+            formText.classList.add('d-none');
+          });
+          
+          const formCheck = event.target.closest('.form-check');
+          const formText = formCheck.querySelector('.form-text');
+          formText.classList.remove('d-none');
+      
+          if (event.target.value === 'COD') {
+            const codFeesDiv = document.createElement('div');
+            codFeesDiv.classList.add('d-flex', 'justify-content-between', 'cod-fees');
+            codFeesDiv.innerHTML = `
               <p class="mb-2">COD fees:</p>
               <p class="mb-2">+ EGP 12</p>
             `;
-        finalCart.appendChild(codFeesDiv);
-
-        const cartTotalDiscount = document.querySelector('#cart_total_discount');
-        const cartTotalDiscountValue = parseFloat(cartTotalDiscount.textContent.replace('EGP ', ''));
-        cartTotalDiscount.textContent = `EGP ${(cartTotalDiscountValue + 12).toFixed(2)}`;
-
-        codFeesApplied = true;
-      } else if (codFeesApplied) {
-        const codFeesDiv = finalCart.querySelector('.cod-fees');
-        if (codFeesDiv) {
-          codFeesDiv.remove();
-        }
-
-        const cartTotalDiscount = document.querySelector('#cart_total_discount');
-        const cartTotalDiscountValue = parseFloat(cartTotalDiscount.textContent.replace('EGP ', ''));
-        cartTotalDiscount.textContent = `EGP ${(cartTotalDiscountValue - 12).toFixed(2)}`;
-
-        codFeesApplied = false;
-      }
-    });
-  });
-</script>
-
-
+            finalCart.appendChild(codFeesDiv);
+      
+            const cartTotalDiscount = document.querySelector('#cart_total_discount');
+            const cartTotalDiscountValue = parseFloat(cartTotalDiscount.textContent.replace('EGP ', ''));
+            cartTotalDiscount.textContent = `EGP ${(cartTotalDiscountValue + 12).toFixed(2)}`;
+      
+            codFeesApplied = true;
+          } else if (codFeesApplied) {
+            const codFeesDiv = finalCart.querySelector('.cod-fees');
+            if (codFeesDiv) {
+              codFeesDiv.remove();
+            }
+      
+            const cartTotalDiscount = document.querySelector('#cart_total_discount');
+            const cartTotalDiscountValue = parseFloat(cartTotalDiscount.textContent.replace('EGP ', ''));
+            cartTotalDiscount.textContent = `EGP ${(cartTotalDiscountValue - 12).toFixed(2)}`;
+      
+            codFeesApplied = false;
+          }
+        });
+      });
+      </script>
 
 
+  
 
 
 
+  <style>
+        .free-shipping {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        border-radius: 5px;
+    }
+  </style>
 {% endblock %}

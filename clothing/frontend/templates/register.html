@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load static %}
+
 {% block title %}
 
 Register
@@ -10,7 +10,24 @@ Register
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
         }
-
+        #id_phone_number_0 {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: left;
+            float: left;
+            position: relative;
+            width: 100px;
+            background-color: white;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+        #id_phone_number_1 {
+            width:auto;
+            float: left;
+            position: absolute;
+            background-color: white;
+  vertical-align: middle;
+  margin-left: 110px;
+}
         h1 {
             text-align: center;
             color: #333333;
@@ -48,86 +65,99 @@ Register
         }
         .google-btn {
     display: inline-block;
-    width: 100%;
     background-color: #4285f4;
     color: white;
     padding: 10px 20px;
     border-radius: 4px;
     font-family: Arial, sans-serif;
     text-decoration: none;
-    text-align: center;
     }
 
     .google-btn:hover {
-        color: black;
         background-color: #357ae8;
     }
-
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input[type=text], input[type=email], input[type=password], input[type=tel] {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  background-color: #f2f2f2;
-}
-
-button[type=submit] {
-  background-color: #4CAF50;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button[type=submit]:hover {
-  background-color: #45a049;
-}
-
     </style>
     <h1>Register</h1>
-    <div class="container">
-        <form method="post" action="{% url 'register' %}">
-            {% csrf_token %}
-          <div class="form-group">
-            <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" required>
-          </div>
-          <div class="form-group">
-            <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" required>
-          </div>
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-          </div>
-          <div class="form-group">
-            <label for="phone_number">Phone Number:</label>
-            <input placeholder="(eg.) +201055981447" type="tel" id="phone_number" name="phone_number" required>
-          </div>
-          <button type="submit">Register</button>
-          <!--
-          <hr/>
-          <a href="http://www.vos-mos.com/accounts/google/login/?process=login" class="google-btn">Sign Up using Google</a>-->
-        </form>
-      </div>
-      
-      
-
+    <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <br>
+        <br>
+        <button type="submit">Register</button>
+        <hr />
+        <a href="http://127.0.0.1:8000/accounts/google/login/?process=login" class="google-btn">Sign Up using Google</a>
+    </form>
     <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
-  
+        <script>
+
+
+
+
+
+            var selectElement = document.getElementById("id_phone_number_0");
+            var phone = document.getElementById("id_phone_number_1");
+            phone.setAttribute("placeholder", "(eg.) +201055981447");
+            var country_code = "+20";
+        // Add an event listener for the "change" event
+        selectElement.addEventListener("change", function(event) {
+            // Get the selected option value
+            var selectedOption = event.target.options[event.target.selectedIndex];
+            // Get the text inside the selected option element
+            var selectedText = selectedOption.text;
+            var lastSpaceIndex = selectedText.lastIndexOf(" ");
+    
+            // Get the text after the last space
+            var textAfterLastSpace = selectedText.slice(lastSpaceIndex + 1);
+              // Do something with the selected value
+              country_code = textAfterLastSpace;
+              console.log("Selected value:", textAfterLastSpace);
+            phone.value = country_code;
+
+        });
+        
+
+        phone.addEventListener("focus", function(event) {
+
+        });
+
+        // Add an event listener for the "click" event on the document
+        document.addEventListener("click", function(event) {
+            if (phone.value == '') {
+                
+                phone.value = country_code;
+            }
+            
+            // Check if the click event target is not the input element
+                /*
+            else if (event.target !== phone) {
+                console.log(phone.value);
+                console.log(country_code.length);
+                phone.value = "";
+                phone.setAttribute("placeholder", "+201055981447");
+            }*/
+        });
+        /*
+        The Regular expression is not working....
+
+        
+        phone.addEventListener('input', function (e) {
+    if (e.target.value.length < previousValue.length) {
+        previousValue = e.target.value;
+        return;
+    }
+    var regex = new RegExp('(\\d{0,' + country_code.length + '})(\\d{0,3})(\\d{0,3})(\\d{0,4})');
+    var x = e.target.value.replace(/\D/g, '').match(regex);
+    e.target.value = !x[2] ? '+' + x[1] : x[1] + ' (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '');
+    previousValue = e.target.value;
+});*/
+
+        document.addEventListener('DOMContentLoaded', function() {
+                document.querySelector('#id_phone_number_0').on('click', function() {
+                alert("ggg");
+                console.log("ggg");
+            });
+        });
+        
+        
+        </script>
 {% endblock %}

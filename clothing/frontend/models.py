@@ -3,14 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 import random
 # Create your models here.
-from django.db import models
-import os
-def rename_image(instance, filename):
-    ext = filename.split('.')[-1]
-    name = filename.split('_')[0]
-    filename = f'{name}.{ext}'
-    return os.path.join('static/images', filename)
-
 class Product(models.Model):
     CATEGORY_CHOICES = (
         ('M', 'Men'),
@@ -40,9 +32,11 @@ class Product(models.Model):
     subcategory = models.CharField(choices= SUB_CATEGORY_CHOICES ,max_length=50, default="")
     price = models.FloatField(default=0)
     discount_price = models.FloatField(default=0)
+    desc = models.CharField(max_length=300)
     pub_date = models.DateField()
-    image = models.ImageField(upload_to=rename_image, default="", blank=True, null=True)
+    image = models.ImageField(upload_to="static/images", default="")
     material = models.CharField(max_length=50, default="Coton 100%")
+<<<<<<< HEAD
     description = models.TextField(default="Are you looking for a t shirt that is comfortable, stylish and affordable? Look no further than our new collection of t shirts, designed to suit any occasion and personality. Whether you want to express your creativity, show your support for a cause, or simply enjoy a casual day out, we have the perfect t shirt for you. Our t shirts are made from high-quality cotton, which is soft, breathable and durable. They come in a variety of colors, sizes and designs, so you can find the one that matches your style and mood.  Our t shirts are easy to wash and care for, and they will not fade or shrink over time. They are also eco-friendly and ethically produced, so you can wear them with confidence and pride. Order your t shirt today and enjoy free shipping for orders over EGP 500. You will love how you look and feel in our t shirts, and so will everyone else. Don't miss this opportunity to get the best t shirt ever.")
     path = models.CharField(max_length=50, default="")
     def get_absolute_url(self):
@@ -55,9 +49,14 @@ class ProductImage(models.Model):
     path = models.CharField(max_length=50, default="")   
     color = models.CharField(max_length=50, default="")
     
+=======
+    description = models.TextField(default="Description")
+    def get_absolute_url(self):
+        return f"/product_detail/{self.id}/"
+
+>>>>>>> e90d82c5df08a373683b755b2771c763fed2abfe
     def __str__(self):
-        return self.product.product_name
-    
+        return self.product_name
 class MyUser(AbstractUser):
     country = models.CharField(max_length=50, default="")
     city = models.CharField(max_length=50, default="")
@@ -67,23 +66,22 @@ class MyUser(AbstractUser):
     pass 
 
 
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to="static/images")
+
+    def __str__(self):
+        return self.product.product_name
 
 class ProductSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="psize")
-    size = models.CharField(max_length=10 , blank=True, null=True)
-    quantity = models.PositiveIntegerField( blank=True, null=True)
-
+    size = models.CharField(max_length=10)
+    quantity = models.PositiveIntegerField()
+    color = models.CharField(max_length=10)
+    color_id = models.CharField(max_length=10, default="1")
     class Meta:
-        unique_together = ('product', 'size')
+        unique_together = ('product', 'size', 'color')
 
-class ProductColor(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="pcolor")
-    color = models.CharField(max_length=10 , blank=True, null=True)
-    color_id = models.CharField(max_length=10 , blank=True, null=True)
-    quantity = models.PositiveIntegerField( blank=True, null=True)
-
-    class Meta:
-        unique_together = ('product', 'color')
 
 class Design(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
@@ -99,20 +97,68 @@ class PromoCode(models.Model):
     max_discount = models.FloatField(default=100)
 
     
+class CartManager(models.Manager):
+    def get_anonymous_cart(self, session):
+        cart = session.get('cart', [])
+        products = Product.objects.filter(
+            pk__in=[item['product_id'] for item in cart],
+            psize__color__in=[item['color'] for item in cart],
 
+        )
+        cart_items = [{'product': product, 'quantity': int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)),
+                        'color': next((item.get('color', 'default_color') for item in cart if item['product_id'] == product.pk), 'default_color'),
+                        'size': next((item.get('size', 'default_size') for item in cart if item['product_id'] == product.pk), 'default_size'),
+                            'total': "{:.2f}".format(product.price * int(next(item['quantity'] for item in cart if item['product_id'] == product.pk)))} for product in products]        # calculate shipping cost for anonymous user
+        # calculate total price before discount
+        total_price_before_discount = sum(float(item['total']) for item in cart_items)
+        
+        # apply promo code discount if available
+        promo_code = session.get('applied_promo_code')
+        if promo_code:
+            promo = PromoCode.objects.filter(code=promo_code).first()
+            if promo:
+                discount = promo.discount
+                max_discount = promo.max_discount
+                cart_total = total_price_before_discount
+                discount_amount = cart_total * discount
+                discount_amount = min(discount_amount, max_discount)
+                # calculate total price after discount
+                total_price = sum(float(item['total']) for item in cart_items) - discount_amount 
+        else:
+            total_price = total_price_before_discount
+            discount_amount = 0.00
+
+        # default shipping cost
+        shipping_cost = 25.99  
+        if float(total_price) > 1000:
+            shipping_cost = 0
+        if shipping_cost > 0:
+            shipping_remainder = 1000 - total_price
+            shipping_remainder = "{:.2f}".format(shipping_remainder)
+        else:
+            shipping_remainder = 0
+        return {
+            'cart_items': cart_items,
+            'total_price_before_discount': "{:.2f}".format(total_price_before_discount),
+            'total_price': "{:.2f}".format(total_price),
+            'discount': "{:.2f}".format(discount_amount),
+            'shipping_cost': shipping_cost,
+            'final_price': "{:.2f}".format(float(total_price) + float(shipping_cost)),
+            'shipping_remainder': shipping_remainder
+        }
         
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(MyUser, on_delete=models.CASCADE, null= True, blank = True)
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     applied_coupons = models.ManyToManyField(PromoCode, blank=True,related_name="Applied_Coupons")
-    session_key = models.CharField(max_length=32, null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ordered = models.BooleanField(default=False)
     coupon = models.ForeignKey(
         PromoCode, on_delete=models.SET_NULL, blank=True, null=True)
-
+    objects = CartManager()
     shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, default=25.99)
     def __str__(self):
         return f"Cart of {self.user.username}"
@@ -120,7 +166,7 @@ class Cart(models.Model):
     @property
     def shipping_remainder(self):
         if self.shipping_cost > 0:
-            return 500 - float(self.total_price)
+            return 1000 - float(self.total_price)
         else:
             return 0
     @property

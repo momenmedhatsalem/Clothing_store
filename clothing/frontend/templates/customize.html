@@ -1,58 +1,970 @@
-{% extends 'layout.html' %}
+{% extends 'layout.html' %} {% block body %}
 
-{% block body %}
-<style>
-    .drawing-area{
-    position: absolute;
-    top: 60px;
-    left: 122px;
-    z-index: 10;
-    width: 200px;
-    height: 400px;
+<head>
+  <title>Custom T-Shirt</title>
+  <style>
+    .form h2 {
+      font-weight: 700;
+      font-size: 35px;
+      line-height: 42px;
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+
+    .tshirt-size-option {
+      display: inline-block;
+      /* padding: 10px; */
+      margin: 5px;
+      background-color: #f1f1f1;
+      cursor: pointer;
+    }
+
+    .tshirt-size-option.selected {
+      background-color: #ccc;
+    }
+
+    .color-option {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .color-option:hover {
+      border: 2px solid black;
+    }
+
+    .color-option.selected {
+      border: 2px solid black;
+    }
+
+    .form form div {
+      padding: 15px;
+    }
+
+    .font-size span:nth-child(1) {
+      font-size: small;
+    }
+
+    .font-size span:nth-child(2) {
+      font-size: medium;
+    }
+
+    .font-size span:nth-child(3) {
+      font-size: large;
+    }
+
+    .font-size button {
+      background-color: white;
+      border: 1px solid #ccc;
+    }
+
+    .rotate button,
+    .upload button {
+      background-color: white;
+      border: 1px solid #ccc;
+    }
+
+    .color-input {
+      height: 50px;
+      width: 50px;
+      padding: 0;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .canva-box {
+      position: relative;
+      width: fit-content;
+      margin: auto;
+    }
+
+    .border-box {
+      position: absolute;
+      left: 226px;
+      background-color: transparent;
+      width: 250px;
+      top: 25%;
+      height: 300px;
+      border: 1px dotted black;
+      overflow: hidden;
+    }
+
+@media screen and (min-width: 331px) and (max-width: 500px) {
+  .border-box{
+    left: 104px;
+    width: 123px;
+    height: 192px;
+  }
 }
-
-.canvas-container{
-    width: 200px; 
-    height: 400px; 
-    position: relative; 
-    user-select: none;
+@media screen and (max-width: 330px) {
+  .border-box{
+    left: 80px;
+    width: 91px;
+    height: 143px;
 }
-
-#tshirt-div{
-    width: 452px;
-    height: 548px;
-    position: relative;
-    background-color: #fff;
 }
-
-#canvas{
-    position: absolute;
-    width: 200px;
-    height: 400px; 
-    left: 0px; 
-    top: 0px; 
-    user-select: none; 
-    cursor: default;
+@media screen and (min-width: 501px) and (max-width: 776px) {
+  .border-box{
+    left: 141px;
+    width: 169px;
+    height: 258px;
+  }
 }
-</style>
-<!-- Create the container of the tool -->
-<div id="tshirt-div">
-    <!-- 
-        Initially, the image will have the background tshirt that has transparency
-        So we can simply update the color with CSS or JavaScript dinamically
-    -->
-    <img id="tshirt-backgroundpicture" src="./background_tshirt.png"/>
+@media (min-width: 992px) {
+  .flex-lg-nowrap {
+    flex-wrap: nowrap;
+  }
+  .font-size{
+      margin: auto;
+  } 
+}
+    .image-container {
+      position: relative;
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
 
-    <!-- 
-        The container where Fabric.js will work. Notice that in the the style of #canvas
-        the width and height need to match with the attributes
-    -->
-    <div id="drawingArea" class="drawing-area">					
-        <div class="canvas-container">
-            <canvas id="canvas" width="200" height="400"></canvas>
+    .delete-button {
+      position: absolute;
+      bottom: 14px;
+      left: 15px;
+      background-color: rgba(255, 0, 0, 0.7);
+      color: #fff;
+      border: none;
+      padding: 2px 6px;
+      font-size: 8px;
+    }
+
+    .edit-button {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      background-color: gray;
+      color: #fff;
+      border: none;
+      padding: 2px 6px;
+      font-size: 8px;
+      cursor: pointer;
+    }
+
+    #preview {
+      width: 400px;
+      height: 300px;
+      overflow: hidden;
+      margin: auto;
+      margin-bottom: 30px;
+    }
+
+    .img-window {
+      display: none;
+      min-width: 70%;
+      z-index: 100;
+    }
+
+    .img-window .row {
+      min-width: 70%;
+      z-index: 100;
+    }
+
+    #closeWindow {
+      font-size: 30px;
+      width: fit-content;
+      padding: 4px;
+      cursor: pointer;
+    }
+    .submit,
+    .radio,
+    .head {
+      text-align: center;
+    }
+    .line-height button{
+    background-color: white;
+    border: 1px solid #ccc;
+    }
+    .submit input {
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 8px;
+      padding-top: 8px;
+      color: white;
+      background-color: black;
+      border: 2px solid black;
+    }
+
+    #form-box {
+      border: 1px solid #212529;
+      margin-bottom: 20px;
+    }
+    .product-image{
+      text-align: center;
+    }
+    .img-upload{
+      max-width: 100%;
+      overflow: hidden;
+    }
+    #rotate{
+      transform: translateY(13px);
+    }
+    .control_panel button{
+      background-color: white;
+    border: 1px solid;
+    margin: 2px;
+    padding-top: 3px;
+    padding-bottom: 0px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container position-relative">
+
+    <div class="img-window " id="editingWindow">
+      <div id="closeWindow">x</div>
+        <div class="control_panel d-flex justify-content-end align-items-center">
+          <button id="move-photo-up"> <span class="arrow_up"></span></button>
+          <button id="move-photo-down"> <span class="arrow_down"></span></button>
+          <button id="move-photo-right"> <span class="arrow_right"></span></button>
+          <button id="move-photo-left"> <span class="arrow_left"></span></button>
+          <button id="zoom-photo-in">+</button>
+          <button id="zoom-photo-out">-</button>
         </div>
-    </div>
-</div>
+        <div class="control_panel d-flex justify-content-end">
+          <button id="zoom-in">Zoom In</button>
+          <button id="zoom-out">Zoom Out</button>
+          <button id="rotate-right">rotate Right</button>
+          <button id="rotate-left">rotate left</button>
+        </div>
+        <div class="row justify-content-between ">
+          <div class="canva-col col-sm">
+            <div class="canva-box">
+              <canvas class="myCanvas"></canvas>
+              <div class="border-box"></div>
+            </div>
+          </div>
+          <div class="img-col col-sm align-self-center">
+            <div id="preview">
+              <img src="" id="img" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
 
+    <div id="mainWindow">
+      <div class="row  justify-content-between flex-lg-nowrap">
+        <div class="col ">
+          <div class="product-image ">
+            <div class="canva-box">
+              <canvas id="myCanvas" class="myCanvas"></canvas>
+              <div class="border-box"></div>
+            </div>
+            <p class="product-description">{{ product.desc|truncatewords:20 }}</p>
+          </div>
+        </div>
+        <div class="col form " id="tshirt">
+          <h2 class="head">Customize your Shirt</h2>
+
+          <form id="form-box">
+            <div class="d-flex align-items-center justify-content-between size_options flex-wrap">
+              <div class="tshirt-size-option" data-size="XS">XS</div>
+              <div class="tshirt-size-option" data-size="SM">SM</div>
+              <div class="tshirt-size-option" data-size="L">L</div>
+              <div class="tshirt-size-option" data-size="XL">XL</div>
+              <div class="tshirt-size-option" data-size="2XL">2XL</div>
+              <input type="hidden" id="selected-size" name="selected-size" />
+            </div>
+            <div class="d-flex align-items-center justify-content-between size_options">
+              <div class="color-option selected" style="background-color: white"></div>
+              <div class="color-option" style="background-color: black"></div>
+              <div class="color-option" style="background-color: grey"></div>
+              <div class="color-option" style="background-color: navy"></div>
+              <div class="color-option" style="background-color: purple"></div>
+            </div>
+            <div class="radio">
+              <div>
+                <input type="radio" id="a4" name="size" value="a4" checked />
+                <label for="a4" style="padding-right: 57px;">A4</label>
+                <input type="radio" id="a3" name="size" value="a3" />
+                <label for="a3">A3</label>
+              </div>
+              <div>
+                <label for="imageInput"><strong>Image Input</strong></label><br />
+               <div class="img-upload"> <input type="file" id="imageInput" accept=".jpg, .jpeg, .png, .webp" /></div>
+                <div id="image-viewer"></div>
+              </div>
+            </div>
+
+            <div>
+              <label for="text">Text:</label><br />
+              <textarea id="text" name="text" style="
+               background-color: transparent;
+               width: 100%;
+               height: 100px;
+               "></textarea>
+            </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+              <div>
+                <label for="fontFamilySelect">Font Type</label><br />
+                <select id="fontFamilySelect">
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                  <option value="Arial, Helvetica, sans-serif">Arial</option>
+                  <option value="Times New Roman, Times, serif">Times New Roman</option>
+                  <option value="Courier New, Courier, monospace">Courier New</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                  <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+                  <option value="Trebuchet MS, Helvetica, sans-serif">Trebuchet MS</option>
+                  <option value="Impact, Charcoal, sans-serif">Impact</option>
+                  <option value="Lucida Sans Unicode, Lucida Grande, sans-serif">Lucida Sans Unicode</option>
+                </select>
+
+              </div>
+
+              <div class="line-height">
+                <br />
+                <button type="button" id="decrease-line">-</button>
+                <span >Line Height</span>
+                <button type="button" id="increase-line">+</button>
+
+              </div>
+              <div class="font-size">
+                <label>Font Size</label>
+                <br />
+                <button type="button" id="decrease">-</button>
+                <span title="Normal Font"><span>A</span><span>A</span><span>A</span></span>
+                <button type="button" id="increase">+</button>
+
+              </div>
+            </div>
+
+
+
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+
+                <label for="text-color">Text Color:</label>
+                <br />
+                <input type="color" class="color-input" id="text-color" name="text-color" />
+              </div>
+
+              <div class="rotate">
+                <br />
+                <button type="button" id="rotate">Rotate Text Area</button>
+              </div>
+            </div>
+            <div class="submit ">
+              <div>
+                <input data-product_id="{{product.id}}" id="design_button" type="submit" value="Submit" />
+              </div>
+            </div>
+          </form>
+
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
+
+<script>
+
+  //Render Canvas elements
+
+  const canvas = document.getElementsByClassName("myCanvas")[0];
+  const seccanva = document.getElementById("myCanvas");
+
+  var ctx = canvas.getContext('2d');
+  var ctx2 = seccanva.getContext('2d');
+
+  //draw canvas according to screen size
+  if ( window.innerWidth >330 && window.innerWidth <= 500) {
+    canvas.width = 330;
+    canvas.height = 330;
+    seccanva.width = 330;
+    seccanva.height = 330;
+}else if(window.innerWidth <= 330){
+  canvas.width = 250;
+  canvas.height =250;
+  seccanva.width = 250;
+  seccanva.height =250;
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  canvas.width = 450;
+  canvas.height =450;
+  seccanva.width = 450;
+  seccanva.height =450;
+}else {
+  canvas.width = 700;
+  canvas.height = 700;
+  seccanva.width = 700;
+  seccanva.height = 700;
+}
+
+
+function handleResize() {
+  if (window.innerWidth >330 && window.innerWidth <= 500) {
+    canvas.width = 330;
+    canvas.height = 330;
+    seccanva.width = 330;
+    seccanva.height = 330;
+    renderText();
+
+}else if(window.innerWidth <= 330){
+  canvas.width = 250;
+  canvas.height =250;
+  seccanva.width = 250;
+  seccanva.height =250;
+
+  renderText();
+
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  canvas.width = 450;
+  canvas.height =450;
+  seccanva.width = 450;
+  seccanva.height =450;
+
+  renderText();
+
+
+}else {
+  canvas.width = 700;
+  canvas.height = 700;
+  seccanva.width = 700;
+  seccanva.height = 700;
+
+  renderText();
+
+}
+}
+
+window.addEventListener('resize', handleResize);
+
+var backgroundImage = new Image();
+  backgroundImage.src = "../static/images/white-shirt.png";
+  backgroundImage.onload = function () {
+    renderText();
+  };
+  //handle image input
+
+  const inputElement = document.getElementById("imageInput");
+  const imageViewer = document.getElementById('image-viewer');
+  const editingWindow = document.getElementById("editingWindow");
+  const mainWindow = document.getElementById("mainWindow");
+  const close = document.getElementById("closeWindow");
+
+  let addedImage = "";
+
+  let photo = document.getElementById('img');
+
+
+
+  inputElement.addEventListener('change', function (event) {
+    if (imageViewer.childElementCount > 0) {
+      const errorMessage = document.createElement('p');
+      errorMessage.textContent = 'You cannot enter more than 1 image';
+      errorMessage.style.color = 'red';
+      imageViewer.appendChild(errorMessage);
+    } else {
+      //run 1st function
+      handleImageUpload(event);
+      //run 2nd function
+      changePhotoSrc(event);
+      //run 3rd function
+      displayWindow();
+    }
+  });
+
+  //1st view in field 
+  function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        const imageSrc = reader.result;
+        const imageContainer = document.createElement('div');
+        imageContainer.classList.add('image-container');
+        const imageElement = document.createElement('img');
+        imageElement.src = imageSrc;
+        imageElement.style.maxHeight = '70px';
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', function () {
+          imageContainer.remove();
+          window.location.reload();
+        });
+        const editButton = document.createElement('span');
+        editButton.classList.add('edit-button');
+        editButton.textContent = 'Edit';
+        editButton.addEventListener('click', displayWindow);
+
+        imageContainer.appendChild(imageElement);
+        imageContainer.appendChild(deleteButton);
+        imageContainer.appendChild(editButton);
+        imageViewer.appendChild(imageContainer);
+      };
+    }
+  }
+
+  //2nd put the photo on croping section and to the canva
+  let a3 = false;
+  const a4RadioButton = document.getElementById('a4');
+  const a3RadioButton = document.getElementById('a3');
+  var shirtimg_x = 226;
+  var shirtimg_y = 200;
+  var shirtimg_w = 250;
+  let crossline=226 ;
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  crossline=104;
+}else if(window.innerWidth <= 330){
+  crossline=100;
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  crossline=141;
+}else{
+  crossline=226;
+}
+  var cropper;
+
+  function changePhotoSrc(event) {
+    var input = event.target;
+    var file = input.files[0];
+
+    if (file) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var imageUrl = e.target.result;
+        document.getElementById('img').src = imageUrl;
+
+        cropper = new Cropper(document.getElementById('img'), {
+          aspectRatio: 16 / 9,
+          viewMode: 2,
+          zoomable: true,
+          movable: true,
+          ready: function () {
+            var image = cropper.getCroppedCanvas() || cropper.getCanvasData();
+            console.log(window.innerWidth<331?143:150)
+            if (a3 == true) {
+              shirtimg_x = 277;
+              shirtimg_w = 150;
+              crossline = crossline + 50;
+              ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
+              ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
+            } else {
+              ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
+              ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
+            }
+          }
+        })
+
+
+
+      };
+      reader.onerror = function (error) {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      reject(new Error("No file selected."));
+    }
+  }
+  //3rd display the image editing window
+  function displayWindow() {
+    editingWindow.style.display = "block";
+    mainWindow.style.display = "none";
+  }
+  close.addEventListener("click", function () {
+    console.log("closed")
+    editingWindow.style.display = "none";
+    mainWindow.style.display = "block";
+  })
+
+
+
+
+  //handle text input, font size, text rotation, and text color
+  let width = 250;
+  let height= 300;
+  let xline = 226;
+  let yline = 200;
+  let font = 16;
+  let font_family = "Comic Sans MS, cursive";
+  let rotationAngle = 0;
+  let textColor = 'black';
+  let lineHeight=32;
+  var textareaValue = document.getElementById("text");
+  var userInput = "";
+
+
+  textareaValue.addEventListener("input", function (event) {
+    userInput = event.target.value;
+    renderText();
+  });
+
+  const borderBox = document.querySelectorAll('.border-box');
+
+  a4RadioButton.addEventListener('change', function () {
+    a3 = false;
+    getvalues(); 
+    if (a4RadioButton.checked) {
+      for (let x = 0; x < borderBox.length; x++) {
+        borderBox[x].style.width = `${shirtimg_w}px`;
+        borderBox[x].style.left = `${shirtimg_x}px`;
+      }
+      renderText();
+    }
+  });
+
+  a3RadioButton.addEventListener('change', function () {
+    a3 = true;
+    getvalues();
+    if (a3RadioButton.checked) {
+      for (let x = 0; x < borderBox.length; x++) {
+        borderBox[x].style.width = `${shirtimg_w}px`;
+        borderBox[x].style.left = `${shirtimg_x}px`;
+      }
+      renderText();
+    }
+  });
+
+  function updateFontFamily() {
+    const selectElement = document.getElementById('fontFamilySelect');
+    const selectedFontFamily = selectElement.value;
+    font_family = selectedFontFamily;
+    renderText();
+  }
+
+  const fontFamilySelect = document.getElementById('fontFamilySelect');
+  fontFamilySelect.addEventListener('change', updateFontFamily);
+
+  document.getElementById('rotate').addEventListener('click', function () {
+    rotationAngle += Math.PI / 4;
+    renderText();
+  });
+
+  document.getElementById('increase').addEventListener('click', function () {
+    font++;
+    renderText();
+  });
+
+  document.getElementById('decrease').addEventListener('click', function () {
+    font--;
+    renderText();
+  });
+  document.getElementById('decrease-line').addEventListener('click', function () {
+    lineHeight=lineHeight-2;
+    renderText();
+  });
+  document.getElementById('increase-line').addEventListener('click', function () {
+    lineHeight=lineHeight+2;
+    renderText();
+  });
+
+  document.getElementById('text-color').addEventListener('input', function (event) {
+    textColor = event.target.value;
+    renderText();
+  });
+
+  function renderbg(arg) {
+
+    arg==true?"": getvalues();
+
+    if (imageViewer.childElementCount != 0) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx2.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+      ctx2.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+ console.log(shirtimg_w,shirtimg_y,shirtimg_x)
+
+      var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
+      ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
+      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w,window.innerWidth<331?100:150);
+
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx2.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+      ctx2.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    }
+
+  }
+
+function getvalues(){
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+height=192;
+yline=100;
+shirtimg_y=100;
+if (a3==true){
+width=68;
+shirtimg_w=68;
+shirtimg_x=130;
+xline=130;
+}else{
+width=123;
+xline=104;
+shirtimg_w=123;
+shirtimg_x=104;
+}
+
+}else if(window.innerWidth <= 330){
+height=143;
+yline=80;
+shirtimg_y=80;
+if (a3==true){
+width=64;
+xline=94;
+shirtimg_w=64;
+shirtimg_x=94;
+}else{
+width=123;
+xline=80;
+shirtimg_w=123;
+shirtimg_x=80;
+}
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+height=258;
+yline=130;
+shirtimg_y=130;
+if (a3==true){
+width=120;
+xline=163;
+shirtimg_w=120;
+shirtimg_x=163;
+}else{
+width=169;
+xline=141;  
+shirtimg_w=169;
+shirtimg_x=141;
+}
+}else{
+height= 300;
+yline = 200; 
+shirtimg_y = 200;
+if (a3==true){
+shirtimg_w=150;
+width=150;
+shirtimg_x=277;
+xline=277;
+}else{
+width = 250;
+shirtimg_w=250;
+shirtimg_x=226;
+xline=226;
+}
+}
+  }
+
+  function renderText(arg) {
+
+    renderbg(arg);
+    // Render text
+    ctx.fillStyle = textColor;
+    ctx.font = `${font}px ${font_family}`;
+    ctx2.fillStyle = textColor;
+    ctx2.font = `${font}px ${font_family}`;
+    let maxWidth = width;
+    let maxHeight = height;
+    let x = xline;
+    let y = yline;
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotationAngle);
+    ctx.translate(-x, -y);
+    ctx2.save();
+    ctx2.translate(x, y);
+    ctx2.rotate(rotationAngle);
+    ctx2.translate(-x, -y);
+
+    const words = userInput.split(" ");
+    let lines = [];
+    let currentLine = "";
+    for (let i = 0; i < words.length; i++) {
+      const testLine = currentLine + words[i] + " ";
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+      if (testWidth > maxWidth && i > 0) {
+        lines.push(currentLine.trim());
+        currentLine = words[i] + " ";
+      } else {
+        currentLine = testLine;
+      }
+    }
+    lines.push(currentLine.trim());
+
+    for (let i = 0; i < lines.length; i++) {
+      if (y + lineHeight <= y + maxHeight) {
+        ctx.fillText(lines[i], x, y);
+        ctx2.fillText(lines[i], x, y);
+        y += lineHeight;
+      } else {
+        lines.splice(i);
+        break;
+      }
+    }
+
+    if (y + lineHeight > y + maxHeight) {
+      lines.splice(-1);
+    }
+
+    ctx.restore();
+    ctx2.restore();
+  }
+
+  //Image control panel
+  document.getElementById('zoom-in').addEventListener('click', function () {
+    cropper.zoom(0.1); // Zoom in by 10%
+    renderText(true);
+  });
+
+  document.getElementById('zoom-out').addEventListener('click', function () {
+    cropper.zoom(-0.1); // Zoom out by 10%
+    renderText(true);
+  });
+
+  document.getElementById('rotate-right').addEventListener('click', function () {
+    cropper.rotate(90);
+    renderText(true);
+
+  });
+  document.getElementById('rotate-left').addEventListener('click', function () {
+    cropper.rotate(-90);
+    renderText(true);
+
+  });
+  document.getElementById('img').addEventListener('cropmove', (event) => {
+    renderText(true);
+
+  });
+
+
+  document.getElementById('move-photo-up').addEventListener('click', (event) => {
+
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  shirtimg_y >= 100? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+}else if(window.innerWidth <= 330){
+
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  shirtimg_y >= 118 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+}else{
+  shirtimg_y >= 180 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+}
+    renderText(true);
+
+  });
+
+
+  document.getElementById('move-photo-down').addEventListener('click', (event) => {
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  shirtimg_y <= 120 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+}else if(window.innerWidth <= 330){
+
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  shirtimg_y <= 218 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+}else{
+  shirtimg_y <= 320 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+}
+    renderText(true);
+  });
+
+  document.getElementById('move-photo-right').addEventListener('click', (event) => {
+shirtimg_x >= crossline ? shirtimg_x : shirtimg_x = shirtimg_x + 10;
+    renderText(true);
+
+  });
+
+  document.getElementById('move-photo-left').addEventListener('click', (event) => {
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  shirtimg_x > 104 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+}else if(window.innerWidth <= 330){
+
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+ shirtimg_x > 141 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+ console.log(shirtimg_x)
+}else{
+  a3 == false ? shirtimg_x > 226 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x : shirtimg_x > 277 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x
+}
+    // crossline=crossline+10;
+    renderText(true);
+
+  });
+
+  document.getElementById('zoom-photo-in').addEventListener('click', (event) => {
+if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  shirtimg_w >= 123 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 
+}else if(window.innerWidth <= 330){
+
+}else if(window.innerWidth > 500 && window.innerWidth <=776){
+  shirtimg_w >= 169 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 
+}else{
+  a3 == false ? shirtimg_w >= 250 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 : shirtimg_w >= 150 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
+}
+
+
+    renderText(true);
+
+  });
+  document.getElementById('zoom-photo-out').addEventListener('click', (event) => {
+    var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
+    crossline = crossline + 10;
+    shirtimg_w = shirtimg_w - 10;
+
+    renderText(true);
+
+  });
+
+
+  // select size
+  document.addEventListener('DOMContentLoaded', function () {
+    var tshirtSizeOptions = document.querySelectorAll('.tshirt-size-option');
+
+    function updateSelectedSize() {
+      var selectedSizes = Array.from(document.querySelectorAll('.tshirt-size-option.selected'))
+        .map(function (option) {
+          return option.getAttribute('data-size');
+        });
+      document.getElementById('selected-size').value = selectedSizes.join(',');
+    }
+
+    tshirtSizeOptions.forEach(function (option) {
+      option.addEventListener('click', function () {
+        tshirtSizeOptions.forEach(function (otherOption) {
+          if (otherOption !== option) {
+            otherOption.classList.remove('selected');
+          }
+        });
+        option.classList.toggle('selected');
+        updateSelectedSize();
+      });
+    });
+  });
+
+  // select color
+  document.addEventListener('DOMContentLoaded', function () {
+    var colorOptions = document.querySelectorAll('.color-option');
+
+    function selectColor() {
+      colorOptions.forEach(function (option) {
+        option.classList.remove('selected');
+      });
+      this.classList.add('selected');
+    }
+
+    colorOptions.forEach(function (option) {
+      option.addEventListener('click', selectColor);
+    });
+  });
+
+</script>
 
 {% endblock %}
