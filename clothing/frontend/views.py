@@ -69,10 +69,13 @@ def contact(request):
 
 def Return(request):
     return render(request, 'Return.html')
+from django.db.models import Q
+
 def show_products(request, category=None, subcategory=None):
     products = Product.objects.all()
     if category:
-        products = products.filter(category=category)
+        categories = category.split(';')
+        products = products.filter(Q(category__name__in=categories))
     if subcategory:
         products = products.filter(subcategory=subcategory)
 
@@ -80,8 +83,9 @@ def show_products(request, category=None, subcategory=None):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    context = {'page_obj': page_obj, 'categories': Product.CATEGORY_CHOICES,}
+    context = {'page_obj': page_obj, 'categories': Product.CATEGORY_CHOICES}
     return render(request, 'products.html', context)
+
 
 
 @csrf_exempt
@@ -698,11 +702,7 @@ def orders(request):
 
 
 def customize(request):
-<<<<<<< HEAD
-    return render(request, 'product_detail.html')
-=======
     return render(request, 'customize.html')
->>>>>>> e90d82c5df08a373683b755b2771c763fed2abfe
 
 
 @csrf_exempt

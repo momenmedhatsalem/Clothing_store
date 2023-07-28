@@ -3,6 +3,9 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 import random
 # Create your models here.
+def rename_image():
+    return random.randint(1,1000000)
+    pass
 class Product(models.Model):
     CATEGORY_CHOICES = (
         ('M', 'Men'),
@@ -27,20 +30,29 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
 
     product_name = models.CharField(max_length=50)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    category = models.ManyToManyField('Category', through='ProductCategory')
+
+
     label = models.CharField(choices=LABEL_CHOICES, max_length=11, default="")
     subcategory = models.CharField(choices= SUB_CATEGORY_CHOICES ,max_length=50, default="")
     price = models.FloatField(default=0)
     discount_price = models.FloatField(default=0)
-    desc = models.CharField(max_length=300)
     pub_date = models.DateField()
     image = models.ImageField(upload_to="static/images", default="")
     material = models.CharField(max_length=50, default="Coton 100%")
-<<<<<<< HEAD
     description = models.TextField(default="Are you looking for a t shirt that is comfortable, stylish and affordable? Look no further than our new collection of t shirts, designed to suit any occasion and personality. Whether you want to express your creativity, show your support for a cause, or simply enjoy a casual day out, we have the perfect t shirt for you. Our t shirts are made from high-quality cotton, which is soft, breathable and durable. They come in a variety of colors, sizes and designs, so you can find the one that matches your style and mood.  Our t shirts are easy to wash and care for, and they will not fade or shrink over time. They are also eco-friendly and ethically produced, so you can wear them with confidence and pride. Order your t shirt today and enjoy free shipping for orders over EGP 500. You will love how you look and feel in our t shirts, and so will everyone else. Don't miss this opportunity to get the best t shirt ever.")
     path = models.CharField(max_length=50, default="")
     def get_absolute_url(self):
         return f"/product_detail/{self.id}/"
+ 
+    
+class Category(models.Model):
+    name = models.CharField(choices=Product.CATEGORY_CHOICES, max_length=2)
+
+class ProductCategory(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
 
 class ProductImage(models.Model):
 
@@ -49,12 +61,6 @@ class ProductImage(models.Model):
     path = models.CharField(max_length=50, default="")   
     color = models.CharField(max_length=50, default="")
     
-=======
-    description = models.TextField(default="Description")
-    def get_absolute_url(self):
-        return f"/product_detail/{self.id}/"
-
->>>>>>> e90d82c5df08a373683b755b2771c763fed2abfe
     def __str__(self):
         return self.product_name
 class MyUser(AbstractUser):

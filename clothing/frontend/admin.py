@@ -21,11 +21,16 @@ class ProductImageInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductSizeInline, ProductImageInline]
-    list_display = ('product_name', 'category', 'price', 'discount_price')
+    list_display = ('product_name', 'get_categories', 'price', 'discount_price')
     list_filter = ('category', 'label')
     search_fields = ('product_name',)
 
+    def get_categories(self, obj):
+        return ", ".join([category.name for category in obj.category.all()])
+    get_categories.short_description = 'Categories'
+
 admin.site.register(Product, ProductAdmin)
+
 
 
 class OrderItemInline(admin.TabularInline):

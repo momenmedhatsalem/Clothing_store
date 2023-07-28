@@ -93,35 +93,40 @@
       overflow: hidden;
     }
 
-@media screen and (min-width: 331px) and (max-width: 500px) {
-  .border-box{
-    left: 104px;
-    width: 123px;
-    height: 192px;
-  }
-}
-@media screen and (max-width: 330px) {
-  .border-box{
-    left: 80px;
-    width: 91px;
-    height: 143px;
-}
-}
-@media screen and (min-width: 501px) and (max-width: 776px) {
-  .border-box{
-    left: 141px;
-    width: 169px;
-    height: 258px;
-  }
-}
-@media (min-width: 992px) {
-  .flex-lg-nowrap {
-    flex-wrap: nowrap;
-  }
-  .font-size{
-      margin: auto;
-  } 
-}
+    @media screen and (min-width: 331px) and (max-width: 500px) {
+      .border-box {
+        left: 104px;
+        width: 123px;
+        height: 192px;
+      }
+    }
+
+    @media screen and (max-width: 330px) {
+      .border-box {
+        left: 80px;
+        width: 91px;
+        height: 143px;
+      }
+    }
+
+    @media screen and (min-width: 501px) and (max-width: 776px) {
+      .border-box {
+        left: 141px;
+        width: 169px;
+        height: 258px;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .flex-lg-nowrap {
+        flex-wrap: nowrap;
+      }
+
+      .font-size {
+        margin: auto;
+      }
+    }
+
     .image-container {
       position: relative;
       display: inline-block;
@@ -177,15 +182,18 @@
       padding: 4px;
       cursor: pointer;
     }
+
     .submit,
     .radio,
     .head {
       text-align: center;
     }
-    .line-height button{
-    background-color: white;
-    border: 1px solid #ccc;
+
+    .line-height button {
+      background-color: white;
+      border: 1px solid #ccc;
     }
+
     .submit input {
       padding-left: 20px;
       padding-right: 20px;
@@ -200,24 +208,27 @@
       border: 1px solid #212529;
       margin-bottom: 20px;
     }
-    .product-image{
+
+    .product-image {
       text-align: center;
     }
-    .img-upload{
+
+    .img-upload {
       max-width: 100%;
       overflow: hidden;
     }
-    #rotate{
+
+    #rotate {
       transform: translateY(13px);
     }
-    .control_panel button{
-      background-color: white;
-    border: 1px solid;
-    margin: 2px;
-    padding-top: 3px;
-    padding-bottom: 0px;
-    }
 
+    .control_panel button {
+      background-color: white;
+      border: 1px solid;
+      margin: 2px;
+      padding-top: 3px;
+      padding-bottom: 0px;
+    }
   </style>
 </head>
 
@@ -226,34 +237,34 @@
 
     <div class="img-window " id="editingWindow">
       <div id="closeWindow">x</div>
-        <div class="control_panel d-flex justify-content-end align-items-center">
-          <button id="move-photo-up"> <span class="arrow_up"></span></button>
-          <button id="move-photo-down"> <span class="arrow_down"></span></button>
-          <button id="move-photo-right"> <span class="arrow_right"></span></button>
-          <button id="move-photo-left"> <span class="arrow_left"></span></button>
-          <button id="zoom-photo-in">+</button>
-          <button id="zoom-photo-out">-</button>
-        </div>
-        <div class="control_panel d-flex justify-content-end">
-          <button id="zoom-in">Zoom In</button>
-          <button id="zoom-out">Zoom Out</button>
-          <button id="rotate-right">rotate Right</button>
-          <button id="rotate-left">rotate left</button>
-        </div>
-        <div class="row justify-content-between ">
-          <div class="canva-col col-sm">
-            <div class="canva-box">
-              <canvas class="myCanvas"></canvas>
-              <div class="border-box"></div>
-            </div>
+      <div class="control_panel d-flex justify-content-end align-items-center">
+        <button id="move-photo-up"> <span class="arrow_up"></span></button>
+        <button id="move-photo-down"> <span class="arrow_down"></span></button>
+        <button id="move-photo-right"> <span class="arrow_right"></span></button>
+        <button id="move-photo-left"> <span class="arrow_left"></span></button>
+        <button id="zoom-photo-in">+</button>
+        <button id="zoom-photo-out">-</button>
+      </div>
+      <div class="control_panel d-flex justify-content-end">
+        <button id="zoom-in">Zoom In</button>
+        <button id="zoom-out">Zoom Out</button>
+        <button id="rotate-right">rotate Right</button>
+        <button id="rotate-left">rotate left</button>
+      </div>
+      <div class="row justify-content-between ">
+        <div class="canva-col col-sm">
+          <div class="canva-box">
+            <canvas class="myCanvas"></canvas>
+            <div class="border-box"></div>
           </div>
-          <div class="img-col col-sm align-self-center">
-            <div id="preview">
-              <img src="" id="img" alt="">
-            </div>
+        </div>
+        <div class="img-col col-sm align-self-center">
+          <div id="preview">
+            <img src="" id="img" alt="">
           </div>
         </div>
       </div>
+    </div>
 
     <div id="mainWindow">
       <div class="row  justify-content-between flex-lg-nowrap">
@@ -294,7 +305,7 @@
               </div>
               <div>
                 <label for="imageInput"><strong>Image Input</strong></label><br />
-               <div class="img-upload"> <input type="file" id="imageInput" accept=".jpg, .jpeg, .png, .webp" /></div>
+                <div class="img-upload"> <input type="file" id="imageInput" accept=".jpg, .jpeg, .png, .webp" /></div>
                 <div id="image-viewer"></div>
               </div>
             </div>
@@ -328,7 +339,7 @@
               <div class="line-height">
                 <br />
                 <button type="button" id="decrease-line">-</button>
-                <span >Line Height</span>
+                <span>Line Height</span>
                 <button type="button" id="increase-line">+</button>
 
               </div>
@@ -387,68 +398,68 @@
   var ctx2 = seccanva.getContext('2d');
 
   //draw canvas according to screen size
-  if ( window.innerWidth >330 && window.innerWidth <= 500) {
+  if (window.innerWidth > 330 && window.innerWidth <= 500) {
     canvas.width = 330;
     canvas.height = 330;
     seccanva.width = 330;
     seccanva.height = 330;
-}else if(window.innerWidth <= 330){
-  canvas.width = 250;
-  canvas.height =250;
-  seccanva.width = 250;
-  seccanva.height =250;
-}else if(window.innerWidth > 500 && window.innerWidth <=776){
-  canvas.width = 450;
-  canvas.height =450;
-  seccanva.width = 450;
-  seccanva.height =450;
-}else {
-  canvas.width = 700;
-  canvas.height = 700;
-  seccanva.width = 700;
-  seccanva.height = 700;
-}
+  } else if (window.innerWidth <= 330) {
+    canvas.width = 250;
+    canvas.height = 250;
+    seccanva.width = 250;
+    seccanva.height = 250;
+  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+    canvas.width = 450;
+    canvas.height = 450;
+    seccanva.width = 450;
+    seccanva.height = 450;
+  } else {
+    canvas.width = 700;
+    canvas.height = 700;
+    seccanva.width = 700;
+    seccanva.height = 700;
+  }
 
 
-function handleResize() {
-  if (window.innerWidth >330 && window.innerWidth <= 500) {
-    canvas.width = 330;
-    canvas.height = 330;
-    seccanva.width = 330;
-    seccanva.height = 330;
-    renderText();
+  function handleResize() {
+    if (window.innerWidth > 330 && window.innerWidth <= 500) {
+      canvas.width = 330;
+      canvas.height = 330;
+      seccanva.width = 330;
+      seccanva.height = 330;
+      renderText();
 
-}else if(window.innerWidth <= 330){
-  canvas.width = 250;
-  canvas.height =250;
-  seccanva.width = 250;
-  seccanva.height =250;
+    } else if (window.innerWidth <= 330) {
+      canvas.width = 250;
+      canvas.height = 250;
+      seccanva.width = 250;
+      seccanva.height = 250;
 
-  renderText();
+      renderText();
 
-}else if(window.innerWidth > 500 && window.innerWidth <=776){
-  canvas.width = 450;
-  canvas.height =450;
-  seccanva.width = 450;
-  seccanva.height =450;
+    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+      canvas.width = 450;
+      canvas.height = 450;
+      seccanva.width = 450;
+      seccanva.height = 450;
 
-  renderText();
+      renderText();
 
 
-}else {
-  canvas.width = 700;
-  canvas.height = 700;
-  seccanva.width = 700;
-  seccanva.height = 700;
+    } else {
+      canvas.width = 700;
+      canvas.height = 700;
+      seccanva.width = 700;
+      seccanva.height = 700;
 
-  renderText();
+      renderText();
 
-}
-}
+    }
+  }
 
-window.addEventListener('resize', handleResize);
+  window.addEventListener('resize', handleResize);
 
-var backgroundImage = new Image();
+  var backgroundImage = new Image();
   backgroundImage.src = "../static/images/white-shirt.png";
   backgroundImage.onload = function () {
     renderText();
@@ -523,16 +534,16 @@ var backgroundImage = new Image();
   var shirtimg_x = 226;
   var shirtimg_y = 200;
   var shirtimg_w = 250;
-  let crossline=226 ;
-if ( window.innerWidth >330 && window.innerWidth <= 500) {
-  crossline=104;
-}else if(window.innerWidth <= 330){
-  crossline=100;
-}else if(window.innerWidth > 500 && window.innerWidth <=776){
-  crossline=141;
-}else{
-  crossline=226;
-}
+  let crossline = 226;
+  if (window.innerWidth > 330 && window.innerWidth <= 500) {
+    crossline = 104;
+  } else if (window.innerWidth <= 330) {
+    crossline = 100;
+  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+    crossline = 141;
+  } else {
+    crossline = 226;
+  }
   var cropper;
 
   function changePhotoSrc(event) {
@@ -552,16 +563,16 @@ if ( window.innerWidth >330 && window.innerWidth <= 500) {
           movable: true,
           ready: function () {
             var image = cropper.getCroppedCanvas() || cropper.getCanvasData();
-            console.log(window.innerWidth<331?143:150)
+            console.log(window.innerWidth < 331 ? 143 : 150)
             if (a3 == true) {
               shirtimg_x = 277;
               shirtimg_w = 150;
               crossline = crossline + 50;
-              ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
-              ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
+              ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+              ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
             } else {
-              ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
-              ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
+              ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+              ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
             }
           }
         })
@@ -593,14 +604,14 @@ if ( window.innerWidth >330 && window.innerWidth <= 500) {
 
   //handle text input, font size, text rotation, and text color
   let width = 250;
-  let height= 300;
+  let height = 300;
   let xline = 226;
   let yline = 200;
   let font = 16;
   let font_family = "Comic Sans MS, cursive";
   let rotationAngle = 0;
   let textColor = 'black';
-  let lineHeight=32;
+  let lineHeight = 32;
   var textareaValue = document.getElementById("text");
   var userInput = "";
 
@@ -614,7 +625,7 @@ if ( window.innerWidth >330 && window.innerWidth <= 500) {
 
   a4RadioButton.addEventListener('change', function () {
     a3 = false;
-    getvalues(); 
+    getvalues();
     if (a4RadioButton.checked) {
       for (let x = 0; x < borderBox.length; x++) {
         borderBox[x].style.width = `${shirtimg_w}px`;
@@ -661,11 +672,11 @@ if ( window.innerWidth >330 && window.innerWidth <= 500) {
     renderText();
   });
   document.getElementById('decrease-line').addEventListener('click', function () {
-    lineHeight=lineHeight-2;
+    lineHeight = lineHeight - 2;
     renderText();
   });
   document.getElementById('increase-line').addEventListener('click', function () {
-    lineHeight=lineHeight+2;
+    lineHeight = lineHeight + 2;
     renderText();
   });
 
@@ -676,7 +687,7 @@ if ( window.innerWidth >330 && window.innerWidth <= 500) {
 
   function renderbg(arg) {
 
-    arg==true?"": getvalues();
+    arg == true ? "" : getvalues();
 
     if (imageViewer.childElementCount != 0) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -684,11 +695,11 @@ if ( window.innerWidth >330 && window.innerWidth <= 500) {
       ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
       ctx2.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
- console.log(shirtimg_w,shirtimg_y,shirtimg_x)
+      console.log(shirtimg_w, shirtimg_y, shirtimg_x)
 
       var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
-      ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth<331?100:150);
-      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w,window.innerWidth<331?100:150);
+      ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
 
     } else {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -699,69 +710,69 @@ if ( window.innerWidth >330 && window.innerWidth <= 500) {
 
   }
 
-function getvalues(){
-if ( window.innerWidth >330 && window.innerWidth <= 500) {
-height=192;
-yline=100;
-shirtimg_y=100;
-if (a3==true){
-width=68;
-shirtimg_w=68;
-shirtimg_x=130;
-xline=130;
-}else{
-width=123;
-xline=104;
-shirtimg_w=123;
-shirtimg_x=104;
-}
+  function getvalues() {
+    if (window.innerWidth > 330 && window.innerWidth <= 500) {
+      height = 192;
+      yline = 100;
+      shirtimg_y = 100;
+      if (a3 == true) {
+        width = 68;
+        shirtimg_w = 68;
+        shirtimg_x = 130;
+        xline = 130;
+      } else {
+        width = 123;
+        xline = 104;
+        shirtimg_w = 123;
+        shirtimg_x = 104;
+      }
 
-}else if(window.innerWidth <= 330){
-height=143;
-yline=80;
-shirtimg_y=80;
-if (a3==true){
-width=64;
-xline=94;
-shirtimg_w=64;
-shirtimg_x=94;
-}else{
-width=123;
-xline=80;
-shirtimg_w=123;
-shirtimg_x=80;
-}
-}else if(window.innerWidth > 500 && window.innerWidth <=776){
-height=258;
-yline=130;
-shirtimg_y=130;
-if (a3==true){
-width=120;
-xline=163;
-shirtimg_w=120;
-shirtimg_x=163;
-}else{
-width=169;
-xline=141;  
-shirtimg_w=169;
-shirtimg_x=141;
-}
-}else{
-height= 300;
-yline = 200; 
-shirtimg_y = 200;
-if (a3==true){
-shirtimg_w=150;
-width=150;
-shirtimg_x=277;
-xline=277;
-}else{
-width = 250;
-shirtimg_w=250;
-shirtimg_x=226;
-xline=226;
-}
-}
+    } else if (window.innerWidth <= 330) {
+      height = 143;
+      yline = 80;
+      shirtimg_y = 80;
+      if (a3 == true) {
+        width = 64;
+        xline = 94;
+        shirtimg_w = 64;
+        shirtimg_x = 94;
+      } else {
+        width = 123;
+        xline = 80;
+        shirtimg_w = 123;
+        shirtimg_x = 80;
+      }
+    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+      height = 258;
+      yline = 130;
+      shirtimg_y = 130;
+      if (a3 == true) {
+        width = 120;
+        xline = 163;
+        shirtimg_w = 120;
+        shirtimg_x = 163;
+      } else {
+        width = 169;
+        xline = 141;
+        shirtimg_w = 169;
+        shirtimg_x = 141;
+      }
+    } else {
+      height = 300;
+      yline = 200;
+      shirtimg_y = 200;
+      if (a3 == true) {
+        shirtimg_w = 150;
+        width = 150;
+        shirtimg_x = 277;
+        xline = 277;
+      } else {
+        width = 250;
+        shirtimg_w = 250;
+        shirtimg_x = 226;
+        xline = 226;
+      }
+    }
   }
 
   function renderText(arg) {
@@ -850,65 +861,65 @@ xline=226;
 
   document.getElementById('move-photo-up').addEventListener('click', (event) => {
 
-if ( window.innerWidth >330 && window.innerWidth <= 500) {
-  shirtimg_y >= 100? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-}else if(window.innerWidth <= 330){
+    if (window.innerWidth > 330 && window.innerWidth <= 500) {
+      shirtimg_y >= 100 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+    } else if (window.innerWidth <= 330) {
 
-}else if(window.innerWidth > 500 && window.innerWidth <=776){
-  shirtimg_y >= 118 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-}else{
-  shirtimg_y >= 180 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-}
+    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+      shirtimg_y >= 118 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+    } else {
+      shirtimg_y >= 180 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+    }
     renderText(true);
 
   });
 
 
   document.getElementById('move-photo-down').addEventListener('click', (event) => {
-if ( window.innerWidth >330 && window.innerWidth <= 500) {
-  shirtimg_y <= 120 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-}else if(window.innerWidth <= 330){
+    if (window.innerWidth > 330 && window.innerWidth <= 500) {
+      shirtimg_y <= 120 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+    } else if (window.innerWidth <= 330) {
 
-}else if(window.innerWidth > 500 && window.innerWidth <=776){
-  shirtimg_y <= 218 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-}else{
-  shirtimg_y <= 320 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-}
+    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+      shirtimg_y <= 218 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+    } else {
+      shirtimg_y <= 320 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+    }
     renderText(true);
   });
 
   document.getElementById('move-photo-right').addEventListener('click', (event) => {
-shirtimg_x >= crossline ? shirtimg_x : shirtimg_x = shirtimg_x + 10;
+    shirtimg_x >= crossline ? shirtimg_x : shirtimg_x = shirtimg_x + 10;
     renderText(true);
 
   });
 
   document.getElementById('move-photo-left').addEventListener('click', (event) => {
-if ( window.innerWidth >330 && window.innerWidth <= 500) {
-  shirtimg_x > 104 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
-}else if(window.innerWidth <= 330){
+    if (window.innerWidth > 330 && window.innerWidth <= 500) {
+      shirtimg_x > 104 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+    } else if (window.innerWidth <= 330) {
 
-}else if(window.innerWidth > 500 && window.innerWidth <=776){
- shirtimg_x > 141 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
- console.log(shirtimg_x)
-}else{
-  a3 == false ? shirtimg_x > 226 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x : shirtimg_x > 277 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x
-}
+    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+      shirtimg_x > 141 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+      console.log(shirtimg_x)
+    } else {
+      a3 == false ? shirtimg_x > 226 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x : shirtimg_x > 277 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x
+    }
     // crossline=crossline+10;
     renderText(true);
 
   });
 
   document.getElementById('zoom-photo-in').addEventListener('click', (event) => {
-if ( window.innerWidth >330 && window.innerWidth <= 500) {
-  shirtimg_w >= 123 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 
-}else if(window.innerWidth <= 330){
+    if (window.innerWidth > 330 && window.innerWidth <= 500) {
+      shirtimg_w >= 123 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
+    } else if (window.innerWidth <= 330) {
 
-}else if(window.innerWidth > 500 && window.innerWidth <=776){
-  shirtimg_w >= 169 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 
-}else{
-  a3 == false ? shirtimg_w >= 250 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 : shirtimg_w >= 150 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
-}
+    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+      shirtimg_w >= 169 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
+    } else {
+      a3 == false ? shirtimg_w >= 250 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 : shirtimg_w >= 150 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
+    }
 
 
     renderText(true);
