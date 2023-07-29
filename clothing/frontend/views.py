@@ -475,11 +475,11 @@ def add_to_cart(request, product_id):
     elif request.method == 'PUT':
         data = json.loads(request.body)
         quantity = data.get('quantity', 1)
-        Product_detail = ProductSize.objects.filter(product=product)
-        product_detail2 = ProductColor.objects.filter(product=product)
-        color = product_detail2[0].color
-        size = Product_detail[0].size
-
+        Product_size = ProductSize.objects.filter(product=product)
+        Product_color = ProductColor.objects.filter(product=product)
+        color = data.get('color')
+        size = data.get('size')
+        print(color)
         # create or retrieve a Cart object for both authenticated and anonymous users
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
