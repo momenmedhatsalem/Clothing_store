@@ -19,7 +19,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 # User = get_user_model()
 
-
+from django.db.models import Q
 
 from django.forms import Form, CharField, EmailField, PasswordInput
 from django.contrib.auth.models import User
