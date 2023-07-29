@@ -3,7 +3,7 @@ from csv import DictReader
 from django.core.management import BaseCommand
 
 # Import the model 
-from frontend.models import Product, ProductColor, ProductImage, ProductSize
+from frontend.models import Product, ProductColor, ProductImage, ProductSize, ProductCategory, Category
 
 
 ALREDY_LOADED_ERROR_MESSAGE = """
@@ -28,8 +28,13 @@ class Command(BaseCommand):
                 existing_product.save()
             else:
                 # Product does not exist, create a new one
-                product = Product(product_name=row['product_name'], category=row['category'], label=row['label'], subcategory=['subcategory'], price=row['price'], discount_price=row['discount_price'], pub_date=row['pub_date'], path=row['path'])
+                categories = row['category'].split(';')
+                product = Product(product_name=row['product_name'], label=row['label'], subcategory=['subcategory'], price=row['price'], discount_price=row['discount_price'], pub_date=row['pub_date'], path=row['path'])
                 product.save()
+
+                for category_name in categories:
+                    category, _ = Category.objects.get_or_create(name=category_name)
+                    ProductCategory.objects.create(product=product, category=category)
 
                 # Get size data for this product from the file
                 sizes = row['sizes'].split(';')
@@ -67,7 +72,6 @@ class Command(BaseCommand):
                     # Image does not exist, create a new one
                     new_image = ProductImage(product=existing_product or product, path=image_path, color=image_color)
                     new_image.save()
-
 
 
 
