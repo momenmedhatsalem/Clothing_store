@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
         selectElement.addEventListener('change', (event) => {
         const quantity = event.target.value;
         const productId = event.target.dataset.productId;
+        const size = event.target.dataset.size;
+        const color = event.target.dataset.color;
         const data = {quantity: quantity};
         fetch(`/add_to_cart/${productId}`, {
             method: 'PUT',

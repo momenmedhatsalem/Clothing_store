@@ -24,7 +24,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'get_categories', 'price', 'discount_price')
     list_filter = ('category', 'label')
     search_fields = ('product_name',)
-
+    filter_horizontal = ('category',)
     def get_categories(self, obj):
         return ", ".join([category.name for category in obj.category.all()])
     get_categories.short_description = 'Categories'

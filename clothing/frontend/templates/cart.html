@@ -51,11 +51,7 @@ Cart
                     <td class="product__cart__item">
                       <a href="{{ item.product.get_absolute_url }}">
                       <div class="product__cart__item__pic">
-<<<<<<< HEAD
                         <img src="{% static item.product.path %}" width="50px" alt="">
-=======
-                        <img src="{{ item.product.image }}" width="50px" alt="">
->>>>>>> e90d82c5df08a373683b755b2771c763fed2abfe
                       </div>
                       <div class="product__cart__item__text">
                         <h6>{{ item.product.product_name }}</h6>
@@ -66,7 +62,7 @@ Cart
                     </td>
                     <td class="quantity__item">
                       <div class="">
-                        <select value="{{ item.quantity }}" class="quantity-select form-select me-4" data-product-id="{{ item.product.id }}" style="width: 80px; border-radius: 12px;">
+                        <select value="{{ item.quantity }}" data-size="{{ item.size }}" data-color="{{ item.color }}" class="quantity-select form-select me-4" data-product-id="{{ item.product.id }}" style="width: 80px; border-radius: 12px;">
                           {% for option in existing_options|dictsort:"value" %}
                           <option value="{{ option.value }}" {% if option.value == item.quantity %}selected{% endif %}>{{ option.label }}</option>
                           {% endfor %}

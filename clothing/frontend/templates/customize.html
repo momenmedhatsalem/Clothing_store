@@ -242,14 +242,13 @@
         <button id="move-photo-down"> <span class="arrow_down"></span></button>
         <button id="move-photo-right"> <span class="arrow_right"></span></button>
         <button id="move-photo-left"> <span class="arrow_left"></span></button>
-        <button id="zoom-photo-in">+</button>
-        <button id="zoom-photo-out">-</button>
+
       </div>
       <div class="control_panel d-flex justify-content-end">
         <button id="zoom-in">Zoom In</button>
         <button id="zoom-out">Zoom Out</button>
-        <button id="rotate-right">rotate Right</button>
-        <button id="rotate-left">rotate left</button>
+        <button id="rotate-right">Rotate Right</button>
+        <button id="rotate-left">Rotate Left</button>
       </div>
       <div class="row justify-content-between ">
         <div class="canva-col col-sm">
@@ -494,7 +493,7 @@
     }
   });
 
-  //1st view in field 
+  //1st view in field
   function handleImageUpload(event) {
     const file = event.target.files[0];
     if (file) {
@@ -556,26 +555,27 @@
         var imageUrl = e.target.result;
         document.getElementById('img').src = imageUrl;
 
-        cropper = new Cropper(document.getElementById('img'), {
-          aspectRatio: 16 / 9,
-          viewMode: 2,
-          zoomable: true,
-          movable: true,
-          ready: function () {
-            var image = cropper.getCroppedCanvas() || cropper.getCanvasData();
-            console.log(window.innerWidth < 331 ? 143 : 150)
-            if (a3 == true) {
-              shirtimg_x = 277;
-              shirtimg_w = 150;
-              crossline = crossline + 50;
-              ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
-              ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
-            } else {
-              ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
-              ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
-            }
-          }
-        })
+cropper = new Cropper(document.getElementById('img'), {
+  aspectRatio: 210 / 297, // A4 aspect ratio
+  viewMode: 2,
+  zoomable: true,
+  movable: true,
+  ready: function () {
+    var image = cropper.getCroppedCanvas() || cropper.getCanvasData();
+    console.log(window.innerWidth < 331 ? 143 : 150)
+    if (a3 == true) {
+      shirtimg_x = 277;
+      shirtimg_w = 150;
+      crossline = crossline + 50;
+      ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+      ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+    } else {
+      ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+      ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+    }
+  }
+})
+
 
 
 
@@ -860,55 +860,62 @@
 
 
   document.getElementById('move-photo-up').addEventListener('click', (event) => {
-
-    if (window.innerWidth > 330 && window.innerWidth <= 500) {
-      shirtimg_y >= 100 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-    } else if (window.innerWidth <= 330) {
-
-    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-      shirtimg_y >= 118 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-    } else {
-      shirtimg_y >= 180 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-    }
-    renderText(true);
-
-  });
+  if (window.innerWidth > 330 && window.innerWidth <= 500) {
+    shirtimg_y >= 10 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+  } else if (window.innerWidth <= 330) {
+    shirtimg_y >= 10 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+    shirtimg_y >= 10 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+  } else {
+    shirtimg_y >= 10 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
+  }
+  renderText(true);
+});
 
 
-  document.getElementById('move-photo-down').addEventListener('click', (event) => {
-    if (window.innerWidth > 330 && window.innerWidth <= 500) {
-      shirtimg_y <= 120 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-    } else if (window.innerWidth <= 330) {
-
-    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-      shirtimg_y <= 218 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-    } else {
-      shirtimg_y <= 320 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-    }
-    renderText(true);
+document.getElementById('move-photo-down').addEventListener('click', (event) => {
+  if (window.innerWidth > 330 && window.innerWidth <= 500) {
+    shirtimg_y <= 182 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+  } else if (window.innerWidth <= 330) {
+    shirtimg_y <= 133 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+    shirtimg_y <= 248 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+  } else {
+    shirtimg_y <= 287 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
+  }
+  
+  renderText(true);
   });
 
   document.getElementById('move-photo-right').addEventListener('click', (event) => {
-    shirtimg_x >= crossline ? shirtimg_x : shirtimg_x = shirtimg_x + 10;
-    renderText(true);
+  if (window.innerWidth > 330 && window.innerWidth <= 500) {
+    shirtimg_x <= 217 ? shirtimg_x = shirtimg_x + 10 : shirtimg_x;
+  } else if (window.innerWidth <= 330) {
+    shirtimg_x <= 161 ? shirtimg_x = shirtimg_x + 10 : shirtimg_x;
+  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+    shirtimg_x <= 300 ? shirtimg_x = shirtimg_x + 10 : shirtimg_x;
+  } else {
+    shirtimg_x <= 200 ? shirtimg_x = shirtimg_x + 10 : shirtimg_x;
+  }
+  renderText(true);
+});
 
-  });
 
-  document.getElementById('move-photo-left').addEventListener('click', (event) => {
-    if (window.innerWidth > 330 && window.innerWidth <= 500) {
-      shirtimg_x > 104 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
-    } else if (window.innerWidth <= 330) {
-
-    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-      shirtimg_x > 141 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
-      console.log(shirtimg_x)
-    } else {
-      a3 == false ? shirtimg_x > 226 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x : shirtimg_x > 277 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x
+document.getElementById('move-photo-left').addEventListener('click', (event) => {
+  if (window.innerWidth > 330 && window.innerWidth <= 500) {
+    shirtimg_x >= 114 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+  } else if (window.innerWidth <= 330) {
+    shirtimg_x >= 90 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
+    shirtimg_x >= 151 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
+    console.log(shirtimg_x)
+  } else {
+    a3 == false ? (shirtimg_x >=236 ? shirtimg_x = shirtimg_x -10 :shirtimg_x) : (shirtimg_x >=287 ?shirtimg_x =shirtimg_x -10:shirtimg_x)
     }
-    // crossline=crossline+10;
     renderText(true);
+});
 
-  });
+
 
   document.getElementById('zoom-photo-in').addEventListener('click', (event) => {
     if (window.innerWidth > 330 && window.innerWidth <= 500) {

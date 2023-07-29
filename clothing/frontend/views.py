@@ -6,7 +6,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.urls import reverse
-from frontend.models import Product, ProductImage, ProductSize, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
+from frontend.models import Product, ProductImage, ProductSize, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem, ProductColor
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -498,9 +498,10 @@ def add_to_cart(request, product_id):
     elif request.method == 'PUT':
         data = json.loads(request.body)
         quantity = data.get('quantity', 1)
-        Product_detail = ProductSize.objects.filter(product=product)
-        color = Product_detail[0].color
-        size = Product_detail[0].size
+        Product_color = ProductColor.objects.filter(product=product)
+        Product_size = ProductSize.objects.filter(product=product)
+        color = data.get('color', Product_color[0].color)
+        size = data.get('size', Product_size[0].size)
 
 
         print(color)
