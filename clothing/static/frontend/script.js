@@ -12,9 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectElements = document.querySelectorAll('.quantity-select');
     selectElements.forEach(selectElement => {
         selectElement.addEventListener('change', (event) => {
+            event.preventDefault(); 
         const quantity = event.target.value;
         const productId = event.target.dataset.productId;
-        const data = {quantity: quantity};
+        const size = event.target.dataset.size;
+        const color = event.target.dataset.color;
+        const data = {quantity: quantity, size: size, color: color};
         fetch(`/add_to_cart/${productId}`, {
             method: 'PUT',
             headers: {
@@ -28,7 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Success:', data);
             // update the cart total or display a message here
             console.log(data);
-            var total_price = document.getElementById(`total_price_${productId}`);
+            console.log(color);
+            console.log(size);
+            console.log(`total_price_${productId}_${size}_${color}`);
+            var total_price = document.getElementById(`total_price_${productId}_${size}_${color}`);
             total_price.innerHTML = `EGP ${data.total}`;
             var cart_total = document.getElementById('cart_total');
             cart_total.innerHTML = `EGP ${data.cart_total_before_discount}`;
