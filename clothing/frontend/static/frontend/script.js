@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectElements = document.querySelectorAll('.quantity-select');
     selectElements.forEach(selectElement => {
         selectElement.addEventListener('change', (event) => {
+            event.preventDefault(); 
         const quantity = event.target.value;
         const productId = event.target.dataset.productId;
         const size = event.target.dataset.size;
