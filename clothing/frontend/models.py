@@ -35,7 +35,7 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True, auto_created=True)
 
     product_name = models.CharField(max_length=50)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    category = models.ManyToManyField('Category', through='ProductCategory')
     label = models.CharField(choices=LABEL_CHOICES, max_length=11, default="")
     subcategory = models.CharField(choices= SUB_CATEGORY_CHOICES ,max_length=50, default="")
     price = models.FloatField(default=0)
@@ -48,6 +48,12 @@ class Product(models.Model):
     def get_absolute_url(self):
         return f"/product_detail/{self.id}/"
 
+class Category(models.Model):
+    name = models.CharField(choices=Product.CATEGORY_CHOICES, max_length=2)
+
+class ProductCategory(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=rename_image, default="", blank=True, null=True)
