@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Success:', data);
             // update the cart total or display a message here
             console.log(data);
+            console.log(color);
+            console.log(size);
+            console.log(`total_price_${productId}_${size}_${color}`);
             var total_price = document.getElementById(`total_price_${productId}_${size}_${color}`);
             total_price.innerHTML = `EGP ${data.total}`;
             var cart_total = document.getElementById('cart_total');
