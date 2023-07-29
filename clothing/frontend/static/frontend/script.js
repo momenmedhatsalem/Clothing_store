@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Success:', data);
             // update the cart total or display a message here
             console.log(data);
-            var total_price = document.getElementById(`total_price_${productId}`);
+            var total_price = document.getElementById(`total_price_${productId}_${size}_${color}`);
             total_price.innerHTML = `EGP ${data.total}`;
             var cart_total = document.getElementById('cart_total');
             cart_total.innerHTML = `EGP ${data.cart_total_before_discount}`;

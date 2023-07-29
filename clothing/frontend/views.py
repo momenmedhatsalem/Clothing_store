@@ -477,8 +477,8 @@ def add_to_cart(request, product_id):
         quantity = data.get('quantity', 1)
         Product_size = ProductSize.objects.filter(product=product)
         Product_color = ProductColor.objects.filter(product=product)
-        color = data.get('color')
-        size = data.get('size')
+        color = data.get('color', Product_color[0].color)
+        size = data.get('size', Product_size[0].size)
         print(color)
         # create or retrieve a Cart object for both authenticated and anonymous users
         if request.user.is_authenticated:

@@ -61,14 +61,14 @@ Cart
                     </td>
                     <td class="quantity__item">
                       <div class="">
-                        <select value="{{ item.quantity }}" class="quantity-select form-select me-4" data-product-id="{{ item.product.id }}" style="width: 80px; border-radius: 12px;">
+                        <select value="{{ item.quantity }}" class="quantity-select form-select me-4" data-product-id="{{ item.product.id }}" data-size="{{ item.size }}" data-color="{{ item.color }}" style="width: 80px; border-radius: 12px;">
                           {% for option in existing_options|dictsort:"value" %}
                           <option value="{{ option.value }}" {% if option.value == item.quantity %}selected{% endif %}>{{ option.label }}</option>
                           {% endfor %}
                       </select>
                       </div>
                     </td>
-                    <td class="cart__price"><text id="total_price_{{ item.product.id }}" class="h6">EGP {{ item.total }}</text> <br />
+                    <td class="cart__price"><text id="total_price_{{ item.product.id }}_{{ item.size }}_{{ item.color }}" class="h6">EGP {{ item.total }}</text> <br />
                     </td>
                     <td>
                       <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
