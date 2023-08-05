@@ -562,16 +562,17 @@ cropper = new Cropper(document.getElementById('img'), {
   movable: true,
   ready: function () {
     var image = cropper.getCroppedCanvas() || cropper.getCanvasData();
-    console.log(window.innerWidth < 331 ? 143 : 150)
+    var cropData = cropper.getCropBoxData();
+
     if (a3 == true) {
       shirtimg_x = 277;
       shirtimg_w = 150;
       crossline = crossline + 50;
-      ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
-      ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+      ctx.drawImage(image, shirtimg_x, shirtimg_y, cropData.width,cropData.height);
+      ctx2.drawImage(image, shirtimg_x, shirtimg_y, cropData.width, image.height);
     } else {
-      ctx.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
-      ctx2.drawImage(image, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+      ctx.drawImage(image, shirtimg_x, shirtimg_y,cropData.width,cropData.height);
+      ctx2.drawImage(image, shirtimg_x, shirtimg_y, cropData.width, cropData.height);
     }
   }
 })
@@ -698,8 +699,9 @@ cropper = new Cropper(document.getElementById('img'), {
       console.log(shirtimg_w, shirtimg_y, shirtimg_x)
 
       var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
-      ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
-      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w, window.innerWidth < 331 ? 100 : 150);
+      getvalues();
+      ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w, shirtimg_y);
+      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w,shirtimg_y);
 
     } else {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -711,64 +713,65 @@ cropper = new Cropper(document.getElementById('img'), {
   }
 
   function getvalues() {
+    let cropData=cropper?cropper.getCropBoxData():"";
     if (window.innerWidth > 330 && window.innerWidth <= 500) {
       height = 192;
       yline = 100;
-      shirtimg_y = 100;
+      shirtimg_y = cropData.height && cropData.height <= height ? cropData.height : height;
       if (a3 == true) {
         width = 68;
-        shirtimg_w = 68;
+        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
         shirtimg_x = 130;
         xline = 130;
       } else {
         width = 123;
         xline = 104;
-        shirtimg_w = 123;
+        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
         shirtimg_x = 104;
       }
 
     } else if (window.innerWidth <= 330) {
       height = 143;
       yline = 80;
-      shirtimg_y = 80;
+      shirtimg_y = cropData.height && cropData.height <= height ? cropData.height : height;
       if (a3 == true) {
         width = 64;
         xline = 94;
-        shirtimg_w = 64;
+        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
         shirtimg_x = 94;
       } else {
         width = 123;
         xline = 80;
-        shirtimg_w = 123;
+        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
         shirtimg_x = 80;
       }
     } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
       height = 258;
       yline = 130;
-      shirtimg_y = 130;
+      shirtimg_y = cropData.height && cropData.height <= height ? cropData.height : height;
       if (a3 == true) {
         width = 120;
         xline = 163;
-        shirtimg_w = 120;
+        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
         shirtimg_x = 163;
       } else {
         width = 169;
         xline = 141;
-        shirtimg_w = 169;
+        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
         shirtimg_x = 141;
       }
     } else {
       height = 300;
       yline = 200;
-      shirtimg_y = 200;
+      shirtimg_y = cropData.height && cropData.height <= height ? cropData.height : height;
       if (a3 == true) {
-        shirtimg_w = 150;
         width = 150;
+        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
         shirtimg_x = 277;
         xline = 277;
       } else {
         width = 250;
-        shirtimg_w = 250;
+        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
         shirtimg_x = 226;
         xline = 226;
       }
