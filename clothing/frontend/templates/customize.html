@@ -504,6 +504,7 @@
         const imageElement = document.createElement('img');
         imageElement.src = imageSrc;
         imageElement.style.maxHeight = '70px';
+        imageElement.style.minWidth = '80px';
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('delete-button');
         deleteButton.textContent = 'Delete';
@@ -682,14 +683,16 @@ cropper = new Cropper(document.getElementById('img'), {
       ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
       ctx2.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-
-      var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
+      if(cropper!=undefined ){
+        var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
       var cropData = cropper.getCropBoxData();
       shirtimg_w=cropData.width;
       shirtimg_h=cropData.height;
 
       ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, cropData.width>BorderboxValues.w?BorderboxValues.w:cropData.width, cropData.height>BorderboxValues.h?BorderboxValues.h:cropData.height);
-      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, cropData.width>BorderboxValues.w?BorderboxValues.w:cropData.width, cropData.height>BorderboxValues.h?BorderboxValues.h:cropData.height);
+      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, cropData.width>BorderboxValues.w?BorderboxValues.w:cropData.width, cropData.height>BorderboxValues.h?BorderboxValues.h:cropData.height); 
+      }
+      
 
 
   }
@@ -761,6 +764,35 @@ cropper = new Cropper(document.getElementById('img'), {
     cropper.zoom(-0.1); // Zoom out by 10%
     renderText(true);
   });
+
+  function handleTouchStart(event) {
+  if (event.touches.length >= 2) {
+    const touch1 = event.touches[0];
+    const touch2 = event.touches[1];
+    initialDistance = getDistance(touch1, touch2);
+    initialScale = cropper.getScale();
+  }
+}
+
+function handleTouchMove(event) {
+  if (event.touches.length >= 2 && initialDistance !== null) {
+    const touch1 = event.touches[0];
+    const touch2 = event.touches[1];
+    const newDistance = getDistance(touch1, touch2);
+    const scale = (initialScale * newDistance) / initialDistance;
+    cropper.zoomTo(scale);
+  }
+  renderText()
+}
+
+function getDistance(touch1, touch2) {
+  const dx = touch1.clientX - touch2.clientX;
+  const dy = touch1.clientY - touch2.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+  renderText()
+}
+image.addEventListener('touchstart', handleTouchStart, { passive: false });
+image.addEventListener('touchmove', handleTouchMove, { passive: false });
 
   document.getElementById('rotate-right').addEventListener('click', function () {
     cropper.rotate(90);
