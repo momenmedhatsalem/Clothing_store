@@ -84,38 +84,30 @@
 
     .border-box {
       position: absolute;
-      left: 226px;
+      left: 31%;
       background-color: transparent;
-      width: 250px;
+      width: 38%;
       top: 25%;
-      height: 300px;
+      height: 53.1%;
       border: 1px dotted black;
       overflow: hidden;
     }
 
-    @media screen and (min-width: 331px) and (max-width: 500px) {
-      .border-box {
-        left: 104px;
-        width: 123px;
-        height: 192px;
+    @media(max-width: 500px) {
+      .cropper-container{
+      max-width: 250px !important;
+      text-align: center;
+     margin:  0 auto 0 auto;
+      }
+      .cropper-crop-box{
+        max-width: 200px !important;
+       transform:  translateX(14%) translateY(43.3231px);
+      }
+      #preview{
+        width: 100% !important;
       }
     }
 
-    @media screen and (max-width: 330px) {
-      .border-box {
-        left: 80px;
-        width: 91px;
-        height: 143px;
-      }
-    }
-
-    @media screen and (min-width: 501px) and (max-width: 776px) {
-      .border-box {
-        left: 141px;
-        width: 169px;
-        height: 258px;
-      }
-    }
 
     @media (min-width: 992px) {
       .flex-lg-nowrap {
@@ -182,6 +174,10 @@
       padding: 4px;
       cursor: pointer;
     }
+    #closeWindow svg{
+      transform: rotate(180deg);
+      width: 31px;
+    }
 
     .submit,
     .radio,
@@ -229,6 +225,9 @@
       padding-top: 3px;
       padding-bottom: 0px;
     }
+    .control_panel{
+      margin: 20px;
+    }
   </style>
 </head>
 
@@ -236,20 +235,8 @@
   <div class="container position-relative">
 
     <div class="img-window " id="editingWindow">
-      <div id="closeWindow">x</div>
-      <div class="control_panel d-flex justify-content-end align-items-center">
-        <button id="move-photo-up"> <span class="arrow_up"></span></button>
-        <button id="move-photo-down"> <span class="arrow_down"></span></button>
-        <button id="move-photo-right"> <span class="arrow_right"></span></button>
-        <button id="move-photo-left"> <span class="arrow_left"></span></button>
-
-      </div>
-      <div class="control_panel d-flex justify-content-end">
-        <button id="zoom-in">Zoom In</button>
-        <button id="zoom-out">Zoom Out</button>
-        <button id="rotate-right">Rotate Right</button>
-        <button id="rotate-left">Rotate Left</button>
-      </div>
+      <div id="closeWindow">        <svg fill="none" height="1em" viewBox="0 0 36 29" width="1em" xmlns="http://www.w3.org/2000/svg"><path clipRule="evenodd" d="M0.682617 13.542L0.682617 15.233L31.9476 15.233C31.658 15.3319 31.3713 15.4405 31.0881 15.5588C29.4139 16.2585 27.8926 17.284 26.6112 18.5768C25.3298 19.8695 24.3133 21.4043 23.6198 23.0934C22.9263 24.7825 22.5693 26.5929 22.5693 28.4211L24.3078 28.4211C24.3078 26.8232 24.6198 25.2409 25.2259 23.7646C25.832 22.2883 26.7205 20.9469 27.8405 19.8169C28.9605 18.687 30.2901 17.7907 31.7534 17.1792C33.2168 16.5677 34.7852 16.2529 36.3691 16.2529L36.3691 14.4998L36.3691 14.4991L36.3691 12.746C34.7852 12.746 33.2168 12.4312 31.7534 11.8197C30.2901 11.2082 28.9605 10.3119 27.8405 9.18198C26.7205 8.05206 25.832 6.71064 25.2259 5.23433C24.6198 3.75802 24.3078 2.17572 24.3078 0.577767L22.5693 0.577767C22.5693 2.40604 22.9263 4.21641 23.6198 5.90551C24.3133 7.59461 25.3298 9.12937 26.6112 10.4222C27.8926 11.7149 29.4139 12.7404 31.0881 13.4401C31.1715 13.4749 31.2551 13.5089 31.3389 13.542L0.682617 13.542ZM36.2266 14.4991L36.2266 14.4998C36.2403 14.4997 36.254 14.4996 36.2677 14.4995C36.254 14.4994 36.2403 14.4992 36.2266 14.4991Z" fill="currentColor" fillRule="evenodd"></path></svg>  
+     </div>
       <div class="row justify-content-between ">
         <div class="canva-col col-sm">
           <div class="canva-box">
@@ -258,6 +245,24 @@
           </div>
         </div>
         <div class="img-col col-sm align-self-center">
+          <div class="radio">
+            <input type="radio" id="a3" name="size" value="a3" checked />
+            <label for="a3" style="padding-right: 57px;">A3</label>
+            <input type="radio" id="a4" name="size" value="a4" />
+            <label for="a4">A4</label>
+            <div class="control_panel">
+              <button id="move-photo-up"> <span class="arrow_up"></span></button>
+              <button id="move-photo-down"> <span class="arrow_down"></span></button>
+              <button id="move-photo-right"> <span class="arrow_right"></span></button>
+              <button id="move-photo-left"> <span class="arrow_left"></span></button>
+            </div>
+        </div>
+        <div class="control_panel d-flex justify-content-center">
+          <button id="zoom-in">Zoom In</button>
+          <button id="zoom-out">Zoom Out</button>
+          <button id="rotate-right">Rotate Right</button>
+          <button id="rotate-left">Rotate Left</button>
+        </div>
           <div id="preview">
             <img src="" id="img" alt="">
           </div>
@@ -295,18 +300,11 @@
               <div class="color-option" style="background-color: navy"></div>
               <div class="color-option" style="background-color: purple"></div>
             </div>
-            <div class="radio">
-              <div>
-                <input type="radio" id="a4" name="size" value="a4" checked />
-                <label for="a4" style="padding-right: 57px;">A4</label>
-                <input type="radio" id="a3" name="size" value="a3" />
-                <label for="a3">A3</label>
-              </div>
-              <div>
-                <label for="imageInput"><strong>Image Input</strong></label><br />
-                <div class="img-upload"> <input type="file" id="imageInput" accept=".jpg, .jpeg, .png, .webp" /></div>
-                <div id="image-viewer"></div>
-              </div>
+
+            <div class="text-center">
+              <label for="imageInput"><strong>Image Input</strong></label><br />
+              <div class="img-upload"> <input type="file" id="imageInput" accept=".jpg, .jpeg, .png, .webp" /></div>
+              <div id="image-viewer"></div>
             </div>
 
             <div>
@@ -527,22 +525,29 @@
   }
 
   //2nd put the photo on croping section and to the canva
-  let a3 = false;
+  let a3 = true;
   const a4RadioButton = document.getElementById('a4');
   const a3RadioButton = document.getElementById('a3');
-  var shirtimg_x = 226;
-  var shirtimg_y = 200;
-  var shirtimg_w = 250;
-  let crossline = 226;
-  if (window.innerWidth > 330 && window.innerWidth <= 500) {
-    crossline = 104;
-  } else if (window.innerWidth <= 330) {
-    crossline = 100;
-  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-    crossline = 141;
-  } else {
-    crossline = 226;
+
+  const imageWidthPercentage = 38;
+  const imageHeightPercentage = 55;
+  const shirtimg_xPercentage = 31;
+  const shirtimg_yPercentage = 25;
+
+  const BorderboxValues={
+     w:(imageWidthPercentage / 100) * canvas.width  ,
+     h:(imageHeightPercentage / 100) * canvas.height,
+    _x:(shirtimg_xPercentage / 100) * canvas.width  ,
+    _y:(shirtimg_yPercentage / 100) * canvas.height ,
+
   }
+  var shirtimg_w = (imageWidthPercentage / 100) * canvas.width;
+  var shirtimg_h = (imageHeightPercentage / 100) * canvas.height;
+  var shirtimg_x = (shirtimg_xPercentage / 100) * canvas.width;
+  var shirtimg_y = (shirtimg_yPercentage / 100) * canvas.height;
+  var cross_x=BorderboxValues._x+BorderboxValues.w;
+  var cross_y=BorderboxValues._y+BorderboxValues.h;
+
   var cropper;
 
   function changePhotoSrc(event) {
@@ -554,33 +559,25 @@
       reader.onload = function (e) {
         var imageUrl = e.target.result;
         document.getElementById('img').src = imageUrl;
-
-cropper = new Cropper(document.getElementById('img'), {
+  a3==true?
+  cropper = new Cropper(document.getElementById('img'), {  
+  aspectRatio: 420 / 297, // A3 aspect ratio
+  viewMode: 2,
+  zoomable: true,
+  movable: true,
+  ready: function () {
+    renderText()  
+  }
+}):
+cropper = new Cropper(document.getElementById('img'), {  
   aspectRatio: 210 / 297, // A4 aspect ratio
   viewMode: 2,
   zoomable: true,
   movable: true,
   ready: function () {
-    var image = cropper.getCroppedCanvas() || cropper.getCanvasData();
-    var cropData = cropper.getCropBoxData();
-
-    if (a3 == true) {
-      shirtimg_x = 277;
-      shirtimg_w = 150;
-      crossline = crossline + 50;
-      ctx.drawImage(image, shirtimg_x, shirtimg_y, cropData.width,cropData.height);
-      ctx2.drawImage(image, shirtimg_x, shirtimg_y, cropData.width, image.height);
-    } else {
-      ctx.drawImage(image, shirtimg_x, shirtimg_y,cropData.width,cropData.height);
-      ctx2.drawImage(image, shirtimg_x, shirtimg_y, cropData.width, cropData.height);
-    }
-  }
-})
-
-
-
-
-      };
+    renderText()
+  }})
+};
       reader.onerror = function (error) {
         reject(error);
       };
@@ -589,6 +586,7 @@ cropper = new Cropper(document.getElementById('img'), {
       reject(new Error("No file selected."));
     }
   }
+
   //3rd display the image editing window
   function displayWindow() {
     editingWindow.style.display = "block";
@@ -604,10 +602,10 @@ cropper = new Cropper(document.getElementById('img'), {
 
 
   //handle text input, font size, text rotation, and text color
-  let width = 250;
-  let height = 300;
-  let xline = 226;
-  let yline = 200;
+  let width = BorderboxValues.w;
+  let height = BorderboxValues.h;
+  let xline = BorderboxValues._x;
+  let yline = BorderboxValues._y + 20;
   let font = 16;
   let font_family = "Comic Sans MS, cursive";
   let rotationAngle = 0;
@@ -624,28 +622,18 @@ cropper = new Cropper(document.getElementById('img'), {
 
   const borderBox = document.querySelectorAll('.border-box');
 
-  a4RadioButton.addEventListener('change', function () {
-    a3 = false;
-    getvalues();
-    if (a4RadioButton.checked) {
-      for (let x = 0; x < borderBox.length; x++) {
-        borderBox[x].style.width = `${shirtimg_w}px`;
-        borderBox[x].style.left = `${shirtimg_x}px`;
-      }
-      renderText();
-    }
-  });
-
   a3RadioButton.addEventListener('change', function () {
     a3 = true;
-    getvalues();
-    if (a3RadioButton.checked) {
-      for (let x = 0; x < borderBox.length; x++) {
-        borderBox[x].style.width = `${shirtimg_w}px`;
-        borderBox[x].style.left = `${shirtimg_x}px`;
-      }
-      renderText();
-    }
+    const newAspectRatio = 420 / 297; // A3 aspect ratio
+    cropper.setAspectRatio(newAspectRatio);
+    renderText();
+  });
+
+  a4RadioButton.addEventListener('change', function () {
+    a3 = false;
+    const newAspectRatio = 210 / 297; // A4 aspect ratio
+    cropper.setAspectRatio(newAspectRatio);
+    renderText();
   });
 
   function updateFontFamily() {
@@ -688,94 +676,22 @@ cropper = new Cropper(document.getElementById('img'), {
 
   function renderbg(arg) {
 
-    arg == true ? "" : getvalues();
 
-    if (imageViewer.childElementCount != 0) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx2.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
       ctx2.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
-      console.log(shirtimg_w, shirtimg_y, shirtimg_x)
 
       var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
-      getvalues();
-      ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w, shirtimg_y);
-      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, shirtimg_w,shirtimg_y);
+      var cropData = cropper.getCropBoxData();
+      shirtimg_w=cropData.width;
+      shirtimg_h=cropData.height;
 
-    } else {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx2.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-      ctx2.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-    }
+      ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, cropData.width>BorderboxValues.w?BorderboxValues.w:cropData.width, cropData.height>BorderboxValues.h?BorderboxValues.h:cropData.height);
+      ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, cropData.width>BorderboxValues.w?BorderboxValues.w:cropData.width, cropData.height>BorderboxValues.h?BorderboxValues.h:cropData.height);
 
-  }
 
-  function getvalues() {
-    let cropData=cropper?cropper.getCropBoxData():"";
-    if (window.innerWidth > 330 && window.innerWidth <= 500) {
-      height = 192;
-      yline = 100;
-      shirtimg_y = cropData.height && cropData.height <= height ? cropData.height : height;
-      if (a3 == true) {
-        width = 68;
-        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
-        shirtimg_x = 130;
-        xline = 130;
-      } else {
-        width = 123;
-        xline = 104;
-        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
-        shirtimg_x = 104;
-      }
-
-    } else if (window.innerWidth <= 330) {
-      height = 143;
-      yline = 80;
-      shirtimg_y = cropData.height && cropData.height <= height ? cropData.height : height;
-      if (a3 == true) {
-        width = 64;
-        xline = 94;
-        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
-        shirtimg_x = 94;
-      } else {
-        width = 123;
-        xline = 80;
-        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
-        shirtimg_x = 80;
-      }
-    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-      height = 258;
-      yline = 130;
-      shirtimg_y = cropData.height && cropData.height <= height ? cropData.height : height;
-      if (a3 == true) {
-        width = 120;
-        xline = 163;
-        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
-        shirtimg_x = 163;
-      } else {
-        width = 169;
-        xline = 141;
-        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
-        shirtimg_x = 141;
-      }
-    } else {
-      height = 300;
-      yline = 200;
-      shirtimg_y = cropData.height && cropData.height <= height ? cropData.height : height;
-      if (a3 == true) {
-        width = 150;
-        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
-        shirtimg_x = 277;
-        xline = 277;
-      } else {
-        width = 250;
-        shirtimg_w = cropData.width && cropData.width <= width ? cropData.width : width;
-        shirtimg_x = 226;
-        xline = 226;
-      }
-    }
   }
 
   function renderText(arg) {
@@ -861,88 +777,27 @@ cropper = new Cropper(document.getElementById('img'), {
 
   });
 
-
   document.getElementById('move-photo-up').addEventListener('click', (event) => {
-  if (window.innerWidth > 330 && window.innerWidth <= 500) {
-    shirtimg_y >= 10 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-  } else if (window.innerWidth <= 330) {
-    shirtimg_y >= 10 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-    shirtimg_y >= 10 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-  } else {
-    shirtimg_y >= 10 ? shirtimg_y = shirtimg_y - 10 : shirtimg_y;
-  }
+  shirtimg_y<=BorderboxValues._y?shirtimg_y:shirtimg_y=shirtimg_y-10;
   renderText(true);
 });
 
 
 document.getElementById('move-photo-down').addEventListener('click', (event) => {
-  if (window.innerWidth > 330 && window.innerWidth <= 500) {
-    shirtimg_y <= 182 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-  } else if (window.innerWidth <= 330) {
-    shirtimg_y <= 133 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-    shirtimg_y <= 248 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-  } else {
-    shirtimg_y <= 287 ? shirtimg_y = shirtimg_y + 10 : shirtimg_y;
-  }
-  
+  shirtimg_y+shirtimg_h>=cross_y?shirtimg_y:  shirtimg_y=shirtimg_y+10;
   renderText(true);
   });
 
   document.getElementById('move-photo-right').addEventListener('click', (event) => {
-  if (window.innerWidth > 330 && window.innerWidth <= 500) {
-    shirtimg_x <= 217 ? shirtimg_x = shirtimg_x + 10 : shirtimg_x;
-  } else if (window.innerWidth <= 330) {
-    shirtimg_x <= 161 ? shirtimg_x = shirtimg_x + 10 : shirtimg_x;
-  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-    shirtimg_x <= 300 ? shirtimg_x = shirtimg_x + 10 : shirtimg_x;
-  } else {
-    shirtimg_x <= 200 ? shirtimg_x = shirtimg_x + 10 : shirtimg_x;
-  }
+  shirtimg_x+shirtimg_w>=cross_x?shirtimg_x:  shirtimg_x=shirtimg_x+10;
   renderText(true);
 });
 
 
 document.getElementById('move-photo-left').addEventListener('click', (event) => {
-  if (window.innerWidth > 330 && window.innerWidth <= 500) {
-    shirtimg_x >= 114 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
-  } else if (window.innerWidth <= 330) {
-    shirtimg_x >= 90 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
-  } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-    shirtimg_x >= 151 ? shirtimg_x = shirtimg_x - 10 : shirtimg_x;
-    console.log(shirtimg_x)
-  } else {
-    a3 == false ? (shirtimg_x >=236 ? shirtimg_x = shirtimg_x -10 :shirtimg_x) : (shirtimg_x >=287 ?shirtimg_x =shirtimg_x -10:shirtimg_x)
-    }
+  shirtimg_x<=BorderboxValues._x?shirtimg_x:shirtimg_x=shirtimg_x-10;
     renderText(true);
 });
-
-
-
-  document.getElementById('zoom-photo-in').addEventListener('click', (event) => {
-    if (window.innerWidth > 330 && window.innerWidth <= 500) {
-      shirtimg_w >= 123 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
-    } else if (window.innerWidth <= 330) {
-
-    } else if (window.innerWidth > 500 && window.innerWidth <= 776) {
-      shirtimg_w >= 169 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
-    } else {
-      a3 == false ? shirtimg_w >= 250 ? shirtimg_w : shirtimg_w = shirtimg_w + 10 : shirtimg_w >= 150 ? shirtimg_w : shirtimg_w = shirtimg_w + 10
-    }
-
-
-    renderText(true);
-
-  });
-  document.getElementById('zoom-photo-out').addEventListener('click', (event) => {
-    var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
-    crossline = crossline + 10;
-    shirtimg_w = shirtimg_w - 10;
-
-    renderText(true);
-
-  });
 
 
   // select size
