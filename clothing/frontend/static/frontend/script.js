@@ -77,31 +77,25 @@ function addToCart(productId) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
-        // update the cart total or display a message here
-        console.log(data);
-    
+
         // create the alert element
         const alert = document.createElement('div');
         alert.className = 'alert alert-success alert-dismissible fade show';
         alert.role = 'alert';
         alert.innerHTML = `<strong>Success!</strong> ${data.product_name} added to cart. <br> <a href="/cart">View cart</a>`;
-        
         // set the position, top, and z-index properties of the alert element
         alert.style.position = 'fixed';
         alert.style.top = '50px';  // adjust this value to position the alert lower on the screen
         alert.style.zIndex = 9999;  // set a high z-index value to make the alert appear on top of other elements
         
         // create the close button
-
-        
         // append the alert to the page
         document.body.prepend(alert);
         
         // remove the alert after 10 seconds
         setTimeout(() => {
             alert.remove();
-        }, 7000);
+        }, 5000);
     })
     .catch((error) => {
         console.error('Error:', error);
