@@ -660,7 +660,7 @@ def orders(request):
 
 
 def customize(request):
-    return render(request, 'product_detail.html')
+    return render(request, 'customize.html')
 
 
 
