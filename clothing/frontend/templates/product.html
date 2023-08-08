@@ -247,5 +247,21 @@
         document.querySelector('#submit-button').addEventListener('click', () => {
         document.querySelector('#my-form').submit();
         });
+        // Get all the radio buttons
+const colorRadios = document.querySelectorAll('#color-selector input[type="radio"]');
+
+// Add an event listener to each radio button
+colorRadios.forEach(radio => {
+    radio.addEventListener('change', event => {
+        // Get the selected radio button
+        const selectedRadio = event.target;
+        // Get the color of the selected option
+        const color = selectedRadio.value;
+        // Update the text above the selected color
+        const colorText = document.querySelector('#color-selector span');
+        colorText.textContent = `Color: ${color}`;
+    });
+});
+
     </script>
 {% endblock %}

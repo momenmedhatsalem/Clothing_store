@@ -28,12 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
+            //console.log('Success:', data);
             // update the cart total or display a message here
-            console.log(data);
-            console.log(color);
-            console.log(size);
-            console.log(`total_price_${productId}_${size}_${color}`);
+
             var total_price = document.getElementById(`total_price_${productId}_${size}_${color}`);
             total_price.innerHTML = `EGP ${data.total}`;
             var cart_total = document.getElementById('cart_total');
@@ -120,7 +117,7 @@ function Apply_promo_function() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        //console.log('Success:', data);
         if (data.error != false) {
             // create error message element
     let errorMessage = document.createElement('div');
@@ -222,7 +219,7 @@ function removeFromCart(event, product_id, product_size, product_color ) {
     const csrftoken = getCookie('csrftoken');
     var row = document.getElementById("x" + product_id + product_size + product_color);
     const size = row.dataset.size;
-    console.log(size);
+    //console.log(size);
     const color = row.dataset.color;
     // Send a PUT request to the server to remove the item from the cart
     fetch(`/cart/remove/${product_id}`, {
@@ -240,7 +237,7 @@ function removeFromCart(event, product_id, product_size, product_color ) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log("success : " + data)
+        //console.log("success : " + data)
         // Update the page to reflect the changes
         // For example, you could update the cart total and remove the item from the cart display
     row.style.transition = "opacity 1s";
@@ -256,7 +253,7 @@ function removeFromCart(event, product_id, product_size, product_color ) {
         var cart_total = document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
         var cart_summary = document.getElementById('cart_summary');
         const cart_count = cart_summary.dataset.cart;
-        console.log(data.cart_total_before_discount);
+        //console.log(data.cart_total_before_discount);
         if (data.cart_total_before_discount == '0.00') {
           cart_summary.classList.add('fade-away');
             cart_summary.addEventListener('transitionend', () => {
@@ -282,9 +279,9 @@ function addToFavorites(product_id) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        //console.log('Success:', data);
         // update the cart total or display a message here
-        console.log(data);
+        //console.log(data);
     
         // create the alert element
         const alert = document.createElement('div');
@@ -363,8 +360,8 @@ document.querySelector('#sizechart').addEventListener('click', () => {
 tabs.forEach(function(tab) {
   tab.addEventListener('click', function(event) {
     // Get the data attribute of the clicked tab
-    console.log("clicked");
-    console.log(tabValue);
+    //console.log("clicked");
+    //console.log(tabValue);
     // Get the image element inside the modal
     var img = document.querySelector('.modal-img');
     
