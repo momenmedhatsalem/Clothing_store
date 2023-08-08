@@ -25,6 +25,7 @@ class Command(BaseCommand):
             if existing_product:
                 # Product already exists, update its path
                 existing_product.path = row['path']
+                existing_product.price = row['price']
                 existing_product.save()
             else:
                 # Product does not exist, create a new one
