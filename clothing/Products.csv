@@ -1,5 +1,5 @@
 product_name,category,label,subcategory,price,discount_price,pub_date,sizes,colors,id,path,images
-Cat meow Basic T-shirt,W,NEW,S,299.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Yellow:3:9;purple:6:10;Pink:7:10;white:9:10,1,images/cat1.png.png,images/cat2.png.png:1:black
+Cat meow Basic T-shirt,W,NEW,S,349.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Yellow:3:9;purple:6:10;Pink:7:10;white:9:10,1,images/cat1.png.png,images/cat2.png.png:1:black
 Befree Elite T-shirt,M,NEW,S,299.98,1000,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1,2,images/befree.png.png,images/befree1.png.png:2:black;images/befree2.jpg.jpg:3:black
 Authentic Basic T-shirt,W,New,S,299.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:5;Yellow:3:9;White:9:1,3,images/1.png.png,images/4.png.png:4:black;images/2.png.png:5:black;images/3.png.png:6:black
 Butterfly Basic T-shirt,W,NEW,S,299.98,449.98,2023-07-03,S:5;M:6;L:7;XL:5;XXL:5;3XL:4,Black:1:10;Blue:2:10;Gray:4:10;Green:5:10;Pink:6:10,4,images/but2.png.png,images/but12.png.png:7:black;images/but32.png.png:8:black;images/but22.png.png:9:black
