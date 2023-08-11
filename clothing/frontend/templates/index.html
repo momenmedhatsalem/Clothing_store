@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% load static %}
 {% block body %}
+
+  
 <div class="cd-cart cd-cart--empty js-cd-cart">
     <a href="#0" class="cd-cart__trigger text-replace">
       Cart
@@ -36,6 +38,7 @@
   </div> <!-- cd-cart -->
  <!-- Hero Section Begin -->
  <section class="hero">
+
   <div class="hero__slider owl-carousel">
       <div class="hero__items set-bg" data-setbg="{% static 'frontend/img/hero/hero-1.jpg' %}">
           <div class="container">
@@ -74,6 +77,10 @@
               </div>
           </div>
       </div>
+  </div>
+  <div class="arrow-container">
+    <div class="arrow"></div>
+    <div class="arrow"></div>
   </div>
 </section>
 <!-- Hero Section End -->
