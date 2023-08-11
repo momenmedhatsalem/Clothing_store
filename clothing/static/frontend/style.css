@@ -133,3 +133,64 @@ margin-left: 110px;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.add-cart {
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+.add-cart.added {
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.add-cart.added .check-mark {
+  display: inline-block;
+  margin-right: 5px;
+  transform: scale(0);
+  color: yellow;
+  transition: transform 0.3s ease-in-out;
+}
+
+.add-cart.added .text {
+  opacity: 0;
+  color: white;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.add-cart:hover .check-mark {
+  transform: scale(1);
+}
+
+.add-cart:hover .text {
+  opacity: 1;
+}
+.arrow-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+
+.arrow {
+  width: 0;
+  height: 0;
+  color: yellow;
+  border-style: solid;
+  border-width: 40px 20px 0 20px;
+  border-color: black transparent transparent transparent;
+  margin: 5px auto;
+}
+
+
+@keyframes arrow-animation {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.arrow {
+    animation-name: arrow-animation;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}

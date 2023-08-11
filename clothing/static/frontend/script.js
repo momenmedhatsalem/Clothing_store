@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#back-button').addEventListener('click', () => {
         history.back();
     });
+
     
+    
+
     
     
     const csrftoken = getCookie('csrftoken');
@@ -28,12 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
+            //console.log('Success:', data);
             // update the cart total or display a message here
-            console.log(data);
-            console.log(color);
-            console.log(size);
-            console.log(`total_price_${productId}_${size}_${color}`);
+
             var total_price = document.getElementById(`total_price_${productId}_${size}_${color}`);
             total_price.innerHTML = `EGP ${data.total}`;
             var cart_total = document.getElementById('cart_total');
@@ -77,36 +77,38 @@ function addToCart(productId) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
-        // update the cart total or display a message here
-        console.log(data);
-    
-        // create the alert element
-        const alert = document.createElement('div');
-        alert.className = 'alert alert-success alert-dismissible fade show';
-        alert.role = 'alert';
-        alert.innerHTML = `<strong>Success!</strong> ${data.product_name} added to cart. <br> <a href="/cart">View cart</a>`;
+        // find the link element
+        const link = document.querySelector(`a[onclick="addToCart('${productId}')"]`);
+        // create the check mark element
+        const checkMark = document.createElement('span');
+        checkMark.className = 'check-mark';
+        checkMark.innerHTML = '✔';
+        // create the text element
+        const text = document.createElement('span');
+        text.className = 'text';
+        text.innerHTML = 'Added To Cart';
+        // append the check mark and text elements to the link
+        link.innerHTML = '';
+        link.appendChild(checkMark);
+        link.appendChild(text);
+        // add the 'added' class to the link to trigger the transition effect
+        link.classList.add('added');
         
-        // set the position, top, and z-index properties of the alert element
-        alert.style.position = 'fixed';
-        alert.style.top = '50px';  // adjust this value to position the alert lower on the screen
-        alert.style.zIndex = 9999;  // set a high z-index value to make the alert appear on top of other elements
-        
-        // create the close button
-
-        
-        // append the alert to the page
-        document.body.prepend(alert);
-        
-        // remove the alert after 10 seconds
+        // remove the added elements, return the text inside the link to its original state, and deactivate the link after 2.5 seconds
         setTimeout(() => {
-            alert.remove();
-        }, 7000);
+            link.innerHTML = '+ Add To Cart';
+            link.classList.remove('added');
+            link.style.cursor = 'default';
+            link.style.textDecoration = 'none';
+            link.style.color = 'white';
+        }, 2500);
     })
     .catch((error) => {
         console.error('Error:', error);
     });
 }
+
+
 
 
 // A function to apply promo codes through a put request
@@ -126,7 +128,7 @@ function Apply_promo_function() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        //console.log('Success:', data);
         if (data.error != false) {
             // create error message element
     let errorMessage = document.createElement('div');
@@ -228,7 +230,7 @@ function removeFromCart(event, product_id, product_size, product_color ) {
     const csrftoken = getCookie('csrftoken');
     var row = document.getElementById("x" + product_id + product_size + product_color);
     const size = row.dataset.size;
-    console.log(size);
+    //console.log(size);
     const color = row.dataset.color;
     // Send a PUT request to the server to remove the item from the cart
     fetch(`/cart/remove/${product_id}`, {
@@ -246,7 +248,7 @@ function removeFromCart(event, product_id, product_size, product_color ) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log("success : " + data)
+        //console.log("success : " + data)
         // Update the page to reflect the changes
         // For example, you could update the cart total and remove the item from the cart display
     row.style.transition = "opacity 1s";
@@ -262,7 +264,7 @@ function removeFromCart(event, product_id, product_size, product_color ) {
         var cart_total = document.getElementById('discount').innerHTML = `EGP ${data.discount}`;
         var cart_summary = document.getElementById('cart_summary');
         const cart_count = cart_summary.dataset.cart;
-        console.log(data.cart_total_before_discount);
+        //console.log(data.cart_total_before_discount);
         if (data.cart_total_before_discount == '0.00') {
           cart_summary.classList.add('fade-away');
             cart_summary.addEventListener('transitionend', () => {
@@ -288,9 +290,9 @@ function addToFavorites(product_id) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        //console.log('Success:', data);
         // update the cart total or display a message here
-        console.log(data);
+        //console.log(data);
     
         // create the alert element
         const alert = document.createElement('div');
@@ -369,8 +371,8 @@ document.querySelector('#sizechart').addEventListener('click', () => {
 tabs.forEach(function(tab) {
   tab.addEventListener('click', function(event) {
     // Get the data attribute of the clicked tab
-    console.log("clicked");
-    console.log(tabValue);
+    //console.log("clicked");
+    //console.log(tabValue);
     // Get the image element inside the modal
     var img = document.querySelector('.modal-img');
     
@@ -379,4 +381,12 @@ tabs.forEach(function(tab) {
 
   });
 });
+});
+window.addEventListener('scroll', function() {
+    var arrowContainer = document.querySelector('.arrow-container');
+    if (window.pageYOffset > 0) {
+        arrowContainer.style.display = 'none';
+    } else {
+        arrowContainer.style.display = 'block';
+    }
 });
