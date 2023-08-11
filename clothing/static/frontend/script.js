@@ -101,7 +101,7 @@ function addToCart(productId) {
             link.style.cursor = 'default';
             link.style.textDecoration = 'none';
             link.style.color = 'white';
-        }, 2500);
+        }, 3000);
     })
     .catch((error) => {
         console.error('Error:', error);

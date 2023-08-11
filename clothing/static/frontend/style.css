@@ -142,7 +142,7 @@ margin-left: 110px;
   transition: all 0.3s ease-in-out;
 }
 
-.add-cart.added .check-mark {
+.add-cart .check-mark {
   display: inline-block;
   margin-right: 5px;
   transform: scale(0);
