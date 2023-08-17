@@ -663,6 +663,20 @@ def customize(request):
     return render(request, 'customize.html')
 
 
+@require_http_methods(["PUT"])
+def update_images(request, product_id):
+    if request.method == 'PUT':
+        # Get the selected color from the request body
+        data = json.loads(request.body)
+        selected_color = data.get('color')
+
+        # Get the images with the selected color for the specified product
+        images = ProductImage.objects.filter(product_id=product_id, color=selected_color)
+
+        # Serialize the images and return them as a JSON response
+        images_data = [{'path': image.path} for image in images]
+        return JsonResponse({'images': images_data})
+
 
 @require_http_methods(["PUT"])
 def add_to_favorites(request):

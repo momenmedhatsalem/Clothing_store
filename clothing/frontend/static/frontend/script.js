@@ -390,3 +390,46 @@ window.addEventListener('scroll', function() {
         arrowContainer.style.display = 'block';
     }
 });
+document.addEventListener('DOMContentLoaded', function() {
+// Get the color selector element
+const colorSelector = document.querySelector('#color-selector');
+
+// Add an event listener to the color selector
+colorSelector.addEventListener('change', (event) => {
+  // Get the selected color
+  const selectedColor = event.target.value;
+
+  // Get the product ID from a data attribute on the color selector element
+  const productId = colorSelector.dataset.productId;
+
+  // Fetch the images with the selected color using a PUT request
+  fetch(`/images/${productId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken,
+    },
+    body: JSON.stringify({ color: selectedColor })
+  })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+      // Sort the images by their number
+      data.images.sort((a, b) => {
+        const aNumber = parseInt(a.path.match(/\d+/)[0]);
+        const bNumber = parseInt(b.path.match(/\d+/)[0]);
+        return aNumber - bNumber;
+      });
+
+      // Set the main image to the first image in the sorted array
+      const mainImage = document.querySelector('.product__thumb__pic');
+      mainImage.style.backgroundImage = `url(/static/${data.images[0].path})`;
+
+      // Set the other images
+      const otherImages = document.querySelectorAll('.product__thumb__pic:not(:first-child)');
+      otherImages.forEach((image, index) => {
+        image.style.backgroundImage = `url(/static/${data.images[index + 1].path})`;
+      });
+    });
+});
+});

@@ -31,4 +31,5 @@ urlpatterns = [
     path('remove_from_favorites/', views.remove_from_favorites, name='remove_from_favorites'),
     path('favorites', views.favorites, name='favorites'),
     path('Return', views.Return, name='Return'),
+    path('images/<int:product_id>', views.update_images, name='update_images'),
 ]
