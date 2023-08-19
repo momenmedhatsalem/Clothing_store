@@ -180,17 +180,23 @@ def login_view(request):
                 for item in CartItem.objects.filter(cart=session_cart):
                     product = item.product
                     quantity = item.quantity
+                    size = item.size  # Retrieve size from session cart item
+                    color = item.color  # Retrieve color from session cart item
                     # Check if CartItem already exists for given product and cart
                     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
                     if created:
-                        # CartItem did not exist, set its quantity
+                        # CartItem did not exist, set its quantity, size, and color
                         cart_item.quantity = int(quantity)
+                        cart_item.size = size  # Assign size to CartItem object
+                        cart_item.color = color  # Assign color to CartItem object
                         cart_item.save()
                     else:
                         # CartItem already exists, check if it has been customized
                         if not cart_item.customized:
-                            # Increase its quantity
+                            # Increase its quantity and update its size and color
                             cart_item.quantity += int(quantity)
+                            cart_item.size = size  # Update size of CartItem object
+                            cart_item.color = color  # Update color of CartItem object
                             cart_item.save()
                 # Clear session cart
                 CartItem.objects.filter(cart=session_cart).delete()
@@ -235,19 +241,26 @@ def register_view(request):
             for item in CartItem.objects.filter(cart=session_cart):
                 product = item.product
                 quantity = item.quantity
+                size = item.size  # Retrieve size from session cart item
+                color = item.color  # Retrieve color from session cart item
                 cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
                 if created:
                     cart_item.quantity = int(quantity)
+                    cart_item.size = size  # Assign size to CartItem object
+                    cart_item.color = color  # Assign color to CartItem object
                     cart_item.save()
                 else:
                     if not cart_item.customized:
                         cart_item.quantity += int(quantity)
+                        cart_item.size = size  # Update size of CartItem object
+                        cart_item.color = color  # Update color of CartItem object
                         cart_item.save()
             CartItem.objects.filter(cart=session_cart).delete()
         
         # Log in user and redirect to index page
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
+
 
         
 def logout_view(request):
