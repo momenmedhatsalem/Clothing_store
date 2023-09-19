@@ -42,6 +42,12 @@ from django.http import JsonResponse
 from .models import Design
 from django.core.paginator import Paginator
 
+from .models import GOVERNORATE_CHOICES
+
+
+
+
+
 
 
 def contact(request):
@@ -146,8 +152,14 @@ def product_detail(request, product_id):
         return redirect('cart_detail')
     # Get the product
     else:
+        """
+        try:
+            # retrieve the CartItem objects for the anonymous user's cart
+            CartItems = CartItem.objects.filter(cart=cart)
+        except:
+            CartItems = []
+        """
         product = get_object_or_404(Product, id=product_id)
-
         # Add the product ID to the list of recently viewed products in the session
         recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
         if product_id not in recently_viewed_product_ids:
@@ -353,6 +365,7 @@ def checkout(request):
                 coupon=cart.coupon,
                 address=request.POST['address'],
                 city=request.POST['city'],
+                governorate = request.POST['governorate'],
                 payment_method=payment_method,
                 shipping_cost=cart.shipping_cost,
                 final_price=cart.final_price + fees  # Set the final price of the order to the final price of the cart
@@ -394,7 +407,7 @@ def checkout(request):
                 address=request.POST['address'],
                 phone=phone,
                 city=request.POST['city'],
-
+                governorate = request.POST['governorate'],
                 payment_method=payment_method,
                 shipping_cost=cart.shipping_cost,
                 final_price=cart.final_price + fees  # Set the final price of the order to the final price of the anonymous cart
@@ -424,6 +437,8 @@ def checkout(request):
         send_order_confirmation_email(first_name, email, order)
         return render(request, 'orderconfirm.html', {"order_number": order.order_number, "email":email})
     else:
+        governorates = GOVERNORATE_CHOICES
+        
         if request.user.is_authenticated:
             # Handle authenticated user
             cart = Cart.objects.get(user=request.user)
@@ -431,7 +446,19 @@ def checkout(request):
             if float(cart.total_price) > 500:
                 cart.shipping_cost = 0
                 cart.save()
-            context = {'cart': CartItems, 'user_cart': cart}
+            try:
+                # Try to get the last order made by the user
+                last_order = Order.objects.filter(user=request.user).latest('id')
+                address = last_order.address
+                city = last_order.city
+                last_governorate = last_order.governorate
+            except Order.DoesNotExist:
+                # Handle case when the user has not made any orders
+                address = 'Street Address'
+                city = 'eg. Maadi'
+                last_governorate = None
+            context = {'cart': CartItems, 'user_cart': cart,'last_governorate': last_governorate, 'city': city, 'address':address, 'governorates': governorates}
+
         else:
             # Handle anonymous user
             # create or retrieve a Cart object for anonymous users
@@ -446,7 +473,10 @@ def checkout(request):
             if float(cart.total_price) > 500:
                 cart.shipping_cost = 0
                 cart.save()
-            context = {'cart': CartItems, 'user_cart': cart}
+            address = 'Street Address'
+            city = 'eg. Maadi'
+            last_governorate = None
+            context = {'cart': CartItems, 'user_cart': cart,'last_governorate': last_governorate, 'city': city, 'address':address, 'governorates': governorates}
 
         return render(request, 'checkout.html', context)
         

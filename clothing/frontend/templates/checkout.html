@@ -89,45 +89,22 @@ Checkout
             </div>
             <div class="checkout__input">
               <p>Address<span>*</span></p>
-              <input class="form-control" required name="address" type="text" placeholder="Street Address"
+              <input class="form-control" required name="address" type="text" placeholder="Street Address" value="{{ address }}"
                 class="checkout__input__add">
-              <input class="form-control" type="text" placeholder="Apartment, suite, unite ect (optinal)">
+              <input class="form-control" type="text" placeholder="Apartment, suite, unite ect (optional)">
             </div>
             <div class="checkout__input">
               <p>Governorate<span>*</span></p>
               <select class="form-control" required name="governorate">
                 <option selected disabled value="">--Please choose an option--</option>
-                <option value="Ad Daqahliyah">Ad Daqahliyah</option>
-                <option value="Al Bahr al Ahmar">Al Bahr al Ahmar</option>
-                <option value="Al Buhayrah">Al Buhayrah</option>
-                <option value="Al Fayyum">Al Fayyum</option>
-                <option value="Al Gharbiyah">Al Gharbiyah</option>
-                <option value="Al Iskandariyah">Al Iskandariyah</option>
-                <option value="Al Isma'iliyah">Al Isma'iliyah</option>
-                <option value="Al Jizah">Al Jizah</option>
-                <option value="Al Minufiyah">Al Minufiyah</option>
-                <option value="Al Minya">Al Minya</option>
-                <option value="Al Qahirah">Al Qahirah</option>
-                <option value="Al Qalyubiyah">Al Qalyubiyah</option>
-                <option value="Al Wadi al Jadid">Al Wadi al Jadid</option>
-                <option value="Ash Sharqiyah">Ash Sharqiyah</option>
-                <option value="As Suways">As Suways</option>
-                <option value="Aswan">Aswan</option>
-                <option value="Asyut">Asyut</option>
-                <option value="Bani Suwayf">Bani Suwayf</option>
-                <option value="Bur Sa'id">Bur Sa'id</option>
-                <option value="Dumyat">Dumyat</option>
-                <option value="Janub Sina'">Janub Sina'</option>
-                <option value="Kafr ash Shaykh">Kafr ash Shaykh</option>
-                <option value="Matruh">Matruh</option>
-                <option value="Qina">Qina</option>
-                <option value="Shamal Sina'">Shamal Sina'</option>
-                <option value="Suhaj">Suhaj</option>
+                {% for value, name in governorates %}
+                  <option value="{{ value }}" {% if last_governorate == value %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
               </select>
             </div>
             <div class="checkout__input">
               <p>City<span>*</span></p>
-              <input placeholder="eg. Maadi" class="form-control" required name="city" type="text">
+              <input placeholder="eg. Maadi" class="form-control" required name="city" type="text" value="{{ city }}">
             </div>
 
             <div class="checkout__input">

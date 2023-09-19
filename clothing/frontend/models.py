@@ -120,9 +120,9 @@ class Cart(models.Model):
     @property
     def shipping_remainder(self):
         if self.shipping_cost > 0:
-            return 500 - float(self.total_price)
+            return "{:.2f}".format(500 - float(self.total_price))
         else:
-            return 0
+            return "{:.2f}".format(0)
     @property
     def discount(self):
         if self.coupon:
@@ -181,6 +181,35 @@ class Address(models.Model):
     def __str__(self):
         return f"Address of {self.user.first_name}"
     
+GOVERNORATE_CHOICES = (
+    ('Ad Daqahliyah', 'Ad Daqahliyah'),
+    ('Al Bahr al Ahmar', 'Al Bahr al Ahmar'),
+    ('Al Buhayrah', 'Al Buhayrah'),
+    ('Al Fayyum', 'Al Fayyum'),
+    ('Al Gharbiyah', 'Al Gharbiyah'),
+    ('Al Iskandariyah', 'Al Iskandariyah'),
+    ('Al Isma\'iliyah', 'Al Isma\'iliyah'),
+    ('Al Jizah', 'Al Jizah'),
+    ('Al Minufiyah', 'Al Minufiyah'),
+    ('Al Minya', 'Al Minya'),
+    ('Al Qahirah', 'Al Qahirah'),
+    ('Al Qalyubiyah', 'Al Qalyubiyah'),
+    ('Al Wadi al Jadid', 'Al Wadi al Jadid'),
+    ('Ash Sharqiyah', 'Ash Sharqiyah'),
+    ('As Suways', 'As Suways'),
+    ('Aswan', 'Aswan'),
+    ('Asyut', 'Asyut'),
+    ('Bani Suwayf', 'Bani Suwayf'),
+    ('Bur Sa\'id', 'Bur Sa\'id'),
+    ('Dumyat', 'Dumyat'),
+    ('Janub Sina\'', 'Janub Sina\''),
+    ('Kafr ash Shaykh', 'Kafr ash Shaykh'),
+    ('Matruh', 'Matruh'),
+    ('Qina', 'Qina'),
+    ('Shamal Sina\'', 'Shamal Sina\''),
+    ('Suhaj', 'Suhaj')
+    )
+
 class Order(models.Model):
 
     STATUS_CHOICES = [
@@ -206,6 +235,7 @@ class Order(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
     address = models.CharField(max_length=250)
+    governorate = models.CharField(max_length=100, choices=GOVERNORATE_CHOICES)
     city = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
