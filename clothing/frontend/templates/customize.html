@@ -153,7 +153,6 @@ Custom T-Shirt
       font-size: 25px;
       cursor: pointer;
     }
-
     #preview {
       width: 400px;
       height: 300px;
@@ -462,7 +461,7 @@ Custom T-Shirt
   window.addEventListener('resize', handleResize);
 
   var backgroundImage = new Image();
-  backgroundImage.src = "static/images/white.png";
+  backgroundImage.src = "../static/images/white-shirt.png";
   backgroundImage.onload = function () {
     renderText();
   };
@@ -508,7 +507,8 @@ Custom T-Shirt
         imageContainer.classList.add('image-container');
         const imageElement = document.createElement('img');
         imageElement.src = imageSrc;
-        imageElement.style.maxHeight = '180px';
+        imageElement.style.maxHeight = '70px';
+        imageElement.style.minWidth = '80px';
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('delete-button');
         deleteButton.textContent = 'Delete';
@@ -691,15 +691,15 @@ cropper = new Cropper(document.getElementById('img'), {
       ctx2.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
 
-      var canva_img = cropper.getCroppedCanvas() || cropper.getCanvasData();
+     if(cropper){
+      var canva_img = cropper.getCroppedCanvas()|| cropper.getCanvasData();
       var cropData = cropper.getCropBoxData();
       shirtimg_w=cropData.width;
       shirtimg_h=cropData.height;
 
       ctx.drawImage(canva_img, shirtimg_x, shirtimg_y, cropData.width>BorderboxValues.w?BorderboxValues.w:cropData.width, cropData.height>BorderboxValues.h?BorderboxValues.h:cropData.height);
       ctx2.drawImage(canva_img, shirtimg_x, shirtimg_y, cropData.width>BorderboxValues.w?BorderboxValues.w:cropData.width, cropData.height>BorderboxValues.h?BorderboxValues.h:cropData.height);
-
-
+     }
   }
 
   function renderText(arg) {
