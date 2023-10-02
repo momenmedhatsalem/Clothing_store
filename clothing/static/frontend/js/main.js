@@ -108,6 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
         $(".product__color__select label,  .product__details__option__size label").removeClass('active');
         $(this).addClass('active');
     });
+    $(".product__color__select label,  .product__details__option__face label").on('click', function () {
+        $(".product__color__select label,  .product__details__option__face label").removeClass('active');
+        $(this).addClass('active');
+    });
 
     /*-------------------
 		Scroll
