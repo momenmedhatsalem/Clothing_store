@@ -134,14 +134,14 @@
                                 {% endfor %}
                                 
                             </div>
-                            <div id="color-selector" class="product__details__option__color" data-product-id="{{ product.id }}">
+                            <div id="color-selector" class="product__details__option__color">
                                 <span>Color:</span>
-                                {% for color in colors %}
-                                    <input type="radio" id="sp-{{ color.color_id }}" name="color" value="{{ color.color }}" class="d-none" {% if forloop.first %}checked{% endif %}>
-                                    <label class="c-{{ color.color_id }}" for="sp-{{ color.color_id }}" title="{{ color.color }}"></label>
+                                {% for size in colors %}
+                                    
+                                    <input type="radio" id="sp-{{ size.color_id }}" name="color" value="{{ size.color }}" class="d-none" {% if forloop.first %}checked{% endif %}>
+                                    <label class="c-{{ size.color_id }}" for="sp-{{ size.color_id }}" title="{{ size.color }}"></label>
                                 {% endfor %}
                             </div>
-                            
                             <br>
                             <br>
                                 {% csrf_token %}

@@ -1784,6 +1784,40 @@ ol {
 	position: absolute;
 	visibility: hidden;
 }
+.product__details__option__face {
+	display: inline-block;
+	margin-right: 50px;
+}
+
+.product__details__option__face span {
+	color: #111111;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.product__details__option__face label {
+	color: #111111;
+	font-size: 15px;
+	font-weight: 700;
+	text-transform: uppercase;
+	display: inline-block;
+	border: 1px solid #e5e5e5;
+	padding: 6px 15px;
+	margin-bottom: 0;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.product__details__option__face label.active {
+	background: #111111;
+	color: #ffffff;
+	border-color: #111111;
+}
+
+.product__details__option__face label input {
+	position: absolute;
+	visibility: hidden;
+}
 
 .product__details__option__color {
 	display: inline-block;

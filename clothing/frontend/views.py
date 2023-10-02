@@ -703,7 +703,8 @@ def orders(request):
 
 
 def customize(request):
-    return render(request, 'customize.html')
+    sizes = ['S', 'M', 'L', 'XL', 'XXL', '3XL']
+    return render(request, 'customize2.html',{'sizes': sizes})
 
 
 @require_http_methods(["PUT"])
