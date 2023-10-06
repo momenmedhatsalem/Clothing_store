@@ -8,39 +8,30 @@ Custom T-Shirt
 {% endblock %}
 {% block body %}
 
-<div class="container position-relative">
-  <div id="tshirt-div">
-      <!-- 
-          Initially, the image will have the background tshirt that has transparency
-          So we can simply update the color with CSS or JavaScript dinamically
-      -->
-      <img id="tshirt-backgroundpicture" src="../static/images/testcustom.png"/>
-  
-      <div id="drawingArea" class="drawing-area">					
-          <div class="canvas" id="tshirt-front">
-              <canvas id="tshirt-front-canvas" width="200" height="400"></canvas>
-          </div>
-          <div class="canvas" id="tshirt-back">
-              <canvas id="tshirt-back-canvas" width="200" height="400"></canvas>
-          </div>
-      </div>
-      
-  </div>
-<!-- Create the container of the tool -->
-
-<p>To remove a loaded picture on the T-Shirt select it and press the <kbd>DEL</kbd> key.</p>
-<!-- The select that will allow the user to pick one of the static designs -->
-<br>
+<div class="container position-relative mt-5">
 
     <div id="mainWindow">
         <div class="row  justify-content-between flex-lg-nowrap">
-          <div class="col ">
+          <div class="col d-inline-flex justify-content-center">
             <div class="product-image ">
-
+              <div id="tshirt-div">
+                <img id="tshirt-backgroundpicture" src="../static/images/testcustom.png"/>
+            
+                <div id="drawingArea" class="drawing-area">					
+                    <div class="canvas" id="tshirt-front">
+                        <canvas id="tshirt-front-canvas" width="200" height="400"></canvas>
+                    </div>
+                    <div class="canvas" id="tshirt-back">
+                        <canvas id="tshirt-back-canvas" width="200" height="400"></canvas>
+                    </div>
+                </div>
+                <p class="mt-5">To remove a loaded picture on the T-Shirt select it and press the <kbd>DEL</kbd> key.</p>
+          
+            </div>
               <p class="product-description">{{ product.desc|truncatewords:20 }}</p>
             </div>
           </div>
-          <div class="col form " id="tshirt">
+          <div class="col form text-center" id="tshirt">
             <h2 class="head">Customize your Shirt</h2>
             
             <form id="form-box">
@@ -67,6 +58,13 @@ Custom T-Shirt
                     </label>
                     {% endfor %}
                     
+                </div>
+                <div class="mt-5">
+                  <label for="tshirt-design">T-Shirt Design:</label>
+                <select id="tshirt-design">
+                    <option value="">Select one of our designs ...</option>
+                    <option value="https://ourcodeworld.com/public-media/gallery/gallery-5d5b0e95d294c.png">Batman</option>
+                </select>
                 </div>
                 <!-- The Select that allows the user to change the color of the T-Shirt -->
                 <br><br>
@@ -106,7 +104,7 @@ Custom T-Shirt
                  "></textarea>
               </div>
               <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <div>
+                <div class="margin-auto">
                   <label for="fontFamilySelect">Font Type</label><br />
                   <select id="fontFamilySelect">
                     <option value="Comic Sans MS, cursive">Comic Sans MS</option>
@@ -123,30 +121,29 @@ Custom T-Shirt
   
                 </div>
   
-
-              </div>
-  
-  
-  
-  
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-  
-                  <label for="text-color">Text Color:</label>
-                  <br />
-                  <input type="color" class="color-input" id="text-color" name="text-color" />
+                <div class="d-flex justify-content-between align-items-center margin-auto">
+                  <div class="margin-auto">
+    
+                    <label for="text-color">Text Color:</label>
+                    <br />
+                    <input type="color" class="color-input" id="text-color" name="text-color" />
+                  </div>
+    
+                  
                 </div>
-  
-                
               </div>
+  
+  
+  
+
               <div class="product__details__cart__option">
-                <div class="sticky-bottom">
-                    <div class="quantity">
+                <div class="sticky-bottom d-flex justify-content-between flex-wrap align-items-center justify-content-center">
+                    <div class="quantity margin-auto" style="padding: 5px;">
                         <div class="pro-qty">
                             <input name="cloth_quantity" type="text" value="1">
                         </div>
                     </div>
-                    <a href="#" class="primary-btn" id="submit-button">Add to Cart</a>
+                    <a href="#" class="primary-btn margin-auto" id="submit-button">Add to Cart</a>
                 </div>
             </div>
             {% csrf_token %}
@@ -161,16 +158,7 @@ Custom T-Shirt
 
  
 
-<label for="tshirt-design">T-Shirt Design:</label>
-<select id="tshirt-design">
-    <option value="">Select one of our designs ...</option>
-    <option value="https://ourcodeworld.com/public-media/gallery/gallery-5d5b0e95d294c.png">Batman</option>
-</select>
 
-
-
-
-<br><br>
 
 </div>
 <style>
@@ -204,6 +192,12 @@ Custom T-Shirt
     background-color: #fff;
     flex: 1;
     margin: 10px;
+}
+.product__details__cart__option .quantity .pro-qty input{
+  position: absolute;
+    left: -1px;
+    bottom: 0;
+    z-index: -1;
 }
 
 .canvas {
@@ -316,7 +310,7 @@ Custom T-Shirt
       margin-bottom: 10px;
     }
 
-    .delete-button {
+    .del-button {
       position: absolute;
       bottom: 14px;
       left: 15px;
@@ -324,7 +318,7 @@ Custom T-Shirt
       color: black;
       border: none;
       padding: 2px 6px;
-      font-size: 25px;
+      font-size: 14px;
     }
 
     .edit-button {
@@ -411,6 +405,37 @@ Custom T-Shirt
     .control_panel{
       margin: 20px;
     }
+    .product__details__option__face{
+  margin-right: 0;
+    }
+    .product__details__option__size{
+      margin-right: 0;
+    }
+
+
+    @media(max-width:750px){
+
+    #tshirt-div {
+    width: 325px;
+    height: auto;
+    text-align: center;
+  }
+  .drawing-area{
+    position: absolute;
+    top: 60px;
+    left: 67px;
+    z-index: 10;
+    width: 200px;
+    height: 234px;
+    border: 1px solid #ccc;
+  }
+    }
+  @media(max-width:420px){
+    .margin-auto{
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+  }  
   </style>
 <script>
 
@@ -423,6 +448,7 @@ Custom T-Shirt
   let back_text = "";
   var textArea = document.getElementById('text');
   document.getElementById('tshirt-back').style.display = 'none';
+
   function updateTshirtImage(imageURL) {
     fabric.Image.fromURL(imageURL, function (img) {
       img.scaleToHeight(300);
@@ -489,7 +515,7 @@ document.getElementById('tshirt-custompicture').addEventListener("change", funct
             imageElement.style.maxHeight = '70px';
             imageElement.style.minWidth = '80px';
             var deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete-button');
+            deleteButton.classList.add('del-button');
             deleteButton.textContent = 'Delete';
             deleteButton.type = 'button';
             // Assign the image ID as a data attribute to the delete button
