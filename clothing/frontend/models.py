@@ -5,7 +5,7 @@ import random
 # Create your models here.
 from django.db import models
 import os
-
+from django.urls import reverse
 
 class Product(models.Model):
     CATEGORY_CHOICES = (
@@ -29,7 +29,7 @@ class Product(models.Model):
     
     product_id = models.AutoField
     id = models.AutoField(primary_key=True, auto_created=True)
-
+    customized = models.BooleanField(default=False)
     product_name = models.CharField(max_length=50)
     category = models.ManyToManyField('Category', through='ProductCategory')
     label = models.CharField(choices=LABEL_CHOICES, max_length=11, default="")
@@ -41,8 +41,28 @@ class Product(models.Model):
     material = models.CharField(max_length=50, default="Coton 100%")
     description = models.TextField(default="Are you looking for a t shirt that is comfortable, stylish and affordable? Look no further than our new collection of t shirts, designed to suit any occasion and personality. Whether you want to express your creativity, show your support for a cause, or simply enjoy a casual day out, we have the perfect t shirt for you. Our t shirts are made from high-quality cotton, which is soft, breathable and durable. They come in a variety of colors, sizes and designs, so you can find the one that matches your style and mood.  Our t shirts are easy to wash and care for, and they will not fade or shrink over time. They are also eco-friendly and ethically produced, so you can wear them with confidence and pride. Order your t shirt today and enjoy free shipping for orders over EGP 500. You will love how you look and feel in our t shirts, and so will everyone else. Don't miss this opportunity to get the best t shirt ever.")
     path = models.CharField(max_length=50, default="")
+    # Add a reference to the associated design
+    FrontCanva = models.OneToOneField('FrontCanva', on_delete=models.CASCADE, null=True, blank=True)
+    BackCanva = models.OneToOneField('BackCanva', on_delete=models.CASCADE, null=True, blank=True)
     def get_absolute_url(self):
-        return f"/product_detail/{self.id}/"
+        if self.customized:
+            return reverse('customized_view', args=[str(self.id)])
+        else:
+            return f"/product_detail/{self.id}/"
+
+
+class FrontCanva(models.Model):
+    # Fields to store the properties of an object
+    image = models.ImageField(upload_to="static/designs", null=True, blank=True)
+    url = models.URLField(max_length=200, null=True, blank=True)
+    
+class BackCanva(models.Model):
+    # Fields to store the properties of an object
+    image = models.ImageField(upload_to="static/designs", null=True, blank=True)
+    url = models.URLField(max_length=200, null=True, blank=True)
+
+
+
 
 class Category(models.Model):
     name = models.CharField(choices=Product.CATEGORY_CHOICES, max_length=2)
@@ -64,7 +84,7 @@ class MyUser(AbstractUser):
     phone = models.CharField(max_length=10, default="")
     country_code = models.CharField(max_length=10, default="")
     favorites = models.ManyToManyField(Product)
-    pass 
+    
 
 
 
@@ -85,13 +105,7 @@ class ProductColor(models.Model):
     class Meta:
         unique_together = ('product', 'color')
 
-class Design(models.Model):
-    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='designs/')
 
-    def __str__(self):
-        return f'Design by {self.user} for {self.product}'
     
 class PromoCode(models.Model):
     code = models.CharField(max_length=15)

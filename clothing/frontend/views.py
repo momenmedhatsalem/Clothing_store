@@ -39,7 +39,7 @@ import base64
 from django.core.files.base import ContentFile
 
 from django.http import JsonResponse
-from .models import Design
+
 from django.core.paginator import Paginator
 
 from .models import GOVERNORATE_CHOICES
@@ -105,12 +105,129 @@ def design_save(request):
         ext = format.split('/')[-1]
         data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
         product = Product.objects.get(id=product_id)
-        image = Design.objects.create(image=data, user=request.user, product=product )
+        image = Product.objects.create(image=data, user=request.user, product=product )
         image.save()
         # Return a JSON response
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False})
+
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
+from .models import Product, ProductImage
+from datetime import date
+#from selenium import webdriver
+
+def create_product(request):
+    if request.method == 'POST':
+        # Get the selected t-shirt side (front or back)
+        tshirt_side = request.POST.get('tshirt-side')
+
+        # Get the selected size
+        size = request.POST.get('size')
+
+        # Get the selected design URL
+        tshirt_design = request.POST.get('tshirt-design')
+
+        # Get the selected t-shirt color
+        tshirt_color = request.POST.get('tshirt-color')
+
+        # Get the uploaded custom picture for the front and back sides
+        front_custom_picture = request.FILES.get('front-custom-picture')
+        back_custom_picture = request.FILES.get('back-custom-picture')
+
+        # Get the entered text for the front and back sides
+        front_text = request.POST.get('front-text')
+        back_text = request.POST.get('back-text')
+
+        # Get the selected font type
+        font_type = request.POST.get('fontFamilySelect')
+
+        # Get the selected text color
+        text_color = request.POST.get('text-color')
+
+        # Get the quantity
+        quantity = request.POST.get('cloth_quantity')
+
+        # Initialize a web driver (Assuming you're using Chrome)
+        """
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')  # Run Chrome in headless mode
+        driver = webdriver.Chrome(chrome_options=options)
+        
+        # Navigate to the t-shirt design page (replace with your URL)
+        driver.get(tshirt_design)
+
+        # Capture a screenshot of the t-shirt design
+        screenshot_path = 'path/to/save/screenshot.png'
+        driver.save_screenshot(screenshot_path)
+
+        # Create a new product
+        product_name = f"{request.user.username}'s Design"
+        product = Product(
+            product_name=product_name,
+            price=0,  # You can set the initial price here
+            pub_date=date.today(),
+            description=f"Front Text: {front_text}, Back Text: {back_text}, Font Type: {font_type}, Text Color: {text_color}",
+            path=screenshot_path,  # Set the path to the screenshot
+        )
+        product.save()
+
+        # Create a new product image for the back
+        back_product_image = ProductImage(
+            product=product,
+            image=back_custom_picture,
+            path="path/to/back/image",  # Provide a default path for the back image
+            color=tshirt_color,
+            side='back',
+            text=back_text,
+        )
+        back_product_image.save()
+
+        # Process other customization data as needed
+
+        # Close the web driver
+        driver.quit()
+        """
+        return redirect('/success/url/')  # Redirect to a success page after processing
+
+    return render(request, 'create_product.html')
+
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from .models import Product, ProductImage
+from django.core.files.storage import FileSystemStorage
+
+def create_product(request):
+    if request.method == 'POST':
+        # Get the text inputs
+        user_name = request.POST.get('user_name')
+        product_name = f"{user_name}'s Design"
+
+        # Get the image inputs
+        front_image = request.FILES['front_image']
+        back_image = request.FILES['back_image']
+
+        # Save the images to your media root
+        fs = FileSystemStorage()
+        front_image_path = fs.save(front_image.name, front_image)
+        back_image_path = fs.save(back_image.name, back_image)
+
+        # Create a new product
+        product = Product(product_name=product_name)
+        product.save()
+
+        # Create new product images and link them to the new product
+        front_product_image = ProductImage(product=product, image=front_image_path)
+        front_product_image.save()
+
+        back_product_image = ProductImage(product=product, image=back_image_path)
+        back_product_image.save()
+
+        return HttpResponseRedirect('/success/url/')
+
+    return render(request, 'create_product.html')
+
 
 def send_order_confirmation_email(first_name, email, order):
     subject = 'Order Confirmation'
@@ -118,6 +235,80 @@ def send_order_confirmation_email(first_name, email, order):
     from_email = 'vosmos.net@gmail.com'
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
+
+
+
+
+
+from .models import FrontCanva, BackCanva
+
+
+
+
+
+import base64
+from django.core.files.base import ContentFile
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+def create_canvas_object(request):
+    if request.method == 'POST':
+        quantity = int(request.POST.get('cloth_quantity', 1))
+        color = request.POST.get('color')
+        size = request.POST.get('size')
+        data = json.loads(request.body)
+
+        # Convert front and back image data URLs to ImageFields
+        format, imgstr = data['front_image_data_url'].split(';base64,')
+        ext = format.split('/')[-1]
+        front_image = ContentFile(base64.b64decode(imgstr), name='front.' + ext)
+
+        format, imgstr = data['back_image_data_url'].split(';base64,')
+        ext = format.split('/')[-1]
+        back_image = ContentFile(base64.b64decode(imgstr), name='back.' + ext)
+
+        # Create a CanvasObject for the front canvas
+        front_canvas = FrontCanva(
+            image=front_image,
+            url=data['front_image_data_url'],  # Save the data URL
+        )
+        front_canvas.save()
+
+        # Create a CanvasObject for the back canvas
+        back_canvas = BackCanva(
+            image=back_image,
+            url=data['back_image_data_url'],  # Save the data URL
+        )
+        back_canvas.save()
+
+        # Get the user
+        User = get_user_model()
+        try:
+            user = User.objects.get(username=request.user.username)
+            product_name = f"{user.username}'s Custom Product"
+        except User.DoesNotExist:
+            product_name = "Customized Product"
+
+        # Create a new Product
+        customized_product = Product(
+            product_name=product_name,
+            price=499.98,
+            FrontCanva=front_canvas,
+            BackCanva=back_canvas,
+            customized=True,
+            pub_date=timezone.now(),
+            # Add other fields as necessary
+        )
+        customized_product.save()
+
+        
+        # Return the id of the customized product
+        return JsonResponse({'product_id': customized_product.id})
+
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
 
 
 def index(request):
@@ -152,6 +343,7 @@ def product_detail(request, product_id):
         return redirect('cart_detail')
     # Get the product
     else:
+
         """
         try:
             # retrieve the CartItem objects for the anonymous user's cart
@@ -160,6 +352,8 @@ def product_detail(request, product_id):
             CartItems = []
         """
         product = get_object_or_404(Product, id=product_id)
+
+
         # Add the product ID to the list of recently viewed products in the session
         recently_viewed_product_ids = request.session.get('recently_viewed_products', [])
         if product_id not in recently_viewed_product_ids:
@@ -171,6 +365,27 @@ def product_detail(request, product_id):
 
     # Render the template with the product
     return render(request, 'product.html', {'product': product, 'images': images, 'sizes': sizes, 'colors': colors})
+
+
+
+
+
+def customized_view(request, product_id):
+    if request.method == 'GET':
+        # Get the product
+        product = get_object_or_404(Product, id=product_id)
+
+        # Check if the product is customized
+        if product.customized:
+            sizes = ['S', 'M', 'L', 'XL', 'XXL', '3XL']
+            colors = ProductColor.objects.filter(product=product)
+
+            # Get the data URLs of the front and back images
+            front_image_data_url = product.FrontCanva.url
+            back_image_data_url = product.BackCanva.url
+
+            return render(request, 'customize2.html', {'front_url': front_image_data_url, 'back_url': back_image_data_url, 'sizes': sizes, 'colors':colors, 'customized': True})
+
 
 
 def login_view(request):
@@ -489,12 +704,13 @@ def checkout(request):
 #@require_http_methods(["POST", "PUT"])
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-
     if request.method == 'GET' or request.method == 'POST':
+        print("post")
         quantity = int(request.POST.get('cloth_quantity', 1))
         color = request.POST.get('color')
+        print(color)
         size = request.POST.get('size')
-
+        print(size)
         # create or retrieve a Cart object for both authenticated and anonymous users
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
@@ -519,6 +735,7 @@ def add_to_cart(request, product_id):
         return redirect('cart')
 
     elif request.method == 'PUT':
+        print("put")
         data = json.loads(request.body)
         quantity = data.get('quantity', 1)
         Product_size = ProductSize.objects.filter(product=product)
@@ -704,7 +921,12 @@ def orders(request):
 
 def customize(request):
     sizes = ['S', 'M', 'L', 'XL', 'XXL', '3XL']
-    return render(request, 'customize2.html',{'sizes': sizes})
+    product = Product.objects.first()
+    if product is None:
+        return JsonResponse({'error': 'No product found'}, status=404)
+    colors = ProductColor.objects.filter(product=product)
+    return render(request, 'customize2.html',{'sizes': sizes, 'colors':colors})
+
 
 
 @require_http_methods(["PUT"])

@@ -9,13 +9,17 @@ Custom T-Shirt
 {% block body %}
 
 <div class="container position-relative mt-5">
+  {% if customized %}
+  <div id="frontImage" data-url="{{ front_url }}"></div>
+  <div id="backImage" data-url="{{ back_url }}"></div>
+{% endif %}
 
     <div id="mainWindow">
         <div class="row  justify-content-between flex-lg-nowrap">
           <div class="col d-inline-flex justify-content-center">
             <div class="product-image ">
               <div id="tshirt-div">
-                <img id="tshirt-backgroundpicture" src="../static/images/testcustom.png"/>
+                <img id="tshirt-backgroundpicture" src="/static/images/testcustom.png"/>
             
                 <div id="drawingArea" class="drawing-area">					
                     <div class="canvas" id="tshirt-front">
@@ -34,7 +38,8 @@ Custom T-Shirt
           <div class="col form text-center" id="tshirt">
             <h2 class="head">Customize your Shirt</h2>
             
-            <form id="form-box">
+            
+              <form id="form-box" method="POST" action="{% url 'add_to_cart' 5 %}">
                 <div>
                 </div>
                 <div class="product__details__option__face">
@@ -47,8 +52,6 @@ Custom T-Shirt
                         
                         <input type="radio" id="back" name="tshirt-side" value="back">
                     </label>
-
-                    
                 </div>
                 <div class="product__details__option__size">
                     <span>Size:</span>
@@ -70,7 +73,7 @@ Custom T-Shirt
                 <br><br>
                 <div>
                 <label for="tshirt-color" class="form-label">T-Shirt Color:</label>
-                <select id="tshirt-color" class="form-select">
+                <select id="tshirt-color" class="form-select" name="color">
                     <!-- You can add any color with a new option and definings its hex code -->
                     <option value="#fff">White</option>
                     <option value="#000">Black</option>
@@ -447,6 +450,9 @@ Custom T-Shirt
   let front_text = "";
   let back_text = "";
   var textArea = document.getElementById('text');
+
+
+
   document.getElementById('tshirt-back').style.display = 'none';
 
   function updateTshirtImage(imageURL) {
@@ -662,7 +668,7 @@ function DeleteActive() {
         document.getElementById('tshirt-front').style.display = 'block';
         back_text = textArea.value;
         textArea.value = front_text;
-        document.getElementById('tshirt-backgroundpicture').src = '../static/images/testcustom.png';
+        document.getElementById('tshirt-backgroundpicture').src = '/static/images/testcustom.png';
         document.getElementById('tshirt-front-canvas').style.display = 'block';
         document.getElementById('tshirt-back-canvas').style.display = 'none';
         canvas = frontCanvas;
@@ -680,7 +686,7 @@ function DeleteActive() {
         document.getElementById('tshirt-back').style.display = 'block';
         front_text = textArea.value;
         textArea.value = back_text;
-        document.getElementById('tshirt-backgroundpicture').src = '../static/images/white-shirt.png';
+        document.getElementById('tshirt-backgroundpicture').src = '/static/images/white-shirt.png';
         document.getElementById('tshirt-front-canvas').style.display = 'none';
         document.getElementById('tshirt-back-canvas').style.display = 'block';
         canvas = backCanvas;
@@ -746,8 +752,108 @@ function DeleteActive() {
 
 
 
+  async function sendCanvasData() {
+    // Get properties of front and back canvases
+    // Convert front and back canvases to data URLs
+    let frontCanvasDataUrl = frontCanvas.toDataURL('image/png');
+    let backCanvasDataUrl = backCanvas.toDataURL('image/png');
+
+    // Get properties of front and back canvases
+    let frontCanvasProperties = frontCanvas.toObject();
+    let backCanvasProperties = backCanvas.toObject();
+
+    // Prepare data to be sent
+    let data = {
+        front_image_data_url: frontCanvasDataUrl,
+        back_image_data_url: backCanvasDataUrl,
+        // ... rest of your data properties ...
+    };
+
+// Send data to Django view
+fetch('/create_canvas_object/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        // Include any other headers your Django view requires
+        // For example, you might need to include a CSRF token:
+        'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(data)
+})
+.then(response => response.json())
+.then(jsonData => {
+    // Get the product_id
+    let product_id = jsonData.product_id;
+
+    // Get the form element
+    let form = document.getElementById('form-box');
+
+    // Update the action attribute with the product id
+    form.action = form.action.replace(5, product_id);
+
+    // Submit the form
+    form.submit();
+})
+.catch(error => console.error('Error:', error));
 
 
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+}
+
+
+document.getElementById('submit-button').addEventListener('click', function(event) {
+    event.preventDefault();  // Prevent the default action
+    sendCanvasData();  // Call the function
+});
+
+
+async function loadCanvasData(data) {
+    // Create new Image objects
+    let frontImage = new Image();
+    let backImage = new Image();
+
+    // Set the source of the images to the data URLs
+    frontImage.src = data.front_image_data_url;
+    backImage.src = data.back_image_data_url;
+    console.log("gg");
+    console.log(data.front_image_data_url);
+    // Wait for the images to load
+    await new Promise(resolve => { frontImage.onload = resolve; });
+    await new Promise(resolve => { backImage.onload = resolve; });
+
+    // Clear the canvases
+    frontCanvas.clear();
+    backCanvas.clear();
+
+    // Add the images to the canvases
+    frontCanvas.add(new fabric.Image(frontImage));
+    backCanvas.add(new fabric.Image(backImage));
+
+    // Render the canvases
+    frontCanvas.renderAll();
+    backCanvas.renderAll();
+}
+
+
+window.onload = async function() {
+    // Check if the product is customized
+    let frontImageElement = document.getElementById('frontImage');
+    let front_image_data_url;
+    let back_image_data_url;
+    let backImageElement = document.getElementById('backImage');
+    if (frontImageElement) {
+      console.log("DDDdd");
+        // If the product is customized, get the data URLs and update the canvas
+        let data = {
+            front_image_data_url: frontImageElement.dataset.url,
+            back_image_data_url: backImageElement.dataset.url
+          };
+          console.log(front_image_data_url);
+        await loadCanvasData(data);
+    }
+};
 
 
 </script>

@@ -50,7 +50,17 @@ Cart
                     <td class="product__cart__item">
                       <a href="{{ item.product.get_absolute_url }}">
                       <div class="product__cart__item__pic">
+                        {% if item.product.customized %}
+                        {% if item.product.FrontCanva %}
+
+                        <img src="{{ item.product.FrontCanva.image.url }}" width="50px" alt="">
+                        {% else %}
+                        <img src="{{ item.product.BackCanva.image.url }}" width="50px" alt="">
+
+                        {% endif %}
+                        {% else %}
                         <img src="{% static item.product.path %}" width="50px" alt="">
+                        {% endif %}
                       </div>
                       <div class="product__cart__item__text">
                         <h6>{{ item.product.product_name }}</h6>
