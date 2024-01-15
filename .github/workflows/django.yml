@@ -28,4 +28,4 @@ jobs:
     - name: Run Tests
       run: |
         cd clothing
-        python manage.py test
+        python manage.py test 
