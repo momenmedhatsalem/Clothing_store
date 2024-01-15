@@ -27,4 +27,5 @@ jobs:
         pip install -r clothing/requirements.txt
     - name: Run Tests
       run: |
+        cd clothing
         python manage.py test
