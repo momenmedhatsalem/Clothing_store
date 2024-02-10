@@ -47,13 +47,13 @@ Thank you for your interest in Vosmos Store project! This guide will walk you th
 
 1. **Fork the Repository**
 
-   Fork the repository from [GitHub](https://github.com/your-username/clothing) to your own GitHub account.
+   Fork the repository from [GitHub](https://github.com/momenmedhatsalem/Clothing_store) to your own GitHub account.
 
 2. **Clone the Repository**
 
    Clone the forked repository to your local machine using the following command:
    ```bash
-   git clone https://github.com/your-username/clothing.git
+   git clone https://github.com/momenmedhatsalem/Clothing_store.git
    ```
 
 3. **Navigate to the Project Directory**
