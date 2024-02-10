@@ -36,6 +36,57 @@ Vosmos is a web application built using Django, featuring a tailored and streaml
 ## Installation
 
 To run the Vosmos project locally, follow the installation steps outlined in the [Installation](#installation) section of the README.
+## Clothing Store Project Installation Guide
+
+Thank you for your interest in Vosmos Clothing Store project! This guide will walk you through the installation process step by step.
+
+### Prerequisites
+- Python 3.x installed on your system
+- Git installed on your system
+
+### Installation Steps
+
+1. **Fork the Repository**
+
+   Fork the repository from [GitHub](https://github.com/your-username/clothing) to your own GitHub account.
+
+2. **Clone the Repository**
+
+   Clone the forked repository to your local machine using the following command:
+   ```bash
+   git clone https://github.com/your-username/clothing.git
+   ```
+
+3. **Navigate to the Project Directory**
+
+   Change your current directory to the project directory:
+   ```bash
+   cd clothing
+   ```
+
+4. **Install Requirements**
+
+   Install the required Python packages using pip. It's recommended to use a virtual environment to manage dependencies.
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Run the Server**
+
+   Once the requirements are installed, you can start the Django development server using the following command:
+   ```bash
+   python manage.py runserver
+   ```
+
+6. **Access the Application**
+
+   Open your web browser and navigate to `http://127.0.0.1:8000/` or `http://localhost:8000/` to access the Clothing Store application.
+
+### Notes
+- If you encounter any issues during the installation process, please refer to the [Django documentation](https://docs.djangoproject.com/en/stable/) or feel free to open an issue in the GitHub repository.
+- Remember to set up your database configurations in `settings.py` before running the server in a production environment.
+
+Thank you for installing our Clothing Store project! If you have any questions or feedback, please don't hesitate to contact us. Happy coding!
 
 ## Models
 
