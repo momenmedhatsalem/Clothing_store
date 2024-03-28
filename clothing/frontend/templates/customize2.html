@@ -1,177 +1,219 @@
-{% extends 'layout.html' %} 
-
-{% load static %}
-{% block title %}
-
-
-Custom T-Shirt
-{% endblock %}
-{% block body %}
+{% extends 'layout.html' %} {% load static %} {% block title %} Custom T-Shirt
+{% endblock %} {% block body %}
 
 <div class="container position-relative mt-5">
   {% if customized %}
-  <div id="frontImage" data-url="{{ front_url }}"></div>
+  <div id="frontImage" data-url="{{ product_id }}"></div>
   <div id="backImage" data-url="{{ back_url }}"></div>
-{% endif %}
+  {% endif %}
 
-    <div id="mainWindow">
-        <div class="row  justify-content-between flex-lg-nowrap">
-          <div class="col d-inline-flex justify-content-center">
-            <div class="product-image ">
-              <div id="tshirt-div">
-                <img id="tshirt-backgroundpicture" src="/static/images/testcustom.png"/>
-            
-                <div id="drawingArea" class="drawing-area">					
-                    <div class="canvas" id="tshirt-front">
-                        <canvas id="tshirt-front-canvas" width="200" height="400"></canvas>
-                    </div>
-                    <div class="canvas" id="tshirt-back">
-                        <canvas id="tshirt-back-canvas" width="200" height="400"></canvas>
-                    </div>
-                </div>
-                <p class="mt-5">To remove a loaded picture on the T-Shirt select it and press the <kbd>DEL</kbd> key.</p>
-          
+  <div id="mainWindow">
+    <div class="row justify-content-between flex-lg-nowrap">
+      <div class="col d-inline-flex justify-content-center">
+        <div class="product-image">
+          <div id="tshirt-div">
+            <img
+              id="tshirt-backgroundpicture"
+              src="/static/images/testcustom.png"
+            />
+
+            <div id="drawingArea" class="drawing-area">
+              <div class="canvas" id="tshirt-front">
+                <canvas
+                  id="tshirt-front-canvas"
+                  width="200"
+                  height="400"
+                ></canvas>
+              </div>
+              <div class="canvas" id="tshirt-back">
+                <canvas
+                  id="tshirt-back-canvas"
+                  width="200"
+                  height="400"
+                ></canvas>
+              </div>
             </div>
-              <p class="product-description">{{ product.desc|truncatewords:20 }}</p>
-            </div>
+            <p class="mt-5">
+              To remove a loaded picture on the T-Shirt select it and press the
+              <kbd>DEL</kbd> key.
+            </p>
           </div>
-          <div class="col form text-center" id="tshirt">
-            <h2 class="head">Customize your Shirt</h2>
-            
-            
-              <form id="form-box" method="POST" action="{% url 'add_to_cart' 5 %}">
-                <div>
-                </div>
-                <div class="product__details__option__face">
-                    
-                    <label for="front" class="active">Front
-                    <input type="radio" id="front" name="tshirt-side" value="front" checked>
-                    </label>
-             
-                    <label for="back">Back
-                        
-                        <input type="radio" id="back" name="tshirt-side" value="back">
-                    </label>
-                </div>
-                <div class="product__details__option__size">
-                    <span>Size:</span>
-                    {% for size in sizes %}
-                    <label for="{{ size }}"  {% if forloop.first %}class="active"{% endif %}>{{ size }}
-                        <input name="size" type="radio" value="{{ size }}" id="{{ size }}" {% if forloop.first %}checked{% endif %}>
-                    </label>
-                    {% endfor %}
-                    
-                </div>
-                <div class="mt-5">
-                  <label for="tshirt-design">T-Shirt Design:</label>
-                <select id="tshirt-design">
-                    <option value="">Select one of our designs ...</option>
-                    <option value="https://ourcodeworld.com/public-media/gallery/gallery-5d5b0e95d294c.png">Batman</option>
-                </select>
-                </div>
-                <!-- The Select that allows the user to change the color of the T-Shirt -->
-                <br><br>
-                <div>
-                <label for="tshirt-color" class="form-label">T-Shirt Color:</label>
-                <select id="tshirt-color" class="form-select" name="color">
-                    <!-- You can add any color with a new option and definings its hex code -->
-                    <option value="#fff">White</option>
-                    <option value="#000">Black</option>
-                    <option value="#f00">Red</option>
-                    <option value="#008000">Green</option>
-                    <option value="#ff0">Yellow</option>
-                </select>
-                </div>
-
-  
-              <div class="text-center">
-                <label for="imageInput"><strong>Image Input</strong></label><br />
-                <label for="tshirt-custompicture">Upload your own design:</label>
-                <div class="img-upload"> 
-                <input type="file" id="tshirt-custompicture" accept=".jpg, .jpeg, .png, .webp"/>
-                        <!-- Image Viewer for Front Side -->
-        <div id="front-image-viewer"></div>
-
-        <!-- Image Viewer for Back Side -->
-        <div id="back-image-viewer"></div>
-            </div>
-                
-              </div>
-  
-              <div>
-                <label for="text">Text:</label><br />
-                <textarea id="text" name="text" style="
-                 background-color: transparent;
-                 width: 100%;
-                 height: 100px;
-                 "></textarea>
-              </div>
-              <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <div class="margin-auto">
-                  <label for="fontFamilySelect">Font Type</label><br />
-                  <select id="fontFamilySelect">
-                    <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-                    <option value="Arial, Helvetica, sans-serif">Arial</option>
-                    <option value="Times New Roman, Times, serif">Times New Roman</option>
-                    <option value="Courier New, Courier, monospace">Courier New</option>
-                    <option value="Georgia, serif">Georgia</option>
-                    <option value="Verdana, Geneva, sans-serif">Verdana</option>
-                    <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
-                    <option value="Trebuchet MS, Helvetica, sans-serif">Trebuchet MS</option>
-                    <option value="Impact, Charcoal, sans-serif">Impact</option>
-                    <option value="Lucida Sans Unicode, Lucida Grande, sans-serif">Lucida Sans Unicode</option>
-                  </select>
-  
-                </div>
-  
-                <div class="d-flex justify-content-between align-items-center margin-auto">
-                  <div class="margin-auto">
-    
-                    <label for="text-color">Text Color:</label>
-                    <br />
-                    <input type="color" class="color-input" id="text-color" name="text-color" />
-                  </div>
-    
-                  
-                </div>
-              </div>
-  
-  
-  
-
-              <div class="product__details__cart__option">
-                <div class="sticky-bottom d-flex justify-content-between flex-wrap align-items-center justify-content-center">
-                    <div class="quantity margin-auto" style="padding: 5px;">
-                        <div class="pro-qty">
-                            <input name="cloth_quantity" type="text" value="1">
-                        </div>
-                    </div>
-                    <a href="#" class="primary-btn margin-auto" id="submit-button">Add to Cart</a>
-                </div>
-            </div>
-            {% csrf_token %}
-            </form>
-  
-          </div>
-  
-  
-  
+          <p class="product-description">{{ product.desc|truncatewords:20 }}</p>
         </div>
       </div>
+      <div class="col form text-center" id="tshirt">
+        <h2 class="head">Customize your Shirt</h2>
 
- 
+        <form id="form-box" method="POST" action="{% url 'add_to_cart' 5 %}">
+          <div></div>
+          <div class="product__details__option__face">
+            <label for="front" class="active"
+              >Front
+              <input
+                type="radio"
+                id="front"
+                name="tshirt-side"
+                value="front"
+                checked
+              />
+            </label>
 
+            <label for="back"
+              >Back
 
+              <input type="radio" id="back" name="tshirt-side" value="back" />
+            </label>
+          </div>
+          <div class="product__details__option__size">
+            <span>Size:</span>
+            {% for size in sizes %}
+            <label
+              for="{{ size }}"
+              {%
+              if
+              forloop.first
+              %}class="active"
+              {%
+              endif
+              %}
+              >{{ size }}
+              <input
+                name="size"
+                type="radio"
+                value="{{ size }}"
+                id="{{ size }}"
+                {%
+                if
+                forloop.first
+                %}checked{%
+                endif
+                %}
+              />
+            </label>
+            {% endfor %}
+          </div>
+          <div class="mt-5">
+            <label for="tshirt-design">T-Shirt Design:</label>
+            <select id="tshirt-design">
+              <option value="">Select one of our designs ...</option>
+              <option
+                value="https://ourcodeworld.com/public-media/gallery/gallery-5d5b0e95d294c.png"
+              >
+                Batman
+              </option>
+            </select>
+          </div>
+          <!-- The Select that allows the user to change the color of the T-Shirt -->
+          <br /><br />
+          <div>
+            <label for="tshirt-color" class="form-label">T-Shirt Color:</label>
+            <select id="tshirt-color" class="form-select" name="color">
+              <!-- You can add any color with a new option and definings its hex code -->
+              <option value="#fff">White</option>
+              <option value="#000">Black</option>
+              <option value="#f00">Red</option>
+              <option value="#008000">Green</option>
+              <option value="#ff0">Yellow</option>
+            </select>
+          </div>
 
+          <div class="text-center">
+            <label for="imageInput"><strong>Image Input</strong></label
+            ><br />
+            <label for="tshirt-custompicture">Upload your own design:</label>
+            <div class="img-upload">
+              <input
+                type="file"
+                id="tshirt-custompicture"
+                accept=".jpg, .jpeg, .png, .webp"
+              />
+              <!-- Image Viewer for Front Side -->
+              <div id="front-image-viewer"></div>
+
+              <!-- Image Viewer for Back Side -->
+              <div id="back-image-viewer"></div>
+            </div>
+          </div>
+
+          <div>
+            <label for="text">Text:</label><br />
+            <textarea
+              id="text"
+              name="text"
+              style="background-color: transparent; width: 100%; height: 100px"
+            ></textarea>
+          </div>
+          <div
+            class="d-flex justify-content-between align-items-center flex-wrap"
+          >
+            <div class="margin-auto">
+              <label for="fontFamilySelect">Font Type</label><br />
+              <select id="fontFamilySelect">
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                <option value="Arial, Helvetica, sans-serif">Arial</option>
+                <option value="Times New Roman, Times, serif">
+                  Times New Roman
+                </option>
+                <option value="Courier New, Courier, monospace">
+                  Courier New
+                </option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+                <option value="Trebuchet MS, Helvetica, sans-serif">
+                  Trebuchet MS
+                </option>
+                <option value="Impact, Charcoal, sans-serif">Impact</option>
+                <option value="Lucida Sans Unicode, Lucida Grande, sans-serif">
+                  Lucida Sans Unicode
+                </option>
+              </select>
+            </div>
+
+            <div
+              class="d-flex justify-content-between align-items-center margin-auto"
+            >
+              <div class="margin-auto">
+                <label for="text-color">Text Color:</label>
+                <br />
+                <input
+                  type="color"
+                  class="color-input"
+                  id="text-color"
+                  name="text-color"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="product__details__cart__option">
+            <div
+              class="sticky-bottom d-flex justify-content-between flex-wrap align-items-center justify-content-center"
+            >
+              <div class="quantity margin-auto" style="padding: 5px">
+                <div class="pro-qty">
+                  <input name="cloth_quantity" type="text" value="1" />
+                </div>
+              </div>
+              <button type="submit">Add to Cart</button>
+              <a class="primary-btn" type="submit" id="submit-button"
+                >Add to Cart</a
+              >
+            </div>
+          </div>
+          {% csrf_token %}
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 <style>
+  .contain {
+    display: flex;
+    width: 50%;
+  }
 
-.contain {
-  display: flex;
-  width: 50%;
-}
-
-.drawing-area {
+  .drawing-area {
     position: absolute;
     top: 60px;
     left: 122px;
@@ -179,31 +221,31 @@ Custom T-Shirt
     width: 200px;
     height: 400px;
     border: 1px solid #ccc;
-}
+  }
 
-.canvas-container {
+  .canvas-container {
     width: 200px;
     height: 400px;
     position: relative;
     user-select: none;
-}
+  }
 
-#tshirt-div {
+  #tshirt-div {
     width: 452px;
     height: 548px;
     position: relative;
     background-color: #fff;
     flex: 1;
     margin: 10px;
-}
-.product__details__cart__option .quantity .pro-qty input{
-  position: absolute;
+  }
+  .product__details__cart__option .quantity .pro-qty input {
+    position: absolute;
     left: -1px;
     bottom: 0;
     z-index: -1;
-}
+  }
 
-.canvas {
+  .canvas {
     position: absolute;
     width: 200px;
     height: 400px;
@@ -211,249 +253,239 @@ Custom T-Shirt
     top: 0px;
     user-select: none;
     cursor: default;
-}
+  }
 
   .form h2 {
-      font-weight: 700;
-      font-size: 35px;
-      line-height: 42px;
-      margin-top: 50px;
-      margin-bottom: 50px;
-    }
-
-    .tshirt-size-option {
-      display: inline-block;
-      /* padding: 10px; */
-      margin: 5px;
-      background-color: #f1f1f1;
-      cursor: pointer;
-    }
-
-    .tshirt-size-option.selected {
-      background-color: #ccc;
-    }
-
-    .color-option {
-      display: inline-block;
-      width: 50px;
-      height: 50px;
-      margin-right: 10px;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
-
-    .color-option:hover {
-      border: 2px solid black;
-    }
-
-    .color-option.selected {
-      border: 2px solid black;
-    }
-
-    .form form div {
-      padding: 15px;
-    }
-
-    .font-size span:nth-child(1) {
-      font-size: small;
-    }
-
-    .font-size span:nth-child(2) {
-      font-size: medium;
-    }
-
-    .font-size span:nth-child(3) {
-      font-size: large;
-    }
-
-    .font-size button {
-      background-color: white;
-      border: 1px solid #ccc;
-    }
-
-    .rotate button,
-    .upload button {
-      background-color: white;
-      border: 1px solid #ccc;
-    }
-
-    .color-input {
-      height: 50px;
-      width: 50px;
-      padding: 0;
-      border: 1px solid #ccc;
-      cursor: pointer;
-      outline: none;
-    }
-
-    .canva-box {
-      position: relative;
-      width: fit-content;
-      margin: auto;
-    }
-
-
-
-
-
-    @media (min-width: 992px) {
-      .flex-lg-nowrap {
-        flex-wrap: nowrap;
-      }
-
-      .font-size {
-        margin: auto;
-      }
-    }
-
-    .image-container {
-      position: relative;
-      display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 10px;
-    }
-
-    .del-button {
-      position: absolute;
-      bottom: 14px;
-      left: 15px;
-      background-color: rgba(255, 0, 0, 0.7);
-      color: black;
-      border: none;
-      padding: 2px 6px;
-      font-size: 14px;
-    }
-
-    .edit-button {
-      position: absolute;
-      bottom: 15px;
-      right: 15px;
-      background-color: gray;
-      color: black;
-      border: none;
-      padding: 2px 6px;
-      font-size: 25px;
-      cursor: pointer;
-    }
-
-
-    .img-window {
-      display: none;
-      min-width: 70%;
-      z-index: 100;
-    }
-
-    .img-window .row {
-      min-width: 70%;
-      z-index: 100;
-    }
-
-    #closeWindow {
-      font-size: 30px;
-      width: fit-content;
-      padding: 4px;
-      cursor: pointer;
-    }
-    #closeWindow svg{
-      transform: rotate(180deg);
-      width: 31px;
-    }
-
-    .submit,
-    .radio,
-    .head {
-      text-align: center;
-    }
-
-    .line-height button {
-      background-color: white;
-      border: 1px solid #ccc;
-    }
-
-    .submit input {
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-bottom: 8px;
-      padding-top: 8px;
-      color: white;
-      background-color: black;
-      border: 2px solid black;
-    }
-
-    #form-box {
-      border: 1px solid #212529;
-      margin-bottom: 20px;
-    }
-
-    .product-image {
-      text-align: center;
-    }
-
-    .img-upload {
-      max-width: 100%;
-      overflow: hidden;
-    }
-
-    #rotate {
-      transform: translateY(13px);
-    }
-    
-    .control_panel button {
-        background-color: white;
-      border: 1px solid;
-      margin: 2px;
-      padding-top: 3px;
-      padding-bottom: 0px;
-    }
-    .control_panel{
-      margin: 20px;
-    }
-    .product__details__option__face{
-  margin-right: 0;
-    }
-    .product__details__option__size{
-      margin-right: 0;
-    }
-
-
-    @media(max-width:750px){
-
-    #tshirt-div {
-    width: 325px;
-    height: auto;
-    text-align: center;
+    font-weight: 700;
+    font-size: 35px;
+    line-height: 42px;
+    margin-top: 50px;
+    margin-bottom: 50px;
   }
-  .drawing-area{
-    position: absolute;
-    top: 60px;
-    left: 67px;
-    z-index: 10;
-    width: 200px;
-    height: 234px;
+
+  .tshirt-size-option {
+    display: inline-block;
+    /* padding: 10px; */
+    margin: 5px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+
+  .tshirt-size-option.selected {
+    background-color: #ccc;
+  }
+
+  .color-option {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+
+  .color-option:hover {
+    border: 2px solid black;
+  }
+
+  .color-option.selected {
+    border: 2px solid black;
+  }
+
+  .form form div {
+    padding: 15px;
+  }
+
+  .font-size span:nth-child(1) {
+    font-size: small;
+  }
+
+  .font-size span:nth-child(2) {
+    font-size: medium;
+  }
+
+  .font-size span:nth-child(3) {
+    font-size: large;
+  }
+
+  .font-size button {
+    background-color: white;
     border: 1px solid #ccc;
   }
+
+  .rotate button,
+  .upload button {
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+
+  .color-input {
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .canva-box {
+    position: relative;
+    width: fit-content;
+    margin: auto;
+  }
+
+  @media (min-width: 992px) {
+    .flex-lg-nowrap {
+      flex-wrap: nowrap;
     }
-  @media(max-width:420px){
-    .margin-auto{
+
+    .font-size {
+      margin: auto;
+    }
+  }
+
+  .image-container {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  .del-button {
+    position: absolute;
+    bottom: 14px;
+    left: 15px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: black;
+    border: none;
+    padding: 2px 6px;
+    font-size: 14px;
+  }
+
+  .edit-button {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background-color: gray;
+    color: black;
+    border: none;
+    padding: 2px 6px;
+    font-size: 25px;
+    cursor: pointer;
+  }
+
+  .img-window {
+    display: none;
+    min-width: 70%;
+    z-index: 100;
+  }
+
+  .img-window .row {
+    min-width: 70%;
+    z-index: 100;
+  }
+
+  #closeWindow {
+    font-size: 30px;
+    width: fit-content;
+    padding: 4px;
+    cursor: pointer;
+  }
+  #closeWindow svg {
+    transform: rotate(180deg);
+    width: 31px;
+  }
+
+  .submit,
+  .radio,
+  .head {
+    text-align: center;
+  }
+
+  .line-height button {
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+
+  .submit input {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 8px;
+    padding-top: 8px;
+    color: white;
+    background-color: black;
+    border: 2px solid black;
+  }
+
+  #form-box {
+    border: 1px solid #212529;
+    margin-bottom: 20px;
+  }
+
+  .product-image {
+    text-align: center;
+  }
+
+  .img-upload {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  #rotate {
+    transform: translateY(13px);
+  }
+
+  .control_panel button {
+    background-color: white;
+    border: 1px solid;
+    margin: 2px;
+    padding-top: 3px;
+    padding-bottom: 0px;
+  }
+  .control_panel {
+    margin: 20px;
+  }
+  .product__details__option__face {
+    margin-right: 0;
+  }
+  .product__details__option__size {
+    margin-right: 0;
+  }
+
+  @media (max-width: 750px) {
+    #tshirt-div {
+      width: 325px;
+      height: auto;
+      text-align: center;
+    }
+    .drawing-area {
+      position: absolute;
+      top: 60px;
+      left: 67px;
+      z-index: 10;
+      width: 200px;
+      height: 234px;
+      border: 1px solid #ccc;
+    }
+  }
+  @media (max-width: 420px) {
+    .margin-auto {
       margin-left: auto !important;
       margin-right: auto !important;
     }
-  }  
-  </style>
+  }
+</style>
 <script>
-
   // Initialize variables for front and back images and containers
   var frontImage, backImage, frontImageContainer, backImageContainer;
-  let frontCanvas = new fabric.Canvas('tshirt-front-canvas');
-  let backCanvas = new fabric.Canvas('tshirt-back-canvas');
+  let frontCanvas = new fabric.Canvas("tshirt-front-canvas");
+  let backCanvas = new fabric.Canvas("tshirt-back-canvas");
   let canvas = frontCanvas;
   let front_text = "";
   let back_text = "";
-  var textArea = document.getElementById('text');
+  var textArea = document.getElementById("text");
 
-
-
-  document.getElementById('tshirt-back').style.display = 'none';
+  document.getElementById("tshirt-back").style.display = "none";
 
   function updateTshirtImage(imageURL) {
     fabric.Image.fromURL(imageURL, function (img) {
@@ -465,298 +497,307 @@ Custom T-Shirt
     });
   }
 
+  // Update the TShirt color according to the selected color by the user
+  document.getElementById("tshirt-color").addEventListener(
+    "change",
+    function () {
+      document.getElementById("tshirt-div").style.backgroundColor = this.value;
+    },
+    false
+  );
 
   // Update the TShirt color according to the selected color by the user
-  document.getElementById("tshirt-color").addEventListener("change", function () {
-    document.getElementById("tshirt-div").style.backgroundColor = this.value;
-  }, false);
+  document.getElementById("tshirt-design").addEventListener(
+    "change",
+    function () {
+      // Call the updateTshirtImage method providing as first argument the URL
+      // of the image provided by the select
+      updateTshirtImage(this.value);
+    },
+    false
+  );
 
-  // Update the TShirt color according to the selected color by the user
-  document.getElementById("tshirt-design").addEventListener("change", function () {
+  // Initialize a counter for auto-incrementing IDs
+  var imageIdCounter = 1;
 
-    // Call the updateTshirtImage method providing as first argument the URL
-    // of the image provided by the select
-    updateTshirtImage(this.value);
-  }, false);
+  // When the user clicks on upload a custom picture
+  document.getElementById("tshirt-custompicture").addEventListener(
+    "change",
+    function (e) {
+      var reader = new FileReader();
 
-// Initialize a counter for auto-incrementing IDs
-var imageIdCounter = 1;
-
-// When the user clicks on upload a custom picture
-document.getElementById('tshirt-custompicture').addEventListener("change", function (e) {
-    var reader = new FileReader();
-
-    reader.onload = function (event) {
+      reader.onload = function (event) {
         var imgObj = new Image();
         imgObj.src = event.target.result;
 
         // When the picture loads, create the image in Fabric.js
         imgObj.onload = function () {
-            // Check if an image already exists in the current canvas, and remove it
-            if (canvas.getObjects().length > 1) {
-                var existingImage = canvas.getObjects()[1]; // Assuming only one image on the canvas
-                canvas.setActiveObject(existingImage);
-                canvas.renderAll();
-                DeleteActive();
-                canvas.remove(existingImage);
-            }
-
-            var img = new fabric.Image(imgObj);
-
-            img.scaleToHeight(300);
-            img.scaleToWidth(300);
-            canvas.centerObject(img);
-            canvas.add(img);
+          // Check if an image already exists in the current canvas, and remove it
+          if (canvas.getObjects().length > 1) {
+            var existingImage = canvas.getObjects()[1]; // Assuming only one image on the canvas
+            canvas.setActiveObject(existingImage);
             canvas.renderAll();
+            DeleteActive();
+            canvas.remove(existingImage);
+          }
 
-            // Assign an auto-incrementing ID to the image
-            img.id = 'image' + imageIdCounter;
-            imageIdCounter++; // Increment the counter for the next image
+          var img = new fabric.Image(imgObj);
 
-            // Create image container and delete button
-            var imageContainer = document.createElement('div');
-            imageContainer.classList.add('image-container');
-            var imageElement = document.createElement('img');
-            imageElement.src = event.target.result;
-            imageElement.style.maxHeight = '70px';
-            imageElement.style.minWidth = '80px';
-            var deleteButton = document.createElement('button');
-            deleteButton.classList.add('del-button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.type = 'button';
-            // Assign the image ID as a data attribute to the delete button
-            deleteButton.dataset.id = img.id;
+          img.scaleToHeight(300);
+          img.scaleToWidth(300);
+          canvas.centerObject(img);
+          canvas.add(img);
+          canvas.renderAll();
 
-            // Listen for "Delete" button click on each small image's delete button
+          // Assign an auto-incrementing ID to the image
+          img.id = "image" + imageIdCounter;
+          imageIdCounter++; // Increment the counter for the next image
 
-    deleteButton.addEventListener('click', function () {
-        // Get the ID of the associated image from the button's data attribute
-        var imageId = this.dataset.id; // Use "this" to refer to the clicked button
-        console.log("see");
+          // Create image container and delete button
+          var imageContainer = document.createElement("div");
+          imageContainer.classList.add("image-container");
+          var imageElement = document.createElement("img");
+          imageElement.src = event.target.result;
+          imageElement.style.maxHeight = "70px";
+          imageElement.style.minWidth = "80px";
+          var deleteButton = document.createElement("button");
+          deleteButton.classList.add("del-button");
+          deleteButton.textContent = "Delete";
+          deleteButton.type = "button";
+          // Assign the image ID as a data attribute to the delete button
+          deleteButton.dataset.id = img.id;
 
-        // Find the Fabric.js object with the matching ID
-        var objects = canvas.getObjects();
-        var selectedImage = null;
-        for (var i = 0; i < objects.length; i++) {
-            if (objects[i].id === imageId) {
+          // Listen for "Delete" button click on each small image's delete button
+
+          deleteButton.addEventListener("click", function () {
+            // Get the ID of the associated image from the button's data attribute
+            var imageId = this.dataset.id; // Use "this" to refer to the clicked button
+            console.log("see");
+
+            // Find the Fabric.js object with the matching ID
+            var objects = canvas.getObjects();
+            var selectedImage = null;
+            for (var i = 0; i < objects.length; i++) {
+              if (objects[i].id === imageId) {
                 selectedImage = objects[i];
                 break;
+              }
             }
-        }
 
-        if (selectedImage) {
-            // Select the corresponding image
-            canvas.setActiveObject(selectedImage);
-            canvas.renderAll();
-        }
-        DeleteActive();
-        resetFileInput();
-    });
-
-
-            // Add image and delete button to the image container
-            imageContainer.appendChild(imageElement);
-            imageContainer.appendChild(deleteButton);
-
-            // Clear the old image container for the opposite canvas
-            if (canvas === frontCanvas) {
-                if (backImageContainer) {
-                    backImageContainer.remove();
-                }
-                frontImageContainer = imageContainer;
-                document.getElementById('front-image-viewer').appendChild(imageContainer);
-            } else if (canvas === backCanvas) {
-                if (frontImageContainer) {
-                    frontImageContainer.remove();
-                }
-                backImageContainer = imageContainer;
-                document.getElementById('back-image-viewer').appendChild(imageContainer);
+            if (selectedImage) {
+              // Select the corresponding image
+              canvas.setActiveObject(selectedImage);
+              canvas.renderAll();
             }
+            DeleteActive();
+            resetFileInput();
+          });
+
+          // Add image and delete button to the image container
+          imageContainer.appendChild(imageElement);
+          imageContainer.appendChild(deleteButton);
+
+          // Clear the old image container for the opposite canvas
+          if (canvas === frontCanvas) {
+            if (backImageContainer) {
+              backImageContainer.remove();
+            }
+            frontImageContainer = imageContainer;
+            document
+              .getElementById("front-image-viewer")
+              .appendChild(imageContainer);
+          } else if (canvas === backCanvas) {
+            if (frontImageContainer) {
+              frontImageContainer.remove();
+            }
+            backImageContainer = imageContainer;
+            document
+              .getElementById("back-image-viewer")
+              .appendChild(imageContainer);
+          }
         };
-    };
+      };
 
-    // If the user selected a picture, load it
-    if (e.target.files[0]) {
+      // If the user selected a picture, load it
+      if (e.target.files[0]) {
         reader.readAsDataURL(e.target.files[0]);
-    }
-}, false);
-
-
+      }
+    },
+    false
+  );
 
   // Function to reset the file input
   function resetFileInput() {
-    var fileInput = document.getElementById('tshirt-custompicture');
-    fileInput.value = ''; // Clear the selected file
+    var fileInput = document.getElementById("tshirt-custompicture");
+    fileInput.value = ""; // Clear the selected file
   }
 
+  // Listen for the "Delete" key press (keycode 46) and remove the selected element
+  document.addEventListener(
+    "keydown",
+    function (e) {
+      var keyCode = e.keyCode;
 
-
-// Listen for the "Delete" key press (keycode 46) and remove the selected element
-document.addEventListener("keydown", function (e) {
-    var keyCode = e.keyCode;
-
-    if (keyCode == 46) {
+      if (keyCode == 46) {
         console.log("Removing selected element on DELETE key!");
         DeleteActive();
 
         resetFileInput();
-    }
-}, false);
+      }
+    },
+    false
+  );
 
+  function DeleteActive() {
+    var activeObject = canvas.getActiveObject();
+    if (activeObject) {
+      // Remove the Fabric.js object
+      canvas.remove(activeObject);
 
-function DeleteActive() {
-  var activeObject = canvas.getActiveObject();
-        if (activeObject) {
-            // Remove the Fabric.js object
-            canvas.remove(activeObject);
-
-            // Remove the associated small image container
-            var imageContainers = document.querySelectorAll('.image-container');
-            imageContainers.forEach(function (imageContainer) {
-                var imageElement = imageContainer.querySelector('img');
-                if (imageElement && imageElement.src === activeObject.getSrc()) {
-                    imageContainer.remove();
-                }
-            });
-            if (canvas === frontCanvas) {
-                if (frontImageContainer) {
-                    frontImageContainer = false;
-                };
-            };
-            if (canvas === backCanvas) {
-                if (backImageContainer) {
-                    backImageContainer = false;
-                };
-            };
+      // Remove the associated small image container
+      var imageContainers = document.querySelectorAll(".image-container");
+      imageContainers.forEach(function (imageContainer) {
+        var imageElement = imageContainer.querySelector("img");
+        if (imageElement && imageElement.src === activeObject.getSrc()) {
+          imageContainer.remove();
         }
-}
-
-
-
-
-
+      });
+      if (canvas === frontCanvas) {
+        if (frontImageContainer) {
+          frontImageContainer = false;
+        }
+      }
+      if (canvas === backCanvas) {
+        if (backImageContainer) {
+          backImageContainer = false;
+        }
+      }
+    }
+  }
 
   // Define as node the T-Shirt Div
-  var node = document.getElementById('tshirt-div');
+  var node = document.getElementById("tshirt-div");
 
-  domtoimage.toPng(node).then(function (dataUrl) {
-    // Print the data URL of the picture in the Console
+  domtoimage
+    .toPng(node)
+    .then(function (dataUrl) {
+      // Print the data URL of the picture in the Console
 
-
-    // You can for example to test, add the image at the end of the document
-    var img = new Image();
-    img.src = dataUrl;
-
-  }).catch(function (error) {
-    console.error('oops, something went wrong!', error);
-  });
+      // You can for example to test, add the image at the end of the document
+      var img = new Image();
+      img.src = dataUrl;
+    })
+    .catch(function (error) {
+      console.error("oops, something went wrong!", error);
+    });
 
   // Radio Manager
   document.querySelectorAll('input[name="tshirt-side"]').forEach((elem) => {
     elem.addEventListener("change", function (event) {
       var side = event.target.value;
-      if (side === 'front') {
+      if (side === "front") {
         // Show front image and delete button
         if (frontImageContainer) {
-          document.getElementById('front-image-viewer').appendChild(frontImageContainer);
+          document
+            .getElementById("front-image-viewer")
+            .appendChild(frontImageContainer);
         }
         // Hide back image and delete button
         if (backImageContainer) {
           backImageContainer.remove();
         }
-        document.getElementById('tshirt-back').style.display = 'none';
-        document.getElementById('tshirt-front').style.display = 'block';
+        document.getElementById("tshirt-back").style.display = "none";
+        document.getElementById("tshirt-front").style.display = "block";
         back_text = textArea.value;
         textArea.value = front_text;
-        document.getElementById('tshirt-backgroundpicture').src = '/static/images/testcustom.png';
-        document.getElementById('tshirt-front-canvas').style.display = 'block';
-        document.getElementById('tshirt-back-canvas').style.display = 'none';
+        document.getElementById("tshirt-backgroundpicture").src =
+          "/static/images/testcustom.png";
+        document.getElementById("tshirt-front-canvas").style.display = "block";
+        document.getElementById("tshirt-back-canvas").style.display = "none";
         canvas = frontCanvas;
         currentText = frontText;
-      } else if (side === 'back') {
+      } else if (side === "back") {
         // Show back image and delete button
         if (backImageContainer) {
-          document.getElementById('back-image-viewer').appendChild(backImageContainer);
+          document
+            .getElementById("back-image-viewer")
+            .appendChild(backImageContainer);
         }
         // Hide front image and delete button
         if (frontImageContainer) {
           frontImageContainer.remove();
         }
-        document.getElementById('tshirt-front').style.display = 'none';
-        document.getElementById('tshirt-back').style.display = 'block';
+        document.getElementById("tshirt-front").style.display = "none";
+        document.getElementById("tshirt-back").style.display = "block";
         front_text = textArea.value;
         textArea.value = back_text;
-        document.getElementById('tshirt-backgroundpicture').src = '/static/images/white-shirt.png';
-        document.getElementById('tshirt-front-canvas').style.display = 'none';
-        document.getElementById('tshirt-back-canvas').style.display = 'block';
+        document.getElementById("tshirt-backgroundpicture").src =
+          "/static/images/white-shirt.png";
+        document.getElementById("tshirt-front-canvas").style.display = "none";
+        document.getElementById("tshirt-back-canvas").style.display = "block";
         canvas = backCanvas;
         currentText = backText;
       }
     });
   });
 
-
-
   // Adds Text to the Canva
   // Get references to the HTML elements
-  var fontFamilySelect = document.getElementById('fontFamilySelect');
-  var textColorInput = document.getElementById('text-color');
+  var fontFamilySelect = document.getElementById("fontFamilySelect");
+  var textColorInput = document.getElementById("text-color");
 
   // Create a fabric.Text object
-  let frontText = new fabric.IText('', {
+  let frontText = new fabric.IText("", {
     left: 10,
     top: 10,
-    fontFamily: 'Comic Sans MS, cursive',
-    fill: '#000000',
+    fontFamily: "Comic Sans MS, cursive",
+    fill: "#000000",
     scaleX: 0.5,
     scaleY: 0.5,
-    fontWeight: '',
-    originX: 'left',
-    originY: 'top'
+    fontWeight: "",
+    originX: "left",
+    originY: "top",
   });
   frontCanvas.add(frontText);
 
-  let backText = new fabric.IText('', {
+  let backText = new fabric.IText("", {
     left: 10,
     top: 10,
-    fontFamily: 'Comic Sans MS, cursive',
-    fill: '#000000',
+    fontFamily: "Comic Sans MS, cursive",
+    fill: "#000000",
     scaleX: 0.5,
     scaleY: 0.5,
-    fontWeight: '',
-    originX: 'left',
-    originY: 'top'
+    fontWeight: "",
+    originX: "left",
+    originY: "top",
   });
   backCanvas.add(backText);
 
   let currentText = frontText;
 
-
   // Update the text object whenever the user types in the textarea
-  textArea.addEventListener('input', function () {
+  textArea.addEventListener("input", function () {
     currentText.set({ text: this.value });
     canvas.renderAll();
   });
 
   // Update the font family of the text object when the user selects a different font
-  fontFamilySelect.addEventListener('change', function () {
+  fontFamilySelect.addEventListener("change", function () {
     currentText.set({ fontFamily: this.value });
     canvas.renderAll();
   });
 
   // Update the color of the text object when the user selects a different color
-  textColorInput.addEventListener('change', function () {
+  textColorInput.addEventListener("change", function () {
     currentText.set({ fill: this.value });
     canvas.renderAll();
   });
 
-
-
   async function sendCanvasData() {
     // Get properties of front and back canvases
     // Convert front and back canvases to data URLs
-    let frontCanvasDataUrl = frontCanvas.toDataURL('image/png');
-    let backCanvasDataUrl = backCanvas.toDataURL('image/png');
+    let frontCanvasDataUrl = frontCanvas.toDataURL("image/png");
+    let backCanvasDataUrl = backCanvas.toDataURL("image/png");
 
     // Get properties of front and back canvases
     let frontCanvasProperties = frontCanvas.toObject();
@@ -764,52 +805,51 @@ function DeleteActive() {
 
     // Prepare data to be sent
     let data = {
-        front_image_data_url: frontCanvasDataUrl,
-        back_image_data_url: backCanvasDataUrl,
-        // ... rest of your data properties ...
+      front_image_data_url: frontCanvasDataUrl,
+      back_image_data_url: backCanvasDataUrl,
+      // ... rest of your data properties ...
     };
 
-// Send data to Django view
-fetch('/create_canvas_object/', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
+    // Send data to Django view
+    fetch("/create_canvas_object/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
         // Include any other headers your Django view requires
         // For example, you might need to include a CSRF token:
-        'X-CSRFToken': getCookie('csrftoken')
-    },
-    body: JSON.stringify(data)
-})
-.then(response => response.json())
-.then(jsonData => {
-    // Get the product_id
-    let product_id = jsonData.product_id;
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((jsonData) => {
+        // Get the product_id
+        let product_id = jsonData.product_id;
 
-    // Get the form element
-    let form = document.getElementById('form-box');
+        // Get the form element
+        let form = document.getElementById("form-box");
 
-    // Update the action attribute with the product id
-    form.action = form.action.replace(5, product_id);
+        // Update the action attribute with the product id
+        form.action = form.action.replace(5, product_id);
 
-    // Submit the form
-    form.submit();
-})
-.catch(error => console.error('Error:', error));
-
+        // Submit the form
+        form.submit();
+      })
+      .catch((error) => console.error("Error:", error));
 
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-}
+  }
 
+  document
+    .getElementById("submit-button")
+    .addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent the default action
+      sendCanvasData(); // Call the function
+    });
 
-document.getElementById('submit-button').addEventListener('click', function(event) {
-    event.preventDefault();  // Prevent the default action
-    sendCanvasData();  // Call the function
-});
-
-
-async function loadCanvasData(data) {
+  async function loadCanvasData(data) {
     // Create new Image objects
     let frontImage = new Image();
     let backImage = new Image();
@@ -817,16 +857,16 @@ async function loadCanvasData(data) {
     // Set the source of the images to the data URLs
     frontImage.src = data.front_image_data_url;
     backImage.src = data.back_image_data_url;
-    console.log("gg");
-    console.log(data.front_image_data_url);
+
     // Wait for the images to load
-    await new Promise(resolve => { frontImage.onload = resolve; });
-    await new Promise(resolve => { backImage.onload = resolve; });
+    await new Promise((resolve) => {
+      frontImage.onload = resolve;
+    });
+    await new Promise((resolve) => {
+      backImage.onload = resolve;
+    });
 
-    // Clear the canvases
-    frontCanvas.clear();
-    backCanvas.clear();
-
+    console.log("Request Reachec");
     // Add the images to the canvases
     frontCanvas.add(new fabric.Image(frontImage));
     backCanvas.add(new fabric.Image(backImage));
@@ -834,27 +874,33 @@ async function loadCanvasData(data) {
     // Render the canvases
     frontCanvas.renderAll();
     backCanvas.renderAll();
-}
+  }
 
+  // Check if the product is customized
+  let frontImageElement = document.getElementById("frontImage");
+  product_id = frontImageElement.dataset.url;
 
-window.onload = async function() {
-    // Check if the product is customized
-    let frontImageElement = document.getElementById('frontImage');
-    let front_image_data_url;
-    let back_image_data_url;
-    let backImageElement = document.getElementById('backImage');
-    if (frontImageElement) {
-      console.log("DDDdd");
-        // If the product is customized, get the data URLs and update the canvas
-        let data = {
-            front_image_data_url: frontImageElement.dataset.url,
-            back_image_data_url: backImageElement.dataset.url
-          };
-          console.log(front_image_data_url);
-        await loadCanvasData(data);
-    }
-};
+  if (frontImageElement) {
+    console.log("Front and Back Images Found");
 
+    // Add an event listener for the 'load' event
+    window.addEventListener("load", async function () {
+      // Send a PUT request to the server
+      let response = await fetch(`/customized/${product_id}/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+      });
+      console.log("PUT ");
 
+      // Parse the response data
+      let data = await response.json();
+
+      // Update the canvas with the new image data URLs
+      await loadCanvasData(data);
+    });
+  }
 </script>
 {% endblock %}

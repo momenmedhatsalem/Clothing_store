@@ -125,9 +125,10 @@ Shop
                                             {% if product.label != 'N' %}
                                             <span class="label">{{ product.label }}</span>
                                             {% endif %}
-                                            <ul class="product__hover">
-                                                <li><a href="#"><img src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
-                                            </ul>
+                                                <ul class="product__hover">
+                                                    <li><a onclick="addToFavorites('{{ product.id }}')" href="#"><img
+                                                                src="{% static 'frontend/img/icon/heart.png' %}" alt=""></a></li>
+                                                </ul>
                                         </div>
                             
                                         <div class="product__item__text">

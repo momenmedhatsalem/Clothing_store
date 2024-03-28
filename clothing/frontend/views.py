@@ -370,21 +370,32 @@ def product_detail(request, product_id):
 
 
 
+from django.http import JsonResponse
+
 def customized_view(request, product_id):
-    if request.method == 'GET':
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'PUT':
         # Get the product
-        product = get_object_or_404(Product, id=product_id)
 
         # Check if the product is customized
         if product.customized:
-            sizes = ['S', 'M', 'L', 'XL', 'XXL', '3XL']
-            colors = ProductColor.objects.filter(product=product)
-
             # Get the data URLs of the front and back images
             front_image_data_url = product.FrontCanva.url
             back_image_data_url = product.BackCanva.url
 
-            return render(request, 'customize2.html', {'front_url': front_image_data_url, 'back_url': back_image_data_url, 'sizes': sizes, 'colors':colors, 'customized': True})
+            # Return a JSON response with the image data URLs
+            return JsonResponse({
+                'front_image_data_url': front_image_data_url,
+                'back_image_data_url': back_image_data_url
+            })
+
+    elif request.method == 'GET':
+        sizes = ['S', 'M', 'L', 'XL', 'XXL', '3XL']
+        colors = ProductColor.objects.filter(product=product)
+
+
+        return render(request, 'customize2.html', {'product_id': product_id, 'sizes': sizes, 'colors':colors, 'customized': True})
+
 
 
 

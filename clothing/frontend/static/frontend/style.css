@@ -1,24 +1,27 @@
-
 .product__item__pic:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 .social-media-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-  .fade-in {
-    animation: fadeIn 1s;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.fade-in {
+  animation: fadeIn 1s;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-      #remove-coupon-btn {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+#remove-coupon-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 .fade-away {
   opacity: 0;
@@ -30,50 +33,50 @@
   transition: height 4s ease-in-out;
 }
 .free-shipping {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 10px;
-    border-radius: 5px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .product-card {
-    width: calc(100% / 3);
-    margin: 10px;
-    position: relative;
+  width: calc(100% / 3);
+  margin: 10px;
+  position: relative;
+  bottom: -100%;
+  animation: moveUp 1s ease-out forwards;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@keyframes moveUp {
+  0% {
     bottom: -100%;
-    animation: moveUp 1s ease-out forwards;
+    opacity: 0;
   }
-  
-  .product-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  100% {
+    bottom: 0;
+    opacity: 1;
   }
-  
-  @keyframes moveUp {
-    0% {
-      bottom: -100%;
-      opacity: 0;
-    }
-    100% {
-      bottom: 0;
-      opacity: 1;
-    }
-  }
-    .starter-template {
-        padding: 40px 15px;
-        text-align: center;
-    }
-    
-    .size-selector {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  
-  @media (max-width: 767px) {
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+.size-selector {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@media (max-width: 767px) {
   .size-selector {
     display: none;
     position: fixed;
@@ -83,45 +86,45 @@
     transition: bottom 0.3s ease-in-out;
     border-radius: 12px;
   }
-  }
+}
+.size-selector--active {
+  display: block;
+  bottom: 0;
+}
+
+@media (max-width: 767px) {
   .size-selector--active {
-    display: block;
     bottom: 0;
   }
-  
-  @media (max-width: 767px) {
-    .size-selector--active {
-      bottom: 0;
-    }
-  }
-  input[name="color"]:checked + label {
-    border: 2px solid red;
-    box-shadow: 0 0 0 2px black;
-    border-radius: 50%;
+}
+input[name="color"]:checked + label {
+  border: 2px solid red;
+  box-shadow: 0 0 0 2px black;
+  border-radius: 50%;
 }
 @media (min-width: 992px) {
-    #filters {
-        display: block;
-    }
+  #filters {
+    display: block;
+  }
 }
 
 #id_phone_number_0 {
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: left;
-    float: left;
-    position: relative;
-    width: 100px;
-    background-color: white;
-vertical-align: middle;
-margin-right: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  float: left;
+  position: relative;
+  width: 100px;
+  background-color: white;
+  vertical-align: middle;
+  margin-right: 10px;
 }
 #id_phone_number_1 {
-    width:auto;
-    float: left;
-    position: absolute;
-    background-color: white;
-vertical-align: middle;
-margin-left: 110px;
+  width: auto;
+  float: left;
+  position: absolute;
+  background-color: white;
+  vertical-align: middle;
+  margin-left: 110px;
 }
 .cart-link {
   position: relative;
@@ -171,7 +174,6 @@ margin-left: 110px;
   z-index: 1;
 }
 
-
 .arrow {
   width: 0;
   height: 0;
@@ -182,16 +184,25 @@ margin-left: 110px;
   margin: 5px auto;
 }
 
-
 @keyframes arrow-animation {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .arrow {
-    animation-name: arrow-animation;
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
+  animation-name: arrow-animation;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
 }
 
+a:hover {
+  color: blue;
+
+}

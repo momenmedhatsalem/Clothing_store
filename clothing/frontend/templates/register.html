@@ -5,23 +5,78 @@
 Register
 {% endblock %}
 {% block body %}
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        #body {
+            font-family: Arial, Helvetica, sans-serif;
             background-color: #f0f0f0;
+        }
+
+        #body {
+            width: 400px;
+            margin: 100px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         h1 {
             text-align: center;
             color: #333333;
         }
-        form {
-            width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid blue;
-            background-color: #ffffff;
+
+        input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
         }
+
+        button {
+            display: block;
+            width: 100%;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #0099ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        a {
+            color: #0099ff;
+        }
+        .google-btn {
+        display: inline-block;
+        background-color: #4285f4;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+        text-decoration: none;
+        }
+
+        .google-btn:hover {
+            background-color: #357ae8;
+        }
+        
+        </style>
+
+    <style>
+
+
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+
         label {
             display: block;
             margin-bottom: 5px;
@@ -96,7 +151,7 @@ button[type=submit]:hover {
 
     </style>
     <h1>Register</h1>
-    <div class="container">
+    <div class="container col-12" id="body">
         <form method="post" action="{% url 'register' %}">
             {% csrf_token %}
           <div class="form-group">
@@ -124,10 +179,10 @@ button[type=submit]:hover {
           <hr/>
           <a href="http://www.vos-mos.com/accounts/google/login/?process=login" class="google-btn">Sign Up using Google</a>-->
         </form>
+        <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
       </div>
       
       
 
-    <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
   
 {% endblock %}

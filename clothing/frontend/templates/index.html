@@ -188,7 +188,9 @@
         <hr />
         <hr />
         <div class=" product__filter">
+            {% if recently_viewed_products %}
             <h3>Recently Viewed</h3>
+            {% endif %}
             {% for product in recently_viewed_products %}
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6 col-6 mix new-arrivals">
