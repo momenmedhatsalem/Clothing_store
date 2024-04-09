@@ -5,21 +5,21 @@ services:
     build: .
     ports:
       - "8000:8000"
-    command: python manage.py runserver 0.0.0.0:8000
-    #command: gunicorn django_project.wsgi -b 0.0.0.0:8000
+    #command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn django_project.wsgi -b 0.0.0.0:8000
     volumes:
       - .:/clothing
     depends_on:
       - db
-    # environment:
-      # - "DJANGO_SECRET_KEY=django-insecure-)i(c*x-n-=kykn(9u%i$cg@i&%_i*a#q@buk@=22b0-63@+z$s"
-      # - "DJANGO_DEBUG=True"
-      # - "DJANGO_SECURE_SSL_REDIRECT=False"
-      # - "DJANGO_SECURE_HSTS_SECONDS=0"
-      # - "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS=False"
-      # - "DJANGO_SECURE_HSTS_PRELOAD=False"
-      # - "DJANGO_SESSION_COOKIE_SECURE=False" 
-      # - "DJANGO_CSRF_COOKIE_SECURE=False" 
+    environment:
+      - "DJANGO_SECRET_KEY=django-insecure-)i(c*x-n-=kykn(9u%i$cg@i&%_i*a#q@buk@=22b0-63@+z$s"
+      - "DJANGO_DEBUG=True"
+      - "DJANGO_SECURE_SSL_REDIRECT=False"
+      - "DJANGO_SECURE_HSTS_SECONDS=0"
+      - "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS=False"
+      - "DJANGO_SECURE_HSTS_PRELOAD=False"
+      - "DJANGO_SESSION_COOKIE_SECURE=False" 
+      - "DJANGO_CSRF_COOKIE_SECURE=False" 
 
 
   db:
