@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.contrib.auth.admin import UserAdmin
-from frontend.models import Product, ProductSize, ProductColor, ProductImage, MyUser, PromoCode, Cart, Order, CartItem, OrderItem
+from backend.models import Product, ProductSize, ProductColor, ProductImage, MyUser, PromoCode, Cart, Order, CartItem, OrderItem
 from django.utils.html import format_html
 
 # Register your models here.

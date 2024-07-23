@@ -9,13 +9,13 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-AUTH_USER_MODEL = 'frontend.MyUser'
+AUTH_USER_MODEL = 'backend.MyUser'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -25,18 +25,16 @@ SECRET_KEY = "django-insecure-6xa^66!(y@17y0w7_!*#j-te#6n%)25u^%y((**r(vhkw1n*i9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
-    "frontend",
+    "backend",
     "allauth",
     "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.sites",
@@ -85,13 +83,9 @@ WSGI_APPLICATION = "clothing.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "db",
-        "PORT": 5432,
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -135,8 +129,8 @@ MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 # Application definition
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "frontend/static"),
-    
+    os.path.join(BASE_DIR, "backend/static"),
+
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
@@ -147,7 +141,7 @@ SITE_ID = 1
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom Backend Authentication
-AUTHENTICATION_BACKENDS = ['frontend.backends.EmailOrPhoneModelBackend', 'allauth.account.auth_backends.AuthenticationBackend',]
+AUTHENTICATION_BACKENDS = ['backend.backends.EmailOrPhoneModelBackend', 'allauth.account.auth_backends.AuthenticationBackend',]
 
 # Email confirmation
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

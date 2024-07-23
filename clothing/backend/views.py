@@ -6,7 +6,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.urls import reverse
-from frontend.models import Product, ProductImage, ProductSize, ProductColor, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
+from .models import Product, ProductImage, ProductSize, ProductColor, MyUser, Cart, CartItem, Order, PromoCode, Address, OrderItem
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404

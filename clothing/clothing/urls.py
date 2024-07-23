@@ -20,7 +20,7 @@ from django.urls import path
 from django.conf.urls import include
 from django.contrib.sitemaps.views import sitemap
 
-from frontend.sitemaps import ProductSitemap
+from backend.sitemaps import ProductSitemap
 
 sitemaps = {
 		"Products": ProductSitemap,
@@ -28,7 +28,7 @@ sitemaps = {
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('frontend.urls')),
+    path('', include('backend.urls')),
     path('accounts/', include('allauth.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
                 name='django.contrib.sitemaps.views.sitemap')

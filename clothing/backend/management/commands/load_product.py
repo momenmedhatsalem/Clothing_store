@@ -3,7 +3,7 @@ from csv import DictReader
 from django.core.management import BaseCommand
 
 # Import the model 
-from frontend.models import Product, ProductColor, ProductImage, ProductSize, ProductCategory, Category
+from backend.models import Product, ProductColor, ProductImage, ProductSize, ProductCategory, Category
 
 
 ALREDY_LOADED_ERROR_MESSAGE = """
